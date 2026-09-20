@@ -33,8 +33,12 @@ LL.DEFAULTS = {
     -- route sur la plus proche. 0 = jamais. Le buff dure 15 min, d'où 5 par défaut.
     warnMinutes = 5,
     names      = { "ley line", "ligne tellurique" },
-    spells     = {},   -- [spellID] = nom du sort d'absorption, appris par /ley learn
-    auras      = {},   -- [spellID] = nom du buff long obtenu sur une faille, appris au 1er succès
+    -- Le sort d'absorption Skyborn et le buff qu'il pose portent le MÊME id, relevé en jeu le
+    -- 2026-09-20 (`/ley probe` après un lancer réussi). Livrés en dur : la capture marche dès le
+    -- premier lancer, sans rien apprendre. `/ley learn` reste la porte de sortie si la bêta change
+    -- l'id ou si un autre sort se met à faire la même chose.
+    spells     = { [1259691] = "Energized" },   -- [spellID] = nom du sort d'absorption
+    auras      = { [1259691] = "Energized" },   -- [spellID] = nom du buff long obtenu sur une faille
     nodes      = {},
 }
 

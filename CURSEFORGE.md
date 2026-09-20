@@ -6,13 +6,12 @@ riding around the zone trying to remember where it was.
 
 This addon remembers them for you, on the minimap and on the world map.
 
-## It learns from your own spell
+## It reads the buff, so it can't be wrong
 
-Type `/ley learn` once, then cast your absorb spell. The addon remembers which spell that is, and
-from then on it watches what comes back. Fifteen minutes of buff means you were standing on a rift,
-so the spot gets saved. Fifteen seconds means you missed, and nothing is written down. The game
-already knows whether you hit, so the addon reads its answer instead of guessing at ranges and at
-where the object really sits.
+Cast your absorb spell and the addon reads what comes back. Fifteen minutes of buff means you were
+standing on a rift, so the spot gets saved. Fifteen seconds means you missed, and nothing is written
+down. The game already knows whether you hit, so the addon reads its answer instead of guessing at
+ranges and at where the object really sits. There's nothing to set up first.
 
 You can record one by hand too. Stand on a rift, type `/ley add`, or bind a key to it.
 

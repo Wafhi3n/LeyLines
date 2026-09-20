@@ -49,7 +49,7 @@ Par précision décroissante :
    `area POI sur cette carte : 0`. Aucune détection passive n'existe donc sur Forever aujourd'hui
    — l'icône blanche de la minicarte est un blip natif, qu'aucune API ne sait énumérer. Le code
    reste en place : il ne coûte rien et prendrait le relais si la bêta changeait ça.
-2. **Sort** — `/ley learn`, puis lance ton sort d'absorption. C'est **le jeu qui tranche** : sur une
+2. **Sort** — lance ton sort d'absorption, rien à configurer. C'est **le jeu qui tranche** : sur une
    faille le sort donne un buff de 15 minutes, à côté un buff de 15 secondes. L'addon lit la durée
    du buff obtenu et n'enregistre que sur un buff long — aucune estimation de distance, aucun faux
    positif. Un lancer raté te le dit en une ligne et n'écrit rien. C'est la meilleure source.
@@ -63,8 +63,9 @@ Par précision décroissante :
 
 ## Premier passage conseillé
 
-1. `/ley learn`, puis lance ton sort **sur** une faille. Le sort ET le buff long sont retenus d'un
-   coup, et la faille est enregistrée. À partir de là, jouer normalement remplit la carte tout seul.
+1. Lance ton sort d'absorption **sur** une faille. Le sort Skyborn (`Energized`, id 1259691) est
+   livré avec l'addon, donc ça marche dès le premier lancer : la faille est enregistrée, et jouer
+   normalement remplit la carte tout seul. `/ley learn` n'est là que si la bêta change cet id.
 2. `/ley probe` debout sur la faille, si quelque chose cloche : la sortie donne la carte et la
    position, le rayon de minicarte lu, les vignettes et area POI autour, le sort et le buff retenus,
    et la dernière infobulle vue avec son propriétaire.
