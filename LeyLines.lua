@@ -223,11 +223,18 @@ CMD.warn = function(rest)
 end
 CMD.rappel = CMD.warn
 
+CMD.export = function() LL.Share:ShowExport() end
+CMD.import = function(rest)
+    -- Un code court tient dans la ligne de chat ; au-dela, la fenetre est le seul chemin.
+    if rest ~= "" then LL.Share:Import(rest) else LL.Share:ShowImport() end
+end
+CMD.partage = CMD.export
+
 CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
     LL:Print(L["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."])
 end
 CMD.aide = CMD.help
@@ -283,11 +290,15 @@ f:SetScript("OnEvent", function(_, event, arg1)
         LL.db = LeyLinesDB
     elseif event == "PLAYER_LOGIN" then
         LL.Nodes:Init()
+        local shipped = LL.Nodes:ApplyShipped()
         LL.Capture:Init()
         LL.Minimap:Init()
         LL.WorldMap:Init()
         LL.HUD:Init()
         LL:Refresh()
         LL:Printf(L["v%s chargée. /ley pour l'état, /ley help pour le reste."], LL.VERSION)
+        if shipped > 0 then
+            LL:Printf(L["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."], shipped)
+        end
     end
 end)

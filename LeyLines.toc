@@ -24,6 +24,9 @@ LeyLines.lua
 LeyLines_Geo.lua
 LeyLines_Nodes.lua
 
+# Positions LIVREES avec l'addon (fusionnees une fois par palier DATA_VERSION).
+LeyLines_Data.lua
+
 # Acquisition des positions (vignette / infobulle / sort / manuel).
 LeyLines_Capture.lua
 
@@ -31,6 +34,9 @@ LeyLines_Capture.lua
 LeyLines_Minimap.lua
 LeyLines_WorldMap.lua
 LeyLines_HUD.lua
+
+# Echange de positions entre joueurs : un texte a copier-coller, aucun reseau.
+LeyLines_Share.lua
 
 # Diagnostic (/ley probe) : ce que le client expose reellement autour d'une ligne tellurique.
 LeyLines_Probe.lua

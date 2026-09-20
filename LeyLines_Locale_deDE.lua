@@ -30,8 +30,8 @@ local de = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minikarte %s — Karte %s — Verfolgung %s — Auto-Erfassung %s.",
     ["%s ligne(s) tellurique(s) dans %s :"] = "%s Ley-Linie(n) in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Befehle: /ley (Status), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."] =
         "So geht's: Stell dich AUF die Ley-Linie und tippe /ley add (oder nutze die Tastenbelegung).",
 
@@ -86,6 +86,20 @@ local de = {
         "Ley-Linien-Buff: noch %s Min — keine bekannte Ley-Linie in dieser Zone.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Buff-Erinnerung: bei %s Min Restzeit (0 = aus).",
+
+    -- Teilen
+    ["Partage des lignes telluriques"] = "Ley-Linien teilen",
+    ["Aucune ligne tellurique à exporter."] = "Keine Ley-Linie zum Exportieren.",
+    ["Copie ce texte (Ctrl+C) et partage-le."] = "Kopiere diesen Text (Strg+C) und teile ihn.",
+    ["Colle un code reçu, puis clique sur Importer."] = "Füge einen erhaltenen Code ein und klicke auf Importieren.",
+    ["Importer"] = "Importieren",
+    ["Fermer"]   = "Schließen",
+    ["Code invalide : ce n'est pas un export de Ley Lines."] = "Dieser Code ist kein Ley-Lines-Export.",
+    ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s Ley-Linie(n) importiert, %s bereits bekannt.",
+    ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
+        "%s Ley-Linie(n) aus den mitgelieferten Daten hinzugefügt.",
+    ["import"]              = "Import",
+    ["livré avec l'addon"] = "mit dem Addon geliefert",
 
     -- Tastenbelegung
     ["Enregistrer une ligne tellurique ici"]      = "Hier eine Ley-Linie aufzeichnen",

@@ -30,8 +30,8 @@ local es = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimapa %s — mapa %s — seguimiento %s — captura automática %s.",
     ["%s ligne(s) tellurique(s) dans %s :"] = "%s línea(s) telúrica(s) en %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Comandos: /ley (estado), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texto>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Comandos: /ley (estado), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texto>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."] =
         "Cómo se usa: colócate SOBRE la línea telúrica y escribe /ley add (o usa el atajo de teclado).",
 
@@ -86,6 +86,20 @@ local es = {
         "Buff de línea telúrica: quedan %s min — ninguna línea conocida en esta zona.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Recordatorio de buff: a %s min restantes (0 = desactivado).",
+
+    -- Compartir
+    ["Partage des lignes telluriques"] = "Compartir líneas telúricas",
+    ["Aucune ligne tellurique à exporter."] = "Ninguna línea telúrica que exportar.",
+    ["Copie ce texte (Ctrl+C) et partage-le."] = "Copia este texto (Ctrl+C) y compártelo.",
+    ["Colle un code reçu, puis clique sur Importer."] = "Pega un código recibido y haz clic en Importar.",
+    ["Importer"] = "Importar",
+    ["Fermer"]   = "Cerrar",
+    ["Code invalide : ce n'est pas un export de Ley Lines."] = "Ese código no es una exportación de Ley Lines.",
+    ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s línea(s) telúrica(s) importada(s), %s ya conocida(s).",
+    ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
+        "%s línea(s) telúrica(s) añadida(s) desde los datos incluidos.",
+    ["import"]              = "importación",
+    ["livré avec l'addon"] = "incluida con el addon",
 
     -- Atajos de teclado
     ["Enregistrer une ligne tellurique ici"]      = "Registrar una línea telúrica aquí",

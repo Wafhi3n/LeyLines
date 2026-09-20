@@ -30,8 +30,8 @@ local en = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
     ["%s ligne(s) tellurique(s) dans %s :"] = "%s ley line(s) in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Commands: /ley (status), add, del, list, clean, clear, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Commands: /ley (status), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."] =
         "How it works: stand ON the ley line, then type /ley add (or use the keybind).",
 
@@ -84,6 +84,20 @@ local en = {
         "Ley line buff: %s min left — no known ley line in this zone.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Buff reminder: at %s min left (0 = off).",
+
+    -- Partage
+    ["Partage des lignes telluriques"] = "Ley line sharing",
+    ["Aucune ligne tellurique à exporter."] = "No ley line to export.",
+    ["Copie ce texte (Ctrl+C) et partage-le."] = "Copy this text (Ctrl+C) and share it.",
+    ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
+    ["Importer"] = "Import",
+    ["Fermer"]   = "Close",
+    ["Code invalide : ce n'est pas un export de Ley Lines."] = "That code isn't a Ley Lines export.",
+    ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s ley line(s) imported, %s already known.",
+    ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
+        "%s ley line(s) added from the shipped data.",
+    ["import"]              = "import",
+    ["livré avec l'addon"] = "shipped with the addon",
 
     -- Raccourcis clavier
     ["Enregistrer une ligne tellurique ici"]     = "Record a ley line here",

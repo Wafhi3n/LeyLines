@@ -14,13 +14,18 @@ LL.Nodes = Nodes
 --   spell / manual = position du JOUEUR, qui est posé dessus (à un pas près) ;
 --   tooltip = position du joueur qui VISE l'objet à distance — ça peut être 30 yd à côté.
 -- Un relevé plus précis DÉPLACE le point existant ; un moins précis ne fait que le confirmer.
-local PRECISION = { vignette = 3, spell = 2, manual = 2, tooltip = 1 }
+-- `import` et `shipped` sont volontairement au plus bas : une position reçue d'un autre joueur ou
+-- livrée avec l'addon ne doit JAMAIS déplacer un relevé que CE joueur a fait sur place. Elle
+-- comble un trou, elle ne corrige pas une vérité locale.
+local PRECISION = { vignette = 3, spell = 2, manual = 2, tooltip = 1, import = 1, shipped = 1 }
 
 local SOURCE_LABEL = {
     vignette = L["vignette du client"],
     spell    = L["sort"],
     manual   = L["relevé manuel"],
     tooltip  = L["infobulle"],
+    import   = L["import"],
+    shipped  = L["livré avec l'addon"],
 }
 
 -- Nettoie un nom lu sur le client : le texte d'une infobulle peut porter du balisage (icône
@@ -68,6 +73,24 @@ function Nodes:RemoveBySource(src)
         end
     end
     return removed
+end
+
+-- Fusionne les positions livrées avec l'addon (LeyLines_Data.lua), UNE fois par palier de
+-- DATA_VERSION. Sans ce palier, un point que le joueur a effacé exprès reviendrait à chaque
+-- chargement : la base lui appartient dès la première fusion.
+function Nodes:ApplyShipped()
+    local version = LL.DATA_VERSION or 0
+    if (LL.db.dataVersion or 0) >= version then return 0 end
+
+    local added = 0
+    for map, list in pairs(LL.DATA or {}) do
+        for i = 1, #list - 1, 2 do
+            local _, isNew = self:Add(map, list[i], list[i + 1], { src = "shipped" })
+            if isNew then added = added + 1 end
+        end
+    end
+    LL.db.dataVersion = version
+    return added
 end
 
 function Nodes:All(map)
