@@ -96,6 +96,9 @@ local en = {
     ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s ley line(s) imported, %s already known.",
     ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
         "%s ley line(s) added from the shipped data.",
+    ["restauré"] = "restored",
+    ["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."] =
+        "%s ley line(s) restored from the internal backup.",
     ["import"]              = "import",
     ["livré avec l'addon"] = "shipped with the addon",
 

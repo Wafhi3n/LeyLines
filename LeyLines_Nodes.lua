@@ -17,7 +17,7 @@ LL.Nodes = Nodes
 -- `import` et `shipped` sont volontairement au plus bas : une position reçue d'un autre joueur ou
 -- livrée avec l'addon ne doit JAMAIS déplacer un relevé que CE joueur a fait sur place. Elle
 -- comble un trou, elle ne corrige pas une vérité locale.
-local PRECISION = { vignette = 3, spell = 2, manual = 2, tooltip = 1, import = 1, shipped = 1 }
+local PRECISION = { vignette = 3, spell = 2, manual = 2, tooltip = 1, import = 1, shipped = 1, restored = 2 }
 
 local SOURCE_LABEL = {
     vignette = L["vignette du client"],
@@ -26,6 +26,7 @@ local SOURCE_LABEL = {
     tooltip  = L["infobulle"],
     import   = L["import"],
     shipped  = L["livré avec l'addon"],
+    restored = L["restauré"],
 }
 
 -- Nettoie un nom lu sur le client : le texte d'une infobulle peut porter du balisage (icône
@@ -73,6 +74,46 @@ function Nodes:RemoveBySource(src)
         end
     end
     return removed
+end
+
+-- ---------------------------------------------------------------------------
+-- Filet de sécurité
+--
+-- Le 2026-09-20, une base s'est retrouvée VIDE après une déconnexion : SavedVariables déclarées,
+-- aucune erreur Lua attrapée, et pourtant les relevés du joueur avaient disparu. Cause jamais
+-- établie — ce qui est précisément la raison d'être d'un filet : pour un addon dont le SEUL travail
+-- est de retenir des positions, une perte silencieuse est la pire panne possible.
+--
+-- L'instantané est stocké en TEXTE (codec LL1), pas en table : une chaîne survit à un changement
+-- de forme des données, se relit à l'oeil dans le fichier, et se recolle dans `/ley import` à la
+-- main si tout le reste échoue.
+-- ---------------------------------------------------------------------------
+
+-- Règle : on ne remplace JAMAIS un instantané non vide par un instantané vide, sauf si le joueur
+-- vient d'effacer lui-même (`force`). Sans ça, la première session qui démarre à vide écraserait
+-- la seule copie qui restait.
+function Nodes:Snapshot(force)
+    if not LL.Share then return end
+    local count = self:Count()
+    local kept  = LL.db.backup and LL.db.backup.n or 0
+    if count == 0 and kept > 0 and not force then return end
+    LL.db.backup = { at = time(), n = count, blob = LL.Share:Encode() }
+end
+
+function Nodes:RestoreIfEmpty()
+    local backup = LL.db.backup
+    if self:Count() > 0 or not backup or not backup.blob or (backup.n or 0) == 0 then return 0 end
+
+    local data = LL.Share and LL.Share:Decode(backup.blob)
+    if not data then return 0 end
+    local restored = 0
+    for map, pts in pairs(data) do
+        for i = 1, #pts - 1, 2 do
+            local _, isNew = self:Add(map, pts[i], pts[i + 1], { src = "restored" })
+            if isNew then restored = restored + 1 end
+        end
+    end
+    return restored
 end
 
 -- Fusionne les positions livrées avec l'addon (LeyLines_Data.lua), UNE fois par palier de

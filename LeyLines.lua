@@ -113,6 +113,7 @@ CMD.del = function()
         return
     end
     LL.Nodes:Remove(node)
+    LL.Nodes:Snapshot(true)   -- effacement VOULU : il doit tenir au prochain chargement
     LL:Printf(L["Ligne tellurique effacée : %s."], LL.Nodes:Label(node))
     LL:Refresh()
 end
@@ -187,6 +188,7 @@ CMD.infobulle = CMD.tooltip
 
 CMD.clean = function()
     local n = LL.Nodes:RemoveBySource("tooltip")
+    LL.Nodes:Snapshot(true)
     LL:Printf(L["%s relevé(s) d'infobulle effacé(s)."], n)
     LL:Refresh()
 end
@@ -264,6 +266,7 @@ StaticPopupDialogs["LEYLINES_CLEAR_ZONE"] = {
     button2      = NO,
     OnAccept     = function(_, map)
         local n = LL.Nodes:ClearMap(map)
+        LL.Nodes:Snapshot(true)
         LL:Printf(L["%s ligne(s) tellurique(s) effacée(s)."], n)
         LL:Refresh()
     end,
@@ -282,23 +285,37 @@ _G.BINDING_NAME_LEYLINES_TRACK  = L["Suivre la ligne tellurique la plus proche"]
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("PLAYER_LOGOUT")
 f:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" and arg1 == ADDON then
         LeyLinesDB = LeyLinesDB or {}
         CopyDefaults(LeyLinesDB, LL.DEFAULTS)
         Migrate(LeyLinesDB)
         LL.db = LeyLinesDB
+    elseif event == "PLAYER_LOGOUT" then
+        LL.Nodes:Snapshot()
     elseif event == "PLAYER_LOGIN" then
         LL.Nodes:Init()
-        local shipped = LL.Nodes:ApplyShipped()
+        local restored = LL.Nodes:RestoreIfEmpty()
         LL.Capture:Init()
         LL.Minimap:Init()
         LL.WorldMap:Init()
         LL.HUD:Init()
         LL:Refresh()
         LL:Printf(L["v%s chargée. /ley pour l'état, /ley help pour le reste."], LL.VERSION)
-        if shipped > 0 then
-            LL:Printf(L["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."], shipped)
+        if restored > 0 then
+            LL:Printf(L["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."], restored)
         end
+        -- Les données livrées attendent 3 s : l'anti-doublon a besoin de la TAILLE de la zone
+        -- (C_Map.GetMapWorldSize), que le client ne donne pas toujours dès PLAYER_LOGIN. Fusionner
+        -- trop tôt ferait passer chaque point livré pour un point nouveau, à côté du vôtre.
+        C_Timer.After(3, function()
+            local shipped = LL.Nodes:ApplyShipped()
+            if shipped > 0 then
+                LL:Printf(L["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."], shipped)
+                LL:Refresh()
+            end
+            LL.Nodes:Snapshot()
+        end)
     end
 end)

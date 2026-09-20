@@ -98,6 +98,9 @@ local de = {
     ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s Ley-Linie(n) importiert, %s bereits bekannt.",
     ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
         "%s Ley-Linie(n) aus den mitgelieferten Daten hinzugefügt.",
+    ["restauré"] = "wiederhergestellt",
+    ["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."] =
+        "%s Ley-Linie(n) aus der internen Sicherung wiederhergestellt.",
     ["import"]              = "Import",
     ["livré avec l'addon"] = "mit dem Addon geliefert",
 

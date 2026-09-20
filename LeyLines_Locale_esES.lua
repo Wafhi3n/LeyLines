@@ -98,6 +98,9 @@ local es = {
     ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s línea(s) telúrica(s) importada(s), %s ya conocida(s).",
     ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
         "%s línea(s) telúrica(s) añadida(s) desde los datos incluidos.",
+    ["restauré"] = "restaurada",
+    ["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."] =
+        "%s línea(s) telúrica(s) restaurada(s) desde la copia interna.",
     ["import"]              = "importación",
     ["livré avec l'addon"] = "incluida con el addon",
 
