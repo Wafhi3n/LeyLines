@@ -16,12 +16,26 @@ local function YesNo(v) return v and "oui" or "non" end
 
 function Probe:Dump()
     LL:Print("---- diagnostic ----")
+    self:DumpLoad()
     self:DumpPosition()
     self:DumpMinimap()
     self:DumpWorldMap()
     self:DumpVignettes()
     self:DumpAreaPOIs()
     self:DumpCapture()
+end
+
+-- Ce que le client a rendu au chargement, avant que l'addon n'y touche.
+function Probe:DumpLoad()
+    local st = LL.loadState
+    if not st then LL:Print("chargement : instrument absent"); return end
+    LL:Printf("au chargement : SavedVariables rendues %s, %s point(s), dataVersion %s, instantane %s",
+        YesNo(st.restored), st.nodes, tostring(st.dataVersion), tostring(st.backup))
+    if st.restored and st.nodes == 0 and (st.backup or 0) > 0 then
+        LL:Print("  >>> base VIDE alors qu'un instantane existe : la perte vient de la SESSION")
+    elseif not st.restored then
+        LL:Print("  >>> le client n'a RIEN rendu : soit 1re utilisation, soit SavedVariables non restaurees")
+    end
 end
 
 function Probe:DumpPosition()

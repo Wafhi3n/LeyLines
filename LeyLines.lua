@@ -288,6 +288,20 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_LOGOUT")
 f:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" and arg1 == ADDON then
+        -- INSTRUMENT : on note ce que le CLIENT vient de nous rendre, AVANT d'y toucher. C'est la
+        -- seule facon de distinguer deux pannes qui se ressemblent a l'ecran -- « la base a ete
+        -- videe pendant la session » et « le client n'a jamais restaure les SavedVariables ».
+        -- Lu par `/ley probe`. Une base neuve donne les memes zeros : c'est le RETOUR du zero
+        -- alors qu'on a deja joue qui accuse le client.
+        local given = LeyLinesDB
+        local state = { restored = (given ~= nil), nodes = 0,
+                        dataVersion = given and given.dataVersion or nil,
+                        backup = given and given.backup and given.backup.n or nil }
+        if given and type(given.nodes) == "table" then
+            for _, list in pairs(given.nodes) do state.nodes = state.nodes + #list end
+        end
+        LL.loadState = state
+
         LeyLinesDB = LeyLinesDB or {}
         CopyDefaults(LeyLinesDB, LL.DEFAULTS)
         Migrate(LeyLinesDB)
