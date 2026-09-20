@@ -20,6 +20,8 @@ les SavedVariables.
 | `/ley del` | efface la ligne la plus proche (≤ 60 yd) |
 | `/ley list` | liste les lignes de la zone avec leurs coordonnées |
 | `/ley clean` | efface tous les relevés faits **par infobulle** (les approximatifs) |
+| `/ley export` | ouvre une fenêtre avec un code à copier et partager |
+| `/ley import` | colle un code reçu et fusionne les positions |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
 | `/ley track` | pose un point de route natif sur la plus proche |
@@ -30,6 +32,21 @@ les SavedVariables.
 
 Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Lines* (enregistrer ici,
 suivre la plus proche).
+
+## Partager ses positions
+
+`/ley export` ouvre une fenêtre avec un code du genre `LL1;2521=3537,3370,3881,4759` : un texte,
+à coller où tu veux (ticket GitHub, Discord, message). `/ley import` fait le chemin inverse.
+
+Le format tient en entiers (dix-millièmes de carte, ~0,5 yd) parce qu'un code voyage à la main :
+il traverse des copier-coller, des clients qui écrivent « 0,35 » et des retours à la ligne. Un
+point aberrant est jeté sans faire échouer le reste du lot.
+
+Une position **reçue** ne déplace jamais un relevé que tu as fait toi-même sur place : elle
+comble un trou, elle ne corrige pas ta vérité locale.
+
+`LeyLines_Data.lua` porte les positions **livrées avec l'addon**, fusionnées une seule fois par
+palier de `DATA_VERSION`. Si tu en effaces une, elle reste effacée.
 
 ## Le rappel de buff
 
