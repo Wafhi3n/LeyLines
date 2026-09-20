@@ -1,0 +1,36 @@
+## Interface: 16001
+## Title: Ley Lines
+## Title-frFR: Lignes telluriques
+## Notes: Remembers the ley lines you walk over and pins them on the minimap and the world map. /ley
+## Notes-frFR: Retient les lignes telluriques que tu croises et les pose sur la minicarte et la carte du monde. /ley
+## Author: Wafhien
+## Version: 1.0.0
+## SavedVariables: LeyLinesDB
+## X-Category: Map & Minimap
+
+# WoW: FOREVER (nom de code CAMELOT, client _classic_beta_, interface 16001) UNIQUEMENT.
+# Ce client est MAINLINE/Retail (WOW_PROJECT_ID == 1) : C_Map, C_Minimap.GetViewRadius,
+# C_VignetteInfo et C_SuperTrack y existent — rien de tout ca n'existe sur Classic Era.
+# Un seul .toc = aucune parite multi-saveur a tenir (cf. check_lua.ps1).
+
+# Localisation : la CLE est le texte FRANCAIS, chaque autre langue est un overlay charge APRES.
+LeyLines_Locale.lua
+LeyLines_Locale_enUS.lua
+LeyLines_Locale_deDE.lua
+LeyLines_Locale_esES.lua
+
+# Socle + geometrie + base de positions.
+LeyLines.lua
+LeyLines_Geo.lua
+LeyLines_Nodes.lua
+
+# Acquisition des positions (vignette / infobulle / sort / manuel).
+LeyLines_Capture.lua
+
+# Affichage.
+LeyLines_Minimap.lua
+LeyLines_WorldMap.lua
+LeyLines_HUD.lua
+
+# Diagnostic (/ley probe) : ce que le client expose reellement autour d'une ligne tellurique.
+LeyLines_Probe.lua

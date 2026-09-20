@@ -1,0 +1,10 @@
+<Bindings>
+    <!-- Les libellés viennent des globales BINDING_* posées (localisées) dans LeyLines.lua.
+         Ce fichier n'est PAS listé dans le .toc : le client le charge tout seul s'il existe. -->
+    <Binding name="LEYLINES_RECORD" header="LEYLINES" category="BINDING_HEADER_LEYLINES">
+        LeyLines:Record()
+    </Binding>
+    <Binding name="LEYLINES_TRACK" category="BINDING_HEADER_LEYLINES">
+        LeyLines:TrackNearest()
+    </Binding>
+</Bindings>
