@@ -1,47 +1,28 @@
 # Ley Lines
 
+<!-- Texte EXACT publie sur la page CurseForge (resume + description), garde ici pour que la page
+     et le depot ne divergent pas. Toute retouche de la page se recopie dans ce fichier. -->
+
+## Summary
+
+Remembers every ley line you find and pins it on your minimap and world map, with a warning before
+your buff runs out.
+
+## Description
+
 Skyborn soak a ley line for a fifteen minute buff. Stand beside one instead of on it and you get
-fifteen seconds. The rifts don't show up on your map, so the second time you want one you end up
-riding around the zone trying to remember where it was.
+fifteen seconds. The rifts don't show on your map, so the second time you want one you end up
+riding around trying to remember where it was.
 
-This addon remembers them for you, on the minimap and on the world map.
+Just cast your absorb spell. The addon reads the buff you get back: fifteen minutes means you were
+on a rift and the spot is saved, fifteen seconds means you missed and nothing is written down.
+Nothing to set up. You can also stand on one and type /ley add, or bind a key to it.
 
-## It reads the buff, so it can't be wrong
+Rifts then show up on your minimap and on the world map. A pin slides to the minimap edge and dims
+when one is out of range, so you still know which way to ride, and the continent view shows every
+rift you've found. Five minutes before your buff ends, the addon tells you how far the nearest one
+is and drops the game's own map pin on it, so you don't need TomTom.
 
-Cast your absorb spell and the addon reads what comes back. Fifteen minutes of buff means you were
-standing on a rift, so the spot gets saved. Fifteen seconds means you missed, and nothing is written
-down. The game already knows whether you hit, so the addon reads its answer instead of guessing at
-ranges and at where the object really sits. There's nothing to set up first.
+Local only, nothing is sent anywhere, and all your characters share one list.
 
-You can record one by hand too. Stand on a rift, type `/ley add`, or bind a key to it.
-
-## Five minutes before the buff drops
-
-You get one line telling you how much time is left and how far the nearest known rift is, and a map
-pin lands on it. It's the game's own pin, so there's nothing else to install. `/ley warn 3` moves
-the warning, `/ley warn 0` turns it off.
-
-## On the map
-
-Minimap pins sit where the rift is. When one is further away than the minimap reaches, its pin
-slides to the edge and dims, so you still know which way to ride.
-
-World map pins carry across maps. Open the continent and you see every rift you've found, not only
-the ones in the zone you're standing in. Click a pin to drop a waypoint on it.
-
-There's also a small bar with the nearest rift, its distance, and an arrow that points where to
-turn. Drag it wherever you want, right-click to hide it.
-
-## Commands
-
-`/ley` on its own says what it knows. After that: `add`, `del`, `list`, `clean`, `clear`, `hud`,
-`pins`, `map`, `track`, `learn`, `auto`, `tooltip`, `warn <min>`, `name <text>`, `scale <n>` and
-`probe`. `/ley help` prints the list in game.
-
-## Notes
-
-Everything stays on your machine. Nothing is sent anywhere, and all your characters share one list.
-
-Built for WoW: Forever (Camelot). It leans on the mainline map APIs, which Classic Era doesn't have.
-
-English, French, German and Spanish.
+Built for WoW: Forever (Camelot). English, French, German and Spanish.
