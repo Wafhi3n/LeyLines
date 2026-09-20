@@ -25,6 +25,7 @@ local LONG_BUFF_MIN = 60    -- s : au-dessus = faille confirmée
 local AURA_DELAY    = 0.8   -- s : laisser le buff s'appliquer avant de le lire
 local FRESH_MARGIN  = 2     -- s : un buff POSÉ À L'INSTANT a expirationTime ≈ maintenant + durée
 local MAX_BUFFS     = 40
+local AURA_RETRY    = 5     -- s de pause après un refus de lecture d'aura (voir Capture:ReadAura)
 
 -- La souris est-elle sur le MONDE 3D, et pas sur un cadre d'interface ? C'est LA question qui
 -- sépare « je survole l'objet » de « je survole un point de la minicarte ». GetMouseFoci rend la
@@ -200,21 +201,58 @@ local function IsFreshLong(aura, now)
     return dur >= LONG_BUFF_MIN and (exp - now) > (dur - FRESH_MARGIN)
 end
 
--- Cherche le buff long fraîchement appliqué. Une aura DÉJÀ identifiée comme celle des failles
--- l'emporte : la reconnaissance se resserre d'elle-même au fil des lancers.
+-- Piège Forever payé en jeu le 2026-09-20, EN COMBAT : lire une aura depuis du code d'addon ne
+-- rend pas nil quand elle est secrète, ça LÈVE une erreur — « Auras cannot be accessed when secret
+-- while tainted by 'LeyLines' ». Protéger la comparaison des champs ne servait à rien : c'est
+-- l'APPEL qu'il faut garder. Et comme le rappel bat une fois par seconde, un refus doit mettre la
+-- lecture en pause au lieu d'être retenté sans fin.
+function Capture:AurasBlocked()
+    return (self.auraBlockedUntil or 0) > GetTime()
+end
+
+function Capture:ReadAura(fn, ...)
+    if self:AurasBlocked() then return nil, true end
+    local ok, aura = pcall(fn, ...)
+    if not ok then
+        self.auraBlockedUntil = GetTime() + AURA_RETRY
+        return nil, true
+    end
+    return aura, false
+end
+
+function Capture:AuraBySpellID(id)
+    local get = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
+    if not get then return nil, false end
+    return self:ReadAura(get, id)
+end
+
+function Capture:AuraByIndex(i)
+    local get = C_UnitAuras and C_UnitAuras.GetAuraDataByIndex
+    if not get then return nil, false end
+    return self:ReadAura(get, "player", i, "HELPFUL")
+end
+
+-- Cherche le buff long fraîchement appliqué. Les buffs DÉJÀ identifiés passent en premier : une
+-- lecture ciblée au lieu de balayer 40 emplacements, donc moins d'occasions de heurter le mur.
 function Capture:FreshLongBuff()
-    if not C_UnitAuras or not C_UnitAuras.GetAuraDataByIndex then return nil end
-    local now, best = GetTime(), nil
-    for i = 1, MAX_BUFFS do
-        local aura = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
-        if not aura then break end
-        -- Piège Forever : une donnée d'aura peut être SECRÈTE et exploser à la comparaison.
-        local ok, fresh = pcall(IsFreshLong, aura, now)
-        if ok and fresh and (not best or (aura.spellId and LL.db.auras[aura.spellId])) then
-            best = aura
+    local now = GetTime()
+    for id in pairs(LL.db.auras) do
+        local aura, blocked = self:AuraBySpellID(id)
+        if blocked then return nil end
+        if aura then
+            local ok, fresh = pcall(IsFreshLong, aura, now)
+            if ok and fresh then return aura end
         end
     end
-    return best
+
+    -- Aucun buff connu : on cherche un buff long inconnu, au cas où la bêta changerait l'id.
+    for i = 1, MAX_BUFFS do
+        local aura, blocked = self:AuraByIndex(i)
+        if blocked or not aura then break end
+        local ok, fresh = pcall(IsFreshLong, aura, now)
+        if ok and fresh then return aura end
+    end
+    return nil
 end
 
 -- Temps restant du buff de faille, ou nil si cette aura n'est pas la nôtre. Isolée dans sa propre
@@ -230,12 +268,14 @@ end
 -- Le buff de faille actuellement actif sur le joueur : rend l'aura ET son temps restant, pour que
 -- l'appelant n'ait jamais à toucher aux champs bruts. Sert au rappel d'expiration (LeyLines_HUD).
 function Capture:LeyAura()
-    if not C_UnitAuras or not C_UnitAuras.GetAuraDataByIndex then return nil end
-    for i = 1, MAX_BUFFS do
-        local aura = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
-        if not aura then break end
-        local ok, left = pcall(LeyRemaining, aura)
-        if ok and left then return aura, left end
+    -- Une seule lecture, ciblée sur l'id connu : c'est le chemin qui bat chaque seconde.
+    for id in pairs(LL.db.auras) do
+        local aura, blocked = self:AuraBySpellID(id)
+        if blocked then return nil end
+        if aura then
+            local ok, left = pcall(LeyRemaining, aura)
+            if ok and left then return aura, left end
+        end
     end
     return nil
 end

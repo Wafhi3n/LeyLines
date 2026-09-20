@@ -144,6 +144,9 @@ function Probe:DumpCapture()
     LL:Printf("buffs de faille reconnus : %s", #auras > 0 and table.concat(auras, ", ") or "aucun")
     local fresh = LL.Capture:FreshLongBuff()
     LL:Printf("buff long pose a l'instant : %s", fresh and tostring(fresh.name) or "aucun")
+    -- Une lecture d'aura REFUSEE (auras secretes + execution teintee) met la surveillance en pause :
+    -- sans cette ligne, un rappel muet ressemblerait a un bug plutot qu'a une attente.
+    LL:Printf("lecture des auras : %s", LL.Capture:AurasBlocked() and "EN PAUSE (refus du client)" or "ouverte")
 
     local missing = LL.Capture.unavailable
     if missing and #missing > 0 then
