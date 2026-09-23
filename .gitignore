@@ -1,4 +1,11 @@
 # Doc de code REGENEREE a chaque deploiement (scripts\gen_docs.ps1) : elle vient du .toc et des
 # en-tetes de fichiers, donc elle n'a rien a faire dans l'historique — elle ne ferait que du bruit
 # de diff a chaque build. Pour l'ameliorer, on ameliore les commentaires d'en-tete.
-/docs/
+# On vise le FICHIER genere, pas le dossier : git ne sait pas re-inclure un fichier situe sous un
+# dossier exclu (il n'y descend meme pas), donc un simple `/docs/` aurait aussi avale le registre
+# de verification ci-dessous.
+/docs/CODEBASE.md
+
+# Le registre de verification en jeu, LUI, se versionne : ce n'est pas un fichier genere mais un
+# releve ecrit a la main apres une seance au banc, et c'est la seule trace de ce qui a ete vu
+# fonctionner. Lu par scripts/untested.ps1 de l'outillage.
