@@ -26,3 +26,19 @@ is and drops the game's own map pin on it, so you don't need TomTom.
 Local only, nothing is sent anywhere, and all your characters share one list.
 
 Built for WoW: Forever (Camelot). English, French, German and Spanish.
+
+## Beta note: Forever forgets what addons remember
+
+The beta writes addon data to disk but doesn't read it back when you log in, so anything an addon
+remembers is gone the next session — this one included. It's a client bug and an addon can't work
+around it: there's nowhere left to put anything, I checked.
+
+The ley lines that ship with the addon aren't affected. They live in the addon's own files, so you
+always get those, every session.
+
+Your own finds are what you lose. Export them before you reload: `/ley export` gives you a block of
+text to paste anywhere outside the game, and `/ley import` puts it back. The addon reminds you once
+per session, the first time you find a rift.
+
+If you'd rather have it all just work, ForeverSVFix (github.com/nobewayo/ForeverSVFix) restores
+saved variables until Blizzard fixes the client.

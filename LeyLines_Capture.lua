@@ -318,6 +318,16 @@ end
 -- ---------------------------------------------------------------------------
 -- Entrée unique dans la base
 -- ---------------------------------------------------------------------------
+-- Bug de persistance de WoW: Forever, mesure le 2026-09-23 : le client ECRIT les SavedVariables
+-- mais ne les RESTAURE pas au chargement. Ce que le joueur releve ne survit donc pas a un
+-- /reload, et il n'existe AUCUN canal de secours en jeu -- les CVars d'addon ont ete mesures
+-- morts eux aussi. On ne peut pas reparer ; on peut le DIRE.
+--
+-- UNE SEULE FOIS PAR SESSION, et APRES son premier releve : avant, il n'a rien a perdre et
+-- l'avertissement n'est qu'un bruit de demarrage de plus. Juste apres, il a quelque chose a
+-- mettre a l'abri et `/ley export` prend un sens. Le dire a chaque point serait du harcelement.
+local warnedNoSave = false
+
 function Capture:Store(map, x, y, info)
     local before = LL.Nodes:CountMap(map)
     local node, isNew = LL.Nodes:Add(map, x, y, info)
@@ -327,6 +337,10 @@ function Capture:Store(map, x, y, info)
         LL:Printf(L["Nouvelle ligne tellurique enregistrée dans %s (%s ici)."],
             LL.Geo:MapName(map), before + 1)
         LL:Refresh()
+        if not warnedNoSave then
+            warnedNoSave = true
+            LL:Print(L["Bug connu de WoW: Forever : tes relevés ne survivront pas à un /reload. Fais |cFFFFD100/ley export|r pour les mettre à l'abri."])
+        end
     elseif info.src == "manual" or info.src == "spell" then
         LL:Printf(L["Ligne tellurique déjà connue — position confirmée (%s relevés)."], node.hits)
         LL:Refresh()

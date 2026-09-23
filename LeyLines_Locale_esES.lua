@@ -107,6 +107,7 @@ local es = {
     -- Atajos de teclado
     ["Enregistrer une ligne tellurique ici"]      = "Registrar una línea telúrica aquí",
     ["Suivre la ligne tellurique la plus proche"] = "Seguir la línea telúrica más cercana",
+    ["Bug connu de WoW: Forever : tes relevés ne survivront pas à un /reload. Fais |cFFFFD100/ley export|r pour les mettre à l'abri."] = "Fallo conocido de WoW: Forever: tus hallazgos no sobreviven a un /reload. Usa |cFFFFD100/ley export|r para conservarlos.",
 }
 
 for k, v in pairs(es) do LL.L[k] = v end
