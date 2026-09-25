@@ -185,12 +185,27 @@ end
 function Capture:OnSpellCast(spellID)
     if self.learning then return self:Learn(spellID) end
     if not LL.db.capture.spell or not spellID then return end
-    if not LL.db.spells[spellID] then return end
+    if not LL.db.spells[spellID] and not self:LearnByName(spellID) then return end
 
     -- La position est prise À L'INSTANT DU LANCER, pas après le délai : le joueur bouge.
     local map, x, y = LL.Geo:PlayerPos()
     if not map then return end
     C_Timer.After(AURA_DELAY, function() Capture:ResolveCast(map, x, y) end)
+end
+
+-- Un sort dont l'id n'est pas connu mais dont le NOM figure dans `spellNames` (Skysight, côté
+-- Horde) : on inscrit son id, et les lancers suivants passent par la voie rapide. Le nom sert de
+-- clé d'entrée, jamais de verdict — c'est toujours la durée du buff qui tranche.
+function Capture:LearnByName(spellID)
+    local lowered = SafeLower(SpellName(spellID))
+    if not lowered then return false end
+    for _, wanted in ipairs(LL.db.spellNames or {}) do
+        if lowered == wanted then
+            LL.db.spells[spellID] = SpellName(spellID)
+            return true
+        end
+    end
+    return false
 end
 
 -- Un buff est « posé à l'instant » quand son temps restant est encore (presque) sa durée totale.

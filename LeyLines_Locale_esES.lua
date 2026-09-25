@@ -11,6 +11,7 @@ if locale ~= "esES" and locale ~= "esMX" then return end
 local es = {
     -- Nombres
     ["Ligne tellurique"]   = "Línea telúrica",
+    ["Vergence élémentaire"] = "Elemental Vergence",   -- nom client ES non relevé
     ["Lignes telluriques"] = "Líneas telúricas",
 
     -- Fuentes

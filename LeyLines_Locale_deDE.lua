@@ -11,6 +11,7 @@ if locale ~= "deDE" then return end
 local de = {
     -- Namen
     ["Ligne tellurique"]   = "Ley-Linie",
+    ["Vergence élémentaire"] = "Elemental Vergence",   -- nom client DE non relevé
     ["Lignes telluriques"] = "Ley-Linien",
 
     -- Quellen

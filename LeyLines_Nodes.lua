@@ -228,8 +228,13 @@ function Nodes:DistanceToPlayer(node)
     return LL.Geo:Distance(map, x, y, node.x, node.y)
 end
 
+-- Libellé par défaut selon la faction du joueur : la Horde absorbe une vergence élémentaire,
+-- l'Alliance une ligne tellurique. Un nom lu sur le client (node.name) passe toujours devant.
 function Nodes:Label(node)
-    return (node and node.name) or L["Ligne tellurique"]
+    if node and node.name then return node.name end
+    local faction = UnitFactionGroup and UnitFactionGroup("player")
+    if faction == "Horde" then return L["Vergence élémentaire"] end
+    return L["Ligne tellurique"]
 end
 
 function Nodes:SourceLabel(node)

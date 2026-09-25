@@ -11,6 +11,7 @@ if locale ~= "enUS" and locale ~= "enGB" then return end
 local en = {
     -- Noms
     ["Ligne tellurique"]  = "Ley Line",
+    ["Vergence élémentaire"] = "Elemental Vergence",
     ["Lignes telluriques"] = "Ley Lines",
 
     -- Sources

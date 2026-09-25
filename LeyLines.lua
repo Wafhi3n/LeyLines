@@ -18,9 +18,15 @@ _G.LeyLines = LL
 --             en ajoute un avec `/ley name <texte>` si son client nomme l'objet autrement.
 --   spells  : [spellID] = nom — appris par `/ley learn`. Le sort d'absorption part de PARTOUT ;
 --             c'est la DURÉE du buff obtenu qui dit s'il a touché une faille (voir _Capture).
+--   spellNames : noms de sort reconnus quand l'id n'est pas encore connu (minuscules, textes
+--             CLIENT). Le premier lancer reconnu par son nom inscrit son id dans `spells`.
 --   mergeRange : deux relevés à moins de N yards sont la MÊME ligne (anti-doublon).
+--
+-- DEUX FACTIONS, DEUX OBJETS (dit par le joueur le 2026-09-25) : l'Alliance absorbe une « Ley
+-- Line » avec Skyborn, la Horde une « Elemental Vergence » avec « Skysight ». Même geste, même
+-- verdict attendu (la durée du buff) — d'où une seule base et une seule capture pour les deux.
 LL.DEFAULTS = {
-    schemaVer  = 2,
+    schemaVer  = 3,
     -- capture.tooltip est à FAUX depuis le 2026-09-20 : le simple survol relève la position du
     -- JOUEUR, pas celle de l'objet — mesuré à 40 yd d'écart en jeu — et notre propre infobulle de
     -- point se faisait relire. Source utile mais approximative, donc sur demande (`/ley tooltip`).
@@ -32,13 +38,22 @@ LL.DEFAULTS = {
     -- Minutes restantes du buff de faille à partir desquelles on prévient et on pose le point de
     -- route sur la plus proche. 0 = jamais. Le buff dure 15 min, d'où 5 par défaut.
     warnMinutes = 5,
-    names      = { "ley line", "ligne tellurique" },
+    -- « vergence » attrape « Elemental Vergence » et, sans le connaître, un nom français du même
+    -- tronc. Si le client nomme l'objet autrement : `/ley name <texte>`.
+    names      = { "ley line", "ligne tellurique", "vergence" },
     -- Le sort d'absorption Skyborn et le buff qu'il pose portent le MÊME id, relevé en jeu le
     -- 2026-09-20 (`/ley probe` après un lancer réussi). Livrés en dur : la capture marche dès le
     -- premier lancer, sans rien apprendre. `/ley learn` reste la porte de sortie si la bêta change
     -- l'id ou si un autre sort se met à faire la même chose.
-    spells     = { [1259691] = "Energized" },   -- [spellID] = nom du sort d'absorption
-    auras      = { [1259691] = "Energized" },   -- [spellID] = nom du buff long obtenu sur une faille
+    --
+    -- Côté Horde (relevé en jeu le 2026-09-25) : 1270893, buff « Elemental Blessing », 15 min lui
+    -- aussi. Posé aux deux tables comme pour l'Alliance ; si l'id du SORT diffère de celui du
+    -- buff, `spellNames` rattrape le lancer par son nom et la durée du buff tranche quand même.
+    spells     = { [1259691] = "Energized", [1270893] = "Skysight" },          -- sort d'absorption
+    auras      = { [1259691] = "Energized", [1270893] = "Elemental Blessing" }, -- buff long obtenu
+    -- Filet si l'id du sort n'est pas le bon : reconnaissance par NOM (anglais). Client dans une
+    -- autre langue : `/ley learn` fait le même travail.
+    spellNames = { "skysight" },
     nodes      = {},
 }
 
@@ -72,6 +87,14 @@ local function Migrate(db)
     if (db.schemaVer or 1) < 2 then
         db.capture.tooltip = false   -- v2 : capture par infobulle devenue opt-in
         db.schemaVer = 2
+    end
+    if db.schemaVer < 3 then
+        -- v3 : vergences élémentaires (Horde). `names` est une LISTE : CopyDefaults ne comble que
+        -- les index absents, donc un nom ajouté par le joueur en position 3 masquerait le nôtre.
+        local has = false
+        for _, n in ipairs(db.names) do if n == "vergence" then has = true end end
+        if not has then table.insert(db.names, "vergence") end
+        db.schemaVer = 3
     end
 end
 
