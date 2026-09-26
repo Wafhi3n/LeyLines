@@ -15,6 +15,19 @@ un releve qu'APRES avoir observe, et on dit ce qui n'a PAS ete observe.
 
 ## Releves
 
+- 2026-09-26 - jusqu'a 93693eb - Forever, un client - **GO cote HORDE** - rapporte par le user :
+  « ley line fonctionne cote horde ». Les vergences elementaires sont donc reconnues et capturees
+  sur un personnage Horde, ce qui ne marchait pas du tout avant ce commit.
+  PERIMETRE, ce qui n'a PAS ete departage par cette observation : on ne sait pas si le sort a ete
+  reconnu par son **id** (1270893, pose en dur) ou rattrape par le **repli sur le nom**
+  (`spellNames` / `Capture:LearnByName`) - les deux chemins finissent par une capture, et rien a
+  l'ecran ne les distingue. Le libelle « Vergence elementaire » et la migration de schema v2 -> v3
+  n'ont pas ete rapportes non plus. Pour departager le repli : `/ley` apres capture, ou relire
+  `db.spells` dans la SavedVariable.
+  ⚠️ L'avertissement « tes releves ne survivront pas » est encore INCONDITIONNEL dans ce build
+  (`warnedNoSave`, LeyLines_Capture.lua) alors que les SavedVariables de Forever refonctionnent
+  depuis le 2026-09-25 : s'il s'est affiche pendant la seance, c'est ce defaut, pas un symptome.
+
 - 2026-09-20 - jusqu'a 8bc7a36 - Forever, un client - **GO sur le cycle de capture** - la capture
   par duree du buff `Energized` a ete vue fonctionner en jeu ce jour-la (v1.0.0).
   ATTENTION : **releve conservateur, reconstitue**. Sept commits ont suivi le meme jour (sort
