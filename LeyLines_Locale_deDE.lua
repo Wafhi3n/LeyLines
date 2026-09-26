@@ -107,7 +107,6 @@ local de = {
     -- Tastenbelegung
     ["Enregistrer une ligne tellurique ici"]      = "Hier eine Ley-Linie aufzeichnen",
     ["Suivre la ligne tellurique la plus proche"] = "Der nächsten Ley-Linie folgen",
-    ["Bug connu de WoW: Forever : tes relevés ne survivront pas à un /reload. Fais |cFFFFD100/ley export|r pour les mettre à l'abri."] = "Bekannter WoW:-Forever-Fehler: Deine Funde überleben kein /reload. Nutze |cFFFFD100/ley export|r, um sie zu sichern.",
 }
 
 for k, v in pairs(de) do LL.L[k] = v end

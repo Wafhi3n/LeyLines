@@ -105,7 +105,6 @@ local en = {
     -- Raccourcis clavier
     ["Enregistrer une ligne tellurique ici"]     = "Record a ley line here",
     ["Suivre la ligne tellurique la plus proche"] = "Track the nearest ley line",
-    ["Bug connu de WoW: Forever : tes relevés ne survivront pas à un /reload. Fais |cFFFFD100/ley export|r pour les mettre à l'abri."] = "Known WoW: Forever bug: your finds will not survive a /reload. Use |cFFFFD100/ley export|r to keep them safe.",
 }
 
 for k, v in pairs(en) do LL.L[k] = v end
