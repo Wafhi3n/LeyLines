@@ -1,7 +1,7 @@
 # Contribution des positions (crowdsourcing)
 
-> État : **brouillon** · Rédigée le 2026-09-27 · Décisions D1-D4 prises par le user le 2026-09-27 ·
-> Arbitrages A1-A4 **à valider** · Pas encore implémentée
+> État : **validée** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4 tranchés par le
+> user le 2026-09-27 · Pas encore implémentée
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Lines
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -21,7 +21,7 @@ Trois défauts de l'existant empêchent de brancher un recueil tel quel :
    « confirme » sans être allé nulle part. C'est le même piège que l'infobulle qui relisait notre
    propre texte (v1.0.0) : un canal partagé finit par relire ce que l'addon y a lui-même écrit.
 2. **Un point ne sait pas quel objet il est.** L'Alliance absorbe une **fissure au sol** (Ley Line,
-   sort Skyborn), la Horde une **tornade** (Elemental Vergence, sort Skysight) : même mécanisme,
+   sort Skyborn), la Horde une **tornade** (Elemental Convergence, sort Skysight) : même mécanisme,
    objets différents, à des endroits différents. Or `Nodes:Label` tire le nom de la faction de CELUI
    QUI REGARDE, l'anti-doublon fusionne deux points à moins de 20 yd quelle que soit leur nature, et
    `LL.DATA` part chez les deux factions. La base est au niveau du compte : un joueur qui a des
@@ -66,6 +66,13 @@ désormais l'espèce de chaque point.
 
 ## Cas particuliers
 
+- **Relevé manuel à plus de 20 yd de la vraie faille** (au-delà de l'anti-doublon) → le lancer
+  réussi ABSORBE le point « à confirmer » de même espèce le plus proche dans un rayon de 60 yd (le
+  rayon de `/ley del`) : le point se déplace sur la position du lancer et passe en `spell`. Sans
+  ça, le point gris resterait à côté, et `/ley del`, qui prend le plus proche, risquerait d'effacer
+  le bon.
+- **`/ley del` sur un point `manual` ou `tooltip`** → pas de retrait à contribuer : ce point
+  n'était jamais parti vers la liste.
 - **Rien de neuf depuis la dernière contribution** → message « rien de neuf à partager », pas de
   lien. `/ley contribute all` renvoie tout ce que le joueur a observé lui-même.
 - **Lien trop long** (au-delà d'environ 6000 caractères, GitHub refuse l'adresse) → la fenêtre montre
@@ -97,11 +104,11 @@ désormais l'espèce de chaque point.
   donc une erreur coûte au pire un trajet pour rien, et la PR est relue.
 - **D3 — 2026-09-27, user** : une contribution peut dire qu'un point n'existe plus.
 - **D4 — 2026-09-27, user** : Alliance = fissures au sol (Ley Line), Horde = tornades (Elemental
-  Vergence). Même mécanisme, objets différents → **l'espèce est une propriété du point**, jamais
-  déduite de celui qui regarde.
+  Convergence — nom relevé par le client, compte #4). Même mécanisme, objets différents →
+  **l'espèce est une propriété du point**, jamais déduite de celui qui regarde.
 - **D5 — 2026-09-27, contrainte technique** : l'addon fabrique un lien, il ne poste pas.
 
-## Arbitrages proposés — à valider par le user
+## Arbitrages — proposés par l'agent, validés par le user le 2026-09-27
 
 - **A1 — Affichage filtré par faction.** Un personnage Alliance ne voit que les fissures, un
   personnage Horde que les tornades. Les deux restent dans la base du compte. Raison : l'objet de
@@ -110,6 +117,11 @@ désormais l'espèce de chaque point.
   par vignette. Les relevés manuels (`/ley add`) restent dans la base du joueur mais ne partent pas
   vers la liste commune. Raison : D2 n'est tenable que si chaque point entrant a été tranché par le
   jeu.
+  **Complément du user** : un point à confirmer doit se VOIR. Un relevé `manual` ou `tooltip`
+  s'affiche dans une couleur distincte « à confirmer » (minicarte, carte du monde, bandeau), et son
+  infobulle dit quoi faire : y revenir et lancer le sort. Un lancer réussi dessus le fait passer en
+  `spell` : couleur normale, et il devient contribuable. Les points `import` et `shipped` ne sont pas
+  colorés : ils viennent d'autres joueurs, et la liste livrée n'est faite que de captures confirmées.
 - **A3 — Un retrait livré n'efface jamais un relevé du joueur.** Il n'efface que les points
   `shipped` et `import`. Même logique que `PRECISION` : une donnée reçue comble un trou, elle ne
   corrige pas une vérité locale.
@@ -122,8 +134,11 @@ désormais l'espèce de chaque point.
 1. [test] Un code `LL2` encodé puis décodé rend les mêmes points, espèces et retraits compris ; un
    code `LL1` se décode encore. → `tests/test_leylines.lua`
 2. [test] Un point `L` et un point `V` à 5 yd l'un de l'autre restent DEUX points.
-3. [test] La contribution exclut les sources `shipped`, `import`, `restored`, `tooltip` (et `manual`
-   si A2 est validé). Elle n'inclut que les observations et les retraits postérieurs à la précédente.
+3. [test] La contribution exclut les sources `shipped`, `import`, `restored`, `tooltip` et `manual`
+   (A2). Elle n'inclut que les observations et les retraits postérieurs à la précédente.
+3b. [test] Un lancer réussi à 40 yd d'un point `manual` de même espèce le déplace et le fait passer
+   en `spell`, sans créer de second point ; à 40 yd d'un point `manual` de l'AUTRE espèce, il crée
+   un point à part.
 4. [test] Un point confirmé par une fusion de données livrées n'est PAS considéré comme revu : il ne
    repart pas dans la contribution suivante.
 5. [test] Un retrait livré efface un point `shipped` ou `import` voisin, et laisse un point `spell`
@@ -140,8 +155,11 @@ désormais l'espèce de chaque point.
    « code » rempli. Témoin connu-bon : `/ley export` de la même version, qui montre un code dans la
    même fenêtre. Observateur : le user.
 10. [humain] Sur un compte avec un personnage de chaque faction, le personnage Alliance ne voit sur sa
-    minicarte aucune tornade capturée par le personnage Horde (si A1 est validé). Témoin connu-bon :
-    la v1.1.0, qui les montre. Observateur : le user, à 2 personnages.
+    minicarte aucune tornade capturée par le personnage Horde (A1). Témoin connu-bon : la v1.1.0,
+    qui les montre. Observateur : le user, à 2 personnages.
+10b. [humain] Un `/ley add` pose un point dans la couleur « à confirmer », distincte d'un point
+    capturé par sort sur la même minicarte ; après un lancer réussi dessus, il reprend la couleur
+    normale. Témoin connu-bon : un point `spell` voisin. Observateur : le user, en jeu.
 11. [humain] Le ticket de test reçoit un commentaire de l'Action avec le décompte, puis une PR
     modifiant `LeyLines_Data.lua` apparaît. Observateur : le user, sur GitHub.
 
@@ -153,7 +171,7 @@ désormais l'espèce de chaque point.
 LL2;<segment>[;<segment>...]
 segment := [-]<espèce><uiMapID>=<x>,<y>[,<x>,<y>...]
 espèce  := L   fissure / Ley Line (Alliance)
-         | V   tornade / Elemental Vergence (Horde)
+         | V   tornade / Elemental Convergence (Horde)
 -       := retrait : « ces points n'existent plus »
 x, y    := dix-millièmes de la carte, entiers 0..10000 (inchangé depuis LL1)
 ```
@@ -181,7 +199,7 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 |---|---|
 | `node.kind` | `"L"` ou `"V"`. Fixé à la capture d'après le buff obtenu (1259691 → L, 1270893 → V) ou le nom lu sur le client ; à défaut, la faction du personnage. |
 | `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
-| `db.gone[map]` | Retraits faits sur place par `/ley del` : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
+| `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
 | `db.contrib.at` | Date de la dernière contribution générée. |
 
 ### Données livrées — `LeyLines_Data.lua`, **généré**
@@ -211,8 +229,13 @@ vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pk
   peuvent rien capturer avec la v1.0.0. Avant le tag : un aller-retour `/ley export` → `/ley import`
   à 2 comptes (jamais relevé en jeu), `CHANGELOG.md` et `CURSEFORGE.md` à jour (ni la Horde ni le
   partage n'y figurent), `.toc` à la main (`bump_version.ps1` ne connaît que COC).
+  Deux correctifs relevés le 2026-09-27 dans la base du compte #4, à faire AVANT ce tag :
+  le sort Horde lancé est **1259686** « Skysight » (inscrit par `LearnByName`), pas 1270893 qui est
+  l'id du BUFF — sans lui en dur, un client Horde non anglais ne capture rien tant qu'il n'a pas fait
+  `/ley learn` ; et le libellé enUS « Elemental Vergence » est faux, le client dit **Elemental
+  Convergence**.
 - **T1** — Schéma v4 : `kind`, `seen`, `gone`, migration (A4) ; anti-doublon et affichage par espèce
-  (A1). Critères 2, 10.
+  (A1) ; couleur « à confirmer » et absorption par le lancer (A2). Critères 2, 3b, 10, 10b.
 - **T2** — Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`. Critère 1.
 - **T3** — `/ley contribute` : filtre (A2), lien, cas « trop long ». Critères 3, 4, 9.
 - **T4** — `LL.DATA` / `LL.GONE` par espèce, retraits dans `ApplyShipped` (A3). Critère 5.
