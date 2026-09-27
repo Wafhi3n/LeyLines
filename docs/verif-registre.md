@@ -23,6 +23,18 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-27 - jusqu'a cb5f83b - Forever, 2 comptes sur le meme PC (#1 Alliance, #4 Horde), un
+  client a la fois, code passe par le presse-papiers - **GO sur l'import, defaut d'espece
+  REPRODUIT** - fichiers en jeu identiques au depot (compares octet a octet, fins de ligne mises a
+  part). Import sur #4 d'un code contenant Zephras Isle (celui du gnome, selon le user) : relu sur
+  le disque, les 2 points deja connus ont ete reconnus sans doublon, leur source est passee de
+  `shipped` a `import`. Import sur #1 (gnome) du code de #4, rapporte par le user : il a cree des
+  « Ley Line » dans les Tarides -- ce sont les tornades Horde, affichees sous le nom Alliance parce
+  qu'un point ne porte pas son espece (voir `docs/specs/contribution-positions.md`). Rapporte
+  aussi : `/ley learn` cote Horde retient 1270893, deja livre en dur.
+  PAS observe : le message de decompte, la persistance cote #1 apres reconnexion (fichier de #1
+  non reecrit au moment du releve).
+
 - 2026-09-26 - jusqu'a 57d3908 - Forever, un client - **GO cote HORDE** - rapporte par le user :
   « ley line fonctionne cote horde ». Les vergences elementaires sont donc reconnues et capturees
   sur un personnage Horde, ce qui ne marchait pas du tout avant ce commit.

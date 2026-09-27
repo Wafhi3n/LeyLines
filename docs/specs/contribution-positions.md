@@ -229,11 +229,12 @@ vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pk
   peuvent rien capturer avec la v1.0.0. Avant le tag : un aller-retour `/ley export` → `/ley import`
   à 2 comptes (jamais relevé en jeu), `CHANGELOG.md` et `CURSEFORGE.md` à jour (ni la Horde ni le
   partage n'y figurent), `.toc` à la main (`bump_version.ps1` ne connaît que COC).
-  Deux correctifs relevés le 2026-09-27 dans la base du compte #4, à faire AVANT ce tag :
-  le sort Horde lancé est **1259686** « Skysight » (inscrit par `LearnByName`), pas 1270893 qui est
-  l'id du BUFF — sans lui en dur, un client Horde non anglais ne capture rien tant qu'il n'a pas fait
-  `/ley learn` ; et le libellé enUS « Elemental Vergence » est faux, le client dit **Elemental
-  Convergence**.
+  Relevé le 2026-09-27 dans la base du compte #4 : le libellé enUS « Elemental Vergence » est faux,
+  le client nomme l'objet **Elemental Convergence**. Côté sort, rien à changer : `/ley learn` sur
+  Horde retient **1270893** (vu en jeu par le user), déjà livré en dur. L'entrée `1259686 = Skysight`
+  de cette base vient du repli par NOM (`spellNames`), qui a attrapé un AUTRE sort : une première
+  lecture de la base en avait conclu le contraire, à tort. Reste à savoir ce qu'est ce sort-là, et
+  si chacun de ses lancers imprime « Buff court : pas de faille ici ».
 - **T1** — Schéma v4 : `kind`, `seen`, `gone`, migration (A4) ; anti-doublon et affichage par espèce
   (A1) ; couleur « à confirmer » et absorption par le lancer (A2). Critères 2, 3b, 10, 10b.
 - **T2** — Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`. Critère 1.
