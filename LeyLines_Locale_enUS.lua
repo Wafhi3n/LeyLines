@@ -103,6 +103,10 @@ local en = {
     ["Fermer"]   = "Close",
     ["Code invalide : ce n'est pas un export de Ley Lines."] = "That code isn't a Ley Lines export.",
     ["%s position(s) importée(s), %s déjà connue(s)."] = "%s position(s) imported, %s already known.",
+    ["Ancien code, qui ne dit pas à quelle faction appartiennent ses points : demande un nouvel export."] =
+        "Old code that doesn't say which faction its spots belong to: ask for a new export.",
+    ["%s position(s) sans faction ignorée(s) : demande un nouvel export."] =
+        "%s position(s) with no faction skipped: ask for a new export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s position(s) added from the shipped data.",
     ["restauré"] = "restored",

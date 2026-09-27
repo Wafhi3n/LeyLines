@@ -36,12 +36,14 @@ local SOURCE_LABEL = {
 }
 
 -- ---------------------------------------------------------------------------
--- Espèce : L = fissure (Alliance), V = tornade (Horde), nil = inconnue
+-- Espèce : L = fissure (Alliance), V = tornade (Horde). TOUT point en a une.
 --
--- Inconnue = un point d'avant la v1.1.0 dont le nom ne dit rien, ou reçu d'un code LL1. Il reste
--- visible des DEUX factions, comme avant, et la première capture ou donnée livrée qui tombe dessus
--- fixe son espèce. On ne devine pas : un point Horde sans nom, classé fissure d'office, disparaîtrait
--- de la carte du joueur Horde qui l'a relevé.
+-- Un point d'avant la v1.1.0 n'en a pas : il la reçoit au chargement (Init), d'après son nom s'il
+-- en dit quelque chose, sinon FISSURE — aucune version publiée avant la v1.1.0 ne capturait côté
+-- Horde (A4, validé par le joueur le 2026-09-27). Une espèce « inconnue, visible des deux » a été
+-- essayée le même jour et rejetée en jeu : c'est exactement ce qui posait des « Ley Line » Horde
+-- dans les Tarides chez un personnage Alliance. Un code d'échange sans espèce ne s'importe donc
+-- plus (Share:Import).
 -- ---------------------------------------------------------------------------
 local KINDS = { L = true, V = true }
 
@@ -78,9 +80,9 @@ function Nodes:Word(form, kind)
     return (WORDS[kind] or WORDS[self:PlayerKind()])[form]
 end
 
--- Ce point s'affiche-t-il pour l'espèce `kind` ? Un point d'espèce inconnue s'affiche partout.
+-- Ce point s'affiche-t-il pour l'espèce `kind` ?
 function Nodes:Shows(node, kind)
-    return node.kind == nil or node.kind == kind
+    return node.kind == kind
 end
 
 -- Nettoie un nom lu sur le client : le texte d'une infobulle peut porter du balisage (icône
@@ -110,7 +112,7 @@ function Nodes:Init()
             else
                 node.map  = map
                 node.name = self:CleanName(node.name)
-                node.kind = KINDS[node.kind] and node.kind or self:KindOfName(node.name)
+                node.kind = KINDS[node.kind] and node.kind or self:KindOfName(node.name) or "L"
             end
         end
     end
@@ -161,16 +163,19 @@ function Nodes:RestoreIfEmpty()
 
     local segments = LL.Share and LL.Share:Decode(backup.blob)
     if not segments then return 0 end
-    return self:AddSegments(segments, "restored")
+    -- Un instantané LL1 date d'avant l'espèce : même règle qu'au chargement (A4), fissure.
+    return self:AddSegments(segments, "restored", "L")
 end
 
--- Verse dans la base des segments décodés par Share:Decode ({ map, kind, pts }). Rend le nombre de
--- points NOUVEAUX ; les autres ont confirmé un point existant.
-function Nodes:AddSegments(segments, src)
+-- Verse dans la base des segments décodés par Share:Decode ({ map, kind, pts }). `defaultKind`
+-- sert aux segments sans espèce. Rend le nombre de points NOUVEAUX ; les autres ont confirmé un
+-- point existant.
+function Nodes:AddSegments(segments, src, defaultKind)
     local added = 0
     for _, seg in ipairs(segments) do
+        local kind = seg.kind or defaultKind
         for i = 1, #seg.pts - 1, 2 do
-            local _, isNew = self:Add(seg.map, seg.pts[i], seg.pts[i + 1], { src = src, kind = seg.kind })
+            local _, isNew = self:Add(seg.map, seg.pts[i], seg.pts[i + 1], { src = src, kind = kind })
             if isNew then added = added + 1 end
         end
     end
@@ -248,7 +253,8 @@ function Nodes:Add(map, x, y, info)
     if not list then list = {}; LL.db.nodes[map] = list end
     local node = {
         map = map, x = x, y = y,
-        kind  = KINDS[info.kind] and info.kind or nil,
+        -- Les appelants donnent toujours l'espèce ; à défaut, celle du joueur plutôt qu'aucune.
+        kind  = KINDS[info.kind] and info.kind or self:PlayerKind(),
         name  = info.name,
         src   = info.src or "manual",
         hits  = 1,

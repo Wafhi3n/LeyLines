@@ -1,7 +1,7 @@
 # Contribution des positions (crowdsourcing)
 
 > État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
-> tranchés par le user le 2026-09-27 (A4 amendé depuis, à confirmer) · Espèce des points et format
+> tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · Espèce des points et format
 > `LL2` codés pour la v1.1.0 (branche `feat/espece-des-points`) ; la contribution elle-même, non
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Lines
 >
@@ -90,8 +90,9 @@ désormais l'espèce de chaque point.
   Lua exécuté par chaque client. Le décodeur n'accepte que la grammaire du contrat (chiffres,
   `L`/`V`, séparateurs). Tout le reste est jeté, et aucun caractère du ticket n'est recopié tel quel
   dans le fichier généré.
-- **Code `LL1` reçu** (d'un build antérieur) → encore lu. Ses points sont d'espèce inconnue :
-  visibles des deux factions, jusqu'à ce qu'un relevé ou une donnée livrée la fixe (A4).
+- **Code sans espèce reçu** (`LL1` d'un build antérieur, ou segment `LL2` sans lettre) → refusé à
+  l'import, avec un message qui demande un nouvel export. Le décodeur le lit encore, pour
+  l'instantané interne d'une vieille base, restauré en fissures (A4).
 - **Client plus ancien qui reçoit un code `LL2`** → « code invalide ». Accepté : il doit mettre à
   jour.
 - **Carte dont la taille n'a jamais été transmise** → points gardés, mais le dédoublonnage en yards
@@ -130,14 +131,16 @@ désormais l'espèce de chaque point.
 - **A3 — Un retrait livré n'efface jamais un relevé du joueur.** Il n'efface que les points
   `shipped` et `import`. Même logique que `PRECISION` : une donnée reçue comble un trou, elle ne
   corrige pas une vérité locale.
-- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` s'il dit
-  « ley » ou « tellurique ».
-  **Amendé par l'agent le 2026-09-27, à confirmer par le user** : la version validée classait `L`
-  tout point sans nom parlant. Or la base du compte #4 contient des captures Horde au sort SANS nom
-  (Tarides, Serres-Rocheuses) : elles seraient devenues des fissures, donc invisibles du personnage
-  Horde qui les a relevées. Un point sans nom parlant garde donc une espèce **inconnue** : visible
-  des deux factions comme avant, et fixée par le premier relevé ou la première donnée livrée qui
-  tombe dessus. On ne devine rien.
+- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` sinon. Aucune
+  version publiée avant la v1.1.0 ne capturait côté Horde : un point sans nom parlant est une
+  fissure.
+  **Amendement essayé puis RETIRÉ le 2026-09-27.** L'agent avait remplacé « `L` sinon » par une
+  espèce « inconnue, visible des deux factions », pour épargner les deux captures Horde SANS nom de
+  la base de développement #4. Testé en jeu le jour même : ces deux points, exportés sans espèce,
+  s'affichaient en « Ley Line » dans les Tarides chez un personnage Alliance — le défaut même que
+  la fonctionnalité doit supprimer. Retour à A4 tel que validé, plus une règle : **un point sans
+  espèce ne s'importe pas** (code `LL1`, ou `LL2` exporté avant correction). Les captures Horde sans
+  nom d'une base de développement se rattachent une fois à la main.
 
 ## Critères d'acceptation
 
@@ -182,7 +185,7 @@ LL2;<segment>[;<segment>...]
 segment := [-][<espèce>]<uiMapID>=<x>,<y>[,<x>,<y>...]
 espèce  := L   fissure / Ley Line (Alliance)
          | V   tornade / Elemental Convergence (Horde)
-         | (absente) espèce inconnue
+         | (absente) pas d'espèce : lue par le décodeur, REFUSÉE à l'import
 -       := retrait : « ces points n'existent plus »
 x, y    := dix-millièmes de la carte, entiers 0..10000 (inchangé depuis LL1)
 ```
@@ -212,7 +215,7 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 
 | Champ | Sens |
 |---|---|
-| `node.kind` | **Livré en v1.1.0, sans changer `schemaVer`** (posé par `Nodes:Init` à chaque chargement). `"L"`, `"V"`, ou absent = inconnue (A4). Fixé à la capture : faction du personnage pour un sort ou un relevé manuel (D4), nom lu pour une infobulle ou une vignette. Un point inconnu prend l'espèce du premier relevé ou de la première donnée livrée qui le confirme. |
+| `node.kind` | **Livré en v1.1.0, sans changer `schemaVer`** (posé par `Nodes:Init` à chaque chargement). `"L"` ou `"V"`, **toujours présent** : un point ancien le reçoit au chargement (A4). Fixé à la capture : faction du personnage pour un sort ou un relevé manuel (D4), nom lu pour une infobulle ou une vignette. |
 | `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
 | `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
 | `db.contrib.at` | Date de la dernière contribution générée. |
@@ -250,7 +253,7 @@ vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pk
   `CHANGELOG.md` et `CURSEFORGE.md` à jour, `.toc` à la main (`bump_version.ps1` ne connaît que COC).
   Libellé « Elemental Convergence » : FAIT (nom relevé sur le client). Côté sort, rien à changer :
   `/ley learn` sur Horde retient **1270893**, déjà livré en dur.
-- **T1** — ~~espèce, anti-doublon et affichage par espèce (A1), A4 amendé~~ (v1.1.0) ; reste pour la
+- **T1** — ~~espèce, anti-doublon et affichage par espèce (A1), A4~~ (v1.1.0) ; reste pour la
   v1.2.0 : `seen`, `gone`, couleur « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.

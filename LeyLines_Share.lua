@@ -18,7 +18,8 @@
 -- « 0,35 »), pas de guillemets à échapper dans un ticket, et ça se relit à l'œil.
 --
 -- `LL1` (v1.0.x, jamais publié mais présent dans des bases de développement) est le même texte
--- sans espèce : il se lit encore, ses points sont d'espèce inconnue.
+-- sans espèce. Le décodeur le lit encore — l'instantané interne d'une vieille base en dépend —
+-- mais l'IMPORT refuse tout point sans espèce : il ne dit pas quelle faction peut l'absorber.
 local _, LL = ...
 local L = LL.L
 
@@ -91,15 +92,29 @@ end
 -- ---------------------------------------------------------------------------
 -- Import
 -- ---------------------------------------------------------------------------
+-- Un point SANS espèce n'entre pas : il ne dit pas quelle faction peut l'absorber, et le deviner
+-- a déjà raté — vu en jeu le 2026-09-27, les tornades Horde d'un vieux code devenaient des
+-- « Ley Line » dans les Tarides chez un personnage Alliance. Celui qui a donné le code réexporte.
 function Share:Import(text)
     local segments, total = self:Decode(text)
     if not segments then
         LL:Print(L["Code invalide : ce n'est pas un export de Ley Lines."])
         return
     end
-    local added = LL.Nodes:AddSegments(segments, "import")
+    local kept, skipped = {}, 0
+    for _, seg in ipairs(segments) do
+        if seg.kind then kept[#kept + 1] = seg else skipped = skipped + #seg.pts / 2 end
+    end
+    if #kept == 0 then
+        LL:Print(L["Ancien code, qui ne dit pas à quelle faction appartiennent ses points : demande un nouvel export."])
+        return
+    end
+    local added = LL.Nodes:AddSegments(kept, "import")
     LL:Refresh()
-    LL:Printf(L["%s position(s) importée(s), %s déjà connue(s)."], added, total - added)
+    LL:Printf(L["%s position(s) importée(s), %s déjà connue(s)."], added, total - skipped - added)
+    if skipped > 0 then
+        LL:Printf(L["%s position(s) sans faction ignorée(s) : demande un nouvel export."], skipped)
+    end
 end
 
 -- ---------------------------------------------------------------------------

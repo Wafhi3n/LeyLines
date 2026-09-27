@@ -14,9 +14,9 @@
 --
 -- Source des points : exports de joueurs (`/ley export`), recopiés ici tels quels.
 --
--- DATA_VERSION 2 (v1.1.0) : même contenu que la 1, rangé par espèce. Le palier est franchi exprès :
--- une base qui avait déjà fusionné ces points les avait reçus SANS espèce, et la nouvelle fusion
--- la leur donne (Nodes:Confirm fixe l'espèce d'un point qui n'en a pas).
+-- DATA_VERSION 2 (v1.1.0) : même contenu que la 1, rangé par espèce. Une base qui avait déjà
+-- fusionné ces points les a reçus sans espèce ; Nodes:Init les range en fissures au chargement,
+-- ce qui est juste pour ces deux-là.
 local _, LL = ...
 
 LL.DATA_VERSION = 2

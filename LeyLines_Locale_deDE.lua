@@ -103,6 +103,10 @@ local de = {
     ["Fermer"]   = "Schließen",
     ["Code invalide : ce n'est pas un export de Ley Lines."] = "Dieser Code ist kein Ley-Lines-Export.",
     ["%s position(s) importée(s), %s déjà connue(s)."] = "%s Position(en) importiert, %s bereits bekannt.",
+    ["Ancien code, qui ne dit pas à quelle faction appartiennent ses points : demande un nouvel export."] =
+        "Alter Code ohne Fraktionsangabe zu seinen Punkten: bitte um einen neuen Export.",
+    ["%s position(s) sans faction ignorée(s) : demande un nouvel export."] =
+        "%s Position(en) ohne Fraktion übersprungen: bitte um einen neuen Export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s Position(en) aus den mitgelieferten Daten hinzugefügt.",
     ["restauré"] = "wiederhergestellt",
