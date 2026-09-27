@@ -13,9 +13,17 @@ Format d'un releve (le plus recent EN TETE) :
 Le `<sha>` est le dernier commit reellement present dans le client pendant la seance. On n'ecrit
 un releve qu'APRES avoir observe, et on dit ce qui n'a PAS ete observe.
 
+⚠️ **UN REBASE PERIME LE SHA D'UN RELEVE.** Vecu le 2026-09-27 : le releve Horde citait `93693eb`,
+le commit d'AVANT la remise a niveau de sa branche. Apres rebase le meme travail s'appelle
+`57d3908`, et `93693eb` n'est plus un ancetre de `main` -- `untested.ps1` reannonçait donc comme
+JAMAIS EPROUVE un travail qui l'avait ete. Le script ne peut pas le voir : le vieux commit existe
+toujours comme objet, sa verification d'existence passe. **Apres tout rebase d'une branche deja
+couverte par un releve, avancer son sha** (`git log --oneline` sur la nouvelle branche donne
+l'equivalent, le message est identique).
+
 ## Releves
 
-- 2026-09-26 - jusqu'a 93693eb - Forever, un client - **GO cote HORDE** - rapporte par le user :
+- 2026-09-26 - jusqu'a 57d3908 - Forever, un client - **GO cote HORDE** - rapporte par le user :
   « ley line fonctionne cote horde ». Les vergences elementaires sont donc reconnues et capturees
   sur un personnage Horde, ce qui ne marchait pas du tout avant ce commit.
   PERIMETRE, ce qui n'a PAS ete departage par cette observation : on ne sait pas si le sort a ete
