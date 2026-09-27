@@ -3,6 +3,7 @@
 ## Title-frFR: Lignes telluriques / Convergences élémentaires
 ## Notes: Remembers the ley lines and elemental convergences you find and pins them on the minimap and the world map. /ley
 ## Notes-frFR: Retient les lignes telluriques et convergences élémentaires que tu trouves et les pose sur la minicarte et la carte du monde. /ley
+## IconTexture: Interface\AddOns\LeyLines\Textures\icon.tga
 ## Author: Wafhien
 ## Version: 1.1.1
 ## SavedVariables: LeyLinesDB

@@ -3,7 +3,8 @@
 ## v1.1.1
 
 New name, Ley Line / Elemental Convergence Tracker, since Horde players track convergences with it
-too. Nothing else changes. Your saved spots, your settings and the /ley command stay as they were.
+too, and an icon of its own in the addon list. Nothing else changes. Your saved spots, your
+settings and the /ley command stay as they were.
 
 ## v1.1.0
 
