@@ -173,11 +173,14 @@ CMD.clear = function()
 end
 CMD.vider = CMD.clear
 
-CMD.hud = function()
+-- Partagé par `/ley hud` et le clic droit du compartiment d'addons (LeyLines_Compartment.lua).
+function LL:ToggleHUD()
     LL.db.hud.show = not LL.db.hud.show
     LL.HUD:Apply()
     LL:Printf(L["Suivi à l'écran : %s."], LL:OnOff(LL.db.hud.show))
 end
+
+CMD.hud = function() LL:ToggleHUD() end
 
 CMD.pins = function()
     LL.db.minimap.show = not LL.db.minimap.show

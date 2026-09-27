@@ -42,6 +42,10 @@ les SavedVariables.
 | `/ley name <texte>` | ajoute un nom d'objet à reconnaître |
 | `/ley probe` | diagnostic : ce que le client expose vraiment autour de toi |
 
+L'addon est aussi dans le **compartiment d'addons** de la minicarte (le bouton natif qui liste les
+addons) : clic gauche = `/ley contribute`, clic droit = bandeau. Inscription par les lignes
+`## AddonCompartmentFunc*` du `.toc` ; les fonctions globales vivent dans `LeyLines_Compartment.lua`.
+
 Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Line / Elemental Convergence Tracker* (enregistrer ici,
 suivre la plus proche).
 

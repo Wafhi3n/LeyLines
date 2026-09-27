@@ -84,6 +84,10 @@ local en = {
     ["Clic : poser un point de route."]        = "Click: drop a map pin.",
     ["Clic gauche : poser un point de route."] = "Left-click: drop a map pin.",
     ["Clic droit : masquer. Glisser : déplacer."] = "Right-click: hide. Drag: move.",
+    ["%s %s connue(s) au total."] = "%s %s known in total.",
+    ["Clic gauche : partager tes captures pour la liste commune."] =
+        "Left-click: share your spots for the shared list.",
+    ["Clic droit : afficher ou masquer le suivi."] = "Right-click: show or hide the tracker.",
     ["Point de route posé sur %s."]            = "Map pin set on %s.",
     ["Cette zone n'accepte pas de point de route."] = "This zone does not accept a map pin.",
 

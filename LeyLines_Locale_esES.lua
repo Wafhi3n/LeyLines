@@ -84,6 +84,10 @@ local es = {
     ["Clic : poser un point de route."]        = "Clic: colocar un punto de ruta.",
     ["Clic gauche : poser un point de route."] = "Clic izquierdo: colocar un punto de ruta.",
     ["Clic droit : masquer. Glisser : déplacer."] = "Clic derecho: ocultar. Arrastrar: mover.",
+    ["%s %s connue(s) au total."] = "%s %s conocida(s) en total.",
+    ["Clic gauche : partager tes captures pour la liste commune."] =
+        "Clic izquierdo: comparte tus puntos para la lista común.",
+    ["Clic droit : afficher ou masquer le suivi."] = "Clic derecho: mostrar u ocultar el seguimiento.",
     ["Point de route posé sur %s."]            = "Punto de ruta colocado en %s.",
     ["Cette zone n'accepte pas de point de route."] = "Esta zona no admite puntos de ruta.",
 

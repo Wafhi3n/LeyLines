@@ -4,6 +4,9 @@
 ## Notes: Remembers the ley lines and elemental convergences you find and pins them on the minimap and the world map. /ley
 ## Notes-frFR: Retient les lignes telluriques et convergences élémentaires que tu trouves et les pose sur la minicarte et la carte du monde. /ley
 ## IconTexture: Interface\AddOns\LeyLines\Textures\icon.tga
+## AddonCompartmentFunc: LeyLines_OnCompartmentClick
+## AddonCompartmentFuncOnEnter: LeyLines_OnCompartmentEnter
+## AddonCompartmentFuncOnLeave: LeyLines_OnCompartmentLeave
 ## Author: Wafhien
 ## Version: 1.1.1
 ## SavedVariables: LeyLinesDB
@@ -38,6 +41,9 @@ LeyLines_HUD.lua
 
 # Echange de positions entre joueurs : un texte a copier-coller, aucun reseau.
 LeyLines_Share.lua
+
+# Entree dans le compartiment d'addons de la minicarte (fonctions nommees par ## AddonCompartmentFunc).
+LeyLines_Compartment.lua
 
 # Diagnostic (/ley probe) : ce que le client expose reellement autour d'une ligne tellurique.
 LeyLines_Probe.lua

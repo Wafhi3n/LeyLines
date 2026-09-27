@@ -84,6 +84,10 @@ local de = {
     ["Clic : poser un point de route."]        = "Klick: Wegpunkt setzen.",
     ["Clic gauche : poser un point de route."] = "Linksklick: Wegpunkt setzen.",
     ["Clic droit : masquer. Glisser : déplacer."] = "Rechtsklick: ausblenden. Ziehen: verschieben.",
+    ["%s %s connue(s) au total."] = "%s %s insgesamt bekannt.",
+    ["Clic gauche : partager tes captures pour la liste commune."] =
+        "Linksklick: deine Punkte für die gemeinsame Liste teilen.",
+    ["Clic droit : afficher ou masquer le suivi."] = "Rechtsklick: Verfolgung ein- oder ausblenden.",
     ["Point de route posé sur %s."]            = "Wegpunkt gesetzt auf %s.",
     ["Cette zone n'accepte pas de point de route."] = "Diese Zone erlaubt keinen Wegpunkt.",
 
