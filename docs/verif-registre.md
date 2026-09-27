@@ -23,6 +23,15 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-27 - jusqu'a 7c22f03 - Forever, compte #1 (Joa), client redemarre - **GO sur le nom et
+  l'icone** - capture d'ecran du user : la liste des addons affiche l'icone (TGA 64x64,
+  `## IconTexture`) devant « Ley Line / Elemental Convergence Tracker », nette, au format des
+  icones des autres addons. L'icone est un montage de deux icones du jeu fait par le user : il a
+  choisi de la livrer telle quelle pour l'instant (repli possible : pointer une icone du client
+  par son chemin, sans rien livrer).
+  PAS observe : l'en-tete des raccourcis clavier et l'infobulle du bandeau sous le nouveau nom,
+  le titre francais (client enUS).
+
 - 2026-09-27 - jusqu'a d612768 - Forever, compte #1 (Joa-Joa, Alliance), base au format v1.0.0
   EXACT installee a la main (2 captures au sort dont une sans nom, 1 releve manuel, `auras` sans
   buff Horde) - **GO sur la conversion v1.0.0 -> v1.1.0 et sur /ley contribute** - rapporte par le
