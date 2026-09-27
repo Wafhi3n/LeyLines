@@ -4,7 +4,7 @@
 ## Notes: Remembers the ley lines you walk over and pins them on the minimap and the world map. /ley
 ## Notes-frFR: Retient les lignes telluriques que tu croises et les pose sur la minicarte et la carte du monde. /ley
 ## Author: Wafhien
-## Version: 1.0.0
+## Version: 1.1.0
 ## SavedVariables: LeyLinesDB
 ## X-Category: Map & Minimap
 

@@ -4,6 +4,11 @@ Retient les lignes telluriques (« Ley Line ») croisées en jeu et les repose s
 sur la **carte du monde** et dans un petit **bandeau de suivi** — pour que le sort de régénération
 Skyborn se lance sur une ligne qu'on retrouve, au lieu d'une ligne qu'on espère.
 
+Côté **Horde**, même mécanisme avec un autre objet : une tornade, « Elemental Convergence », absorbée
+par Skysight. Chaque faction ne peut absorber que le sien. Chaque point retient donc son **espèce**
+(L = fissure Alliance, V = tornade Horde) et un personnage ne voit que celle de sa faction, même
+quand la base du compte contient les deux.
+
 **Cible : WoW: Forever / Camelot uniquement** (client `_classic_beta_`, Interface 16001, API
 mainline). L'addon s'appuie sur `C_Map`, `C_Minimap.GetViewRadius`, `C_VignetteInfo` et
 `C_SuperTrack`, qui n'existent pas sous cette forme sur Classic Era.
@@ -22,6 +27,7 @@ les SavedVariables.
 | `/ley clean` | efface tous les relevés faits **par infobulle** (les approximatifs) |
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |
 | `/ley import` | colle un code reçu et fusionne les positions |
+| `/ley contribute` | code des seules captures confirmées par le jeu, pour la liste commune |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
 | `/ley track` | pose un point de route natif sur la plus proche |
@@ -35,8 +41,11 @@ suivre la plus proche).
 
 ## Partager ses positions
 
-`/ley export` ouvre une fenêtre avec un code du genre `LL1;2521=3537,3370,3881,4759` : un texte,
-à coller où tu veux (ticket GitHub, Discord, message). `/ley import` fait le chemin inverse.
+`/ley export` ouvre une fenêtre avec un code du genre `LL2;L2521=3537,3370;V1413=4978,2879` : un
+texte, à coller où tu veux (ticket GitHub, Discord, message). `/ley import` fait le chemin inverse.
+La lettre devant la carte est l'espèce (L fissure, V tornade) : un code **sans** espèce (`LL1` des
+builds de test) est refusé à l'import, parce qu'il ne dit pas quelle faction peut absorber ses
+points.
 
 Le format tient en entiers (dix-millièmes de carte, ~0,5 yd) parce qu'un code voyage à la main :
 il traverse des copier-coller, des clients qui écrivent « 0,35 » et des retours à la ligne. Un
@@ -45,8 +54,15 @@ point aberrant est jeté sans faire échouer le reste du lot.
 Une position **reçue** ne déplace jamais un relevé que tu as fait toi-même sur place : elle
 comble un trou, elle ne corrige pas ta vérité locale.
 
-`LeyLines_Data.lua` porte les positions **livrées avec l'addon**, fusionnées une seule fois par
-palier de `DATA_VERSION`. Si tu en effaces une, elle reste effacée.
+## La liste commune
+
+`LeyLines_Data.lua` porte les positions **livrées avec l'addon**. Il est **généré**, ne pas
+l'éditer : `/ley contribute` → ticket GitHub (formulaire « Share positions ») →
+`.\scripts\ll_ingest.ps1 -Issue <n>` dans l'outillage → `data/contrib/<id>.ll` → liste régénérée
+→ release. Détails et raisons : `docs/specs/contribution-positions.md`.
+
+Chaque point livré retient le palier de `DATA_VERSION` qui l'a introduit : une mise à jour ne
+fusionne que les points que le joueur n'a pas encore reçus. Si tu en effaces un, il reste effacé.
 
 ## Le rappel de buff
 
