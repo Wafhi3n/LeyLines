@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.0
+
+The addon now has an entry in the addon compartment, the small button with a number at the top
+right of the screen, next to the clock. Left-click it for your code for the shared list, right-click
+to show or hide the tracker. Hovering it tells you how many spots you know.
+
 ## v1.1.1
 
 New name, Ley Line / Elemental Convergence Tracker, since Horde players track convergences with it

@@ -23,6 +23,16 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-27 - jusqu'a fb59d2f - Forever, compte #4 (Horde), client redemarre - **GO sur le
+  compartiment d'addons** - captures du user : LeyLines figure dans le compartiment avec son icone.
+  Sur Forever ce n'est PAS sur la minicarte : c'est le petit bouton « 2 » dans la barre en haut a
+  droite, pres de l'horloge (`AddonCompartmentFrame` affiche, visible, strata LOW ; `IsTestBuild()`
+  vrai sur la beta). Survol = infobulle de 4 lignes, « 3 elemental convergence(s) known in
+  total. » ; rapporte par le user : clic gauche (contribution) et clic droit (bandeau) fonctionnent.
+  Inscription par le .toc confirmee : 2 addons inscrits, metadonnee lue, etat d'activation 2 (All).
+  PAS observe : un personnage active pour lui seul (etat 1), que Blizzard n'inscrit pas ; le clic
+  gauche sans aucune capture (« Nothing to share »).
+
 - 2026-09-27 - jusqu'a 7c22f03 - Forever, compte #1 (Joa), client redemarre - **GO sur le nom et
   l'icone** - capture d'ecran du user : la liste des addons affiche l'icone (TGA 64x64,
   `## IconTexture`) devant « Ley Line / Elemental Convergence Tracker », nette, au format des

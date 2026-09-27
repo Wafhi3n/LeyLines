@@ -7,7 +7,7 @@
 
 Remembers every ley line and elemental convergence you find, pins them on your minimap and world
 map, and warns you before your buff runs out.
-
+²
 ## Description
 
 Skyborn soak a ley line for a fifteen minute buff, and Horde players get the same from an elemental
@@ -27,7 +27,8 @@ Each spot knows its faction. Your Alliance characters see ley lines, your Horde 
 convergences, and all of them share one list.
 
 Want to trade spots with a friend? /ley export gives you a short code and /ley import reads one
-back. Found some the addon doesn't ship with? Type /ley contribute and paste the code in the form
+back. Found some the addon doesn't ship with? Type /ley contribute (or left-click the addon in the
+addon compartment, top right next to the clock) and paste the code in the form
 at https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml (only spots you confirmed
 with the spell go in). They're added to the list that comes with the next update, so everyone gets
 them.
