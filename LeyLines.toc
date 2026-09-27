@@ -1,10 +1,10 @@
 ## Interface: 16001
-## Title: Ley Lines
-## Title-frFR: Lignes telluriques
-## Notes: Remembers the ley lines you walk over and pins them on the minimap and the world map. /ley
-## Notes-frFR: Retient les lignes telluriques que tu croises et les pose sur la minicarte et la carte du monde. /ley
+## Title: Ley Line / Elemental Convergence Tracker
+## Title-frFR: Lignes telluriques / Convergences élémentaires
+## Notes: Remembers the ley lines and elemental convergences you find and pins them on the minimap and the world map. /ley
+## Notes-frFR: Retient les lignes telluriques et convergences élémentaires que tu trouves et les pose sur la minicarte et la carte du monde. /ley
 ## Author: Wafhien
-## Version: 1.1.0
+## Version: 1.1.1
 ## SavedVariables: LeyLinesDB
 ## X-Category: Map & Minimap
 

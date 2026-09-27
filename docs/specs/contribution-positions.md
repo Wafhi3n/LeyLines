@@ -3,7 +3,7 @@
 > État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
 > tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · Espèce des points et format
 > `LL2` codés pour la v1.1.0 (branche `feat/espece-des-points`) ; la contribution elle-même, non
-> Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Lines
+> Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
 > son `/ley export` pour « avoir la liste de toutes les lignes de Forever ».

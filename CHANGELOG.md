@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.1
+
+New name, Ley Line / Elemental Convergence Tracker, since Horde players track convergences with it
+too. Nothing else changes. Your saved spots, your settings and the /ley command stay as they were.
+
 ## v1.1.0
 
 Horde players are covered now. You absorb Elemental Convergences (the tornadoes) with Skysight

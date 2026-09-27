@@ -21,7 +21,7 @@ local es = {
     ["convergence(s) élémentaire(s)"]   = "convergencia(s) elemental(es)",
     ["lignes telluriques"]              = "líneas telúricas",
     ["convergences élémentaires"]       = "convergencias elementales",
-    ["Lignes telluriques"]              = "Líneas telúricas",
+    ["Lignes telluriques / Convergences élémentaires"] = "Líneas telúricas / Convergencias elementales",
 
     -- Fuentes
     ["vignette du client"] = "viñeta del cliente",

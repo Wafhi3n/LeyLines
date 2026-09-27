@@ -1,4 +1,4 @@
-# Ley Lines
+# Ley Line / Elemental Convergence Tracker
 
 Retient les lignes telluriques (« Ley Line ») croisées en jeu et les repose sur la **minicarte**,
 sur la **carte du monde** et dans un petit **bandeau de suivi** — pour que le sort de régénération
@@ -8,6 +8,12 @@ Côté **Horde**, même mécanisme avec un autre objet : une tornade, « Element
 par Skysight. Chaque faction ne peut absorber que le sien. Chaque point retient donc son **espèce**
 (L = fissure Alliance, V = tornade Horde) et un personnage ne voit que celle de sa faction, même
 quand la base du compte contient les deux.
+
+**Nom affiché ≠ nom technique.** L'addon s'appelle « Ley Line / Elemental Convergence Tracker »
+depuis la v1.1.1, mais le **dossier** `LeyLines`, le `package-as` de `.pkgmeta`, la SavedVariable
+`LeyLinesDB` et la commande `/ley` gardent l'ancien nom, **à dessein** : le fichier de sauvegarde
+d'un joueur est lié au nom du dossier. Renommer le dossier ferait repartir chaque joueur d'une base
+vide. Seuls le `## Title` du `.toc`, les libellés en jeu et la page CurseForge ont changé.
 
 **Cible : WoW: Forever / Camelot uniquement** (client `_classic_beta_`, Interface 16001, API
 mainline). L'addon s'appuie sur `C_Map`, `C_Minimap.GetViewRadius`, `C_VignetteInfo` et
@@ -36,7 +42,7 @@ les SavedVariables.
 | `/ley name <texte>` | ajoute un nom d'objet à reconnaître |
 | `/ley probe` | diagnostic : ce que le client expose vraiment autour de toi |
 
-Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Lines* (enregistrer ici,
+Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Line / Elemental Convergence Tracker* (enregistrer ici,
 suivre la plus proche).
 
 ## Partager ses positions

@@ -78,7 +78,7 @@ function HUD:Wire()
     f:SetScript("OnEnter", function(frame)
         LL.Capture:Mute()   -- voir LeyLines_Minimap.lua : nos infobulles ne se capturent pas
         GameTooltip:SetOwner(frame, "ANCHOR_BOTTOM")
-        GameTooltip:AddLine(L["Lignes telluriques"], 0.75, 0.55, 1)
+        GameTooltip:AddLine(L["Lignes telluriques / Convergences élémentaires"], 0.75, 0.55, 1)
         GameTooltip:AddLine(L["Clic gauche : poser un point de route."], 1, 1, 1)
         GameTooltip:AddLine(L["Clic droit : masquer. Glisser : déplacer."], 0.7, 0.7, 0.7)
         GameTooltip:Show()

@@ -1,4 +1,4 @@
-# Ley Lines
+# Ley Line / Elemental Convergence Tracker
 
 <!-- Texte EXACT publie sur la page CurseForge (resume + description), garde ici pour que la page
      et le depot ne divergent pas. Toute retouche de la page se recopie dans ce fichier. -->

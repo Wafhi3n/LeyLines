@@ -21,7 +21,7 @@ local de = {
     ["convergence(s) élémentaire(s)"]   = "Elementarkonvergenz(en)",
     ["lignes telluriques"]              = "Ley-Linien",
     ["convergences élémentaires"]       = "Elementarkonvergenzen",
-    ["Lignes telluriques"]              = "Ley-Linien",
+    ["Lignes telluriques / Convergences élémentaires"] = "Ley-Linien / Elementarkonvergenzen",
 
     -- Quellen
     ["vignette du client"] = "Client-Vignette",

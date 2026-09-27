@@ -8,7 +8,7 @@
 local ADDON, LL = ...
 local L = LL.L
 
-LL.VERSION = "1.1.0"
+LL.VERSION = "1.1.1"
 LL.ADDON   = ADDON
 _G.LeyLines = LL
 
@@ -309,7 +309,7 @@ StaticPopupDialogs["LEYLINES_CLEAR_ZONE"] = {
 -- ---------------------------------------------------------------------------
 -- Démarrage
 -- ---------------------------------------------------------------------------
-_G.BINDING_HEADER_LEYLINES = L["Lignes telluriques"]
+_G.BINDING_HEADER_LEYLINES = L["Lignes telluriques / Convergences élémentaires"]
 
 -- Les libellés de raccourcis nomment l'objet de la faction : ils attendent donc PLAYER_LOGIN, où
 -- la faction est connue. La fenêtre des raccourcis ne s'ouvre pas avant.

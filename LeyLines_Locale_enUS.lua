@@ -22,7 +22,7 @@ local en = {
     ["convergence(s) élémentaire(s)"]   = "elemental convergence(s)",
     ["lignes telluriques"]              = "ley lines",
     ["convergences élémentaires"]       = "elemental convergences",
-    ["Lignes telluriques"]              = "Ley Lines",
+    ["Lignes telluriques / Convergences élémentaires"] = "Ley Line / Elemental Convergence Tracker",
 
     -- Sources
     ["vignette du client"] = "client vignette",
