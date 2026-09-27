@@ -1,8 +1,10 @@
 # Contribution des positions (crowdsourcing)
 
 > État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
-> tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · Espèce des points et format
-> `LL2` codés pour la v1.1.0 (branche `feat/espece-des-points`) ; la contribution elle-même, non
+> tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · **Publié** : v1.1.0
+> (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
+> icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). Reste : lien pré-rempli,
+> retraits (`gone`/`LL.GONE`), couleur « à confirmer », GitHub Action
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -301,4 +303,6 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
 - **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`
   + `scripts\ll_ingest.ps1`, lancé à la main ; critères 6 partiel, 7 → `tests/test_ll_ingest.lua`) ;
   reste la PR unique ouverte par l'Action.
-- **T7** — Release v1.2.0, réponse sur le commentaire CurseForge avec le lien du formulaire.
+- **T7** — ~~Releases~~ (v1.1.0, v1.1.1, v1.2.0 publiées le 2026-09-27 ; la v1.2.0 est le
+  compartiment d'addons, pas la contribution complète). Reste : la réponse au commentaire CurseForge
+  (texte prêt, à poster par le user), et la release qui portera T1/T3/T4/T5 restants.
