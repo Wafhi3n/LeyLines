@@ -23,6 +23,21 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-27 - jusqu'a 420b093 - Forever, 2 comptes sur le meme PC (#4 Horde, #1 Joa-Joa,
+  personnage Alliance neuf), un client a la fois - **GO sur l'espece des points** - sur #4, apres
+  rattachement a la main des 2 tornades SANS nom d'une base de developpement (`/run`, kind = V) :
+  relu sur le disque, chaque point porte son espece et l'export vaut
+  `LL2;L2521=3537,3370,3881,4759;V1413=4978,2879,4848,4629;V1442=7490,9450`. Base de Joa videe
+  (fichier `LeyLinesDB = nil` a 16:25), puis import de ce code : rapporte par le user, « ca a l'air
+  corrige » -- plus de « Ley Line » Horde dans les Tarides. Vu plus tot dans la meme seance : la
+  tornade NOMMEE (V) disparait de la carte d'un personnage Alliance, et la carte du monde se
+  rafraichit bien en changeant de zone (3 points puis 2, positions recoupees avec la base).
+  Lecon de la seance : l'espece « inconnue, visible des deux factions » (8ba37a6) a ete vue en jeu
+  reproduire le defaut, d'ou 420b093.
+  PAS observe : le decompte de l'import cote Joa (base pas encore reecrite), le refus d'un code
+  sans espece, les messages cote Horde (« no elemental convergence here »), `/ley list` et
+  `/ley clear` par espece, la minicarte.
+
 - 2026-09-27 - jusqu'a cb5f83b - Forever, 2 comptes sur le meme PC (#1 Alliance, #4 Horde), un
   client a la fois, code passe par le presse-papiers - **GO sur l'import, defaut d'espece
   REPRODUIT** - fichiers en jeu identiques au depot (compares octet a octet, fins de ligne mises a
