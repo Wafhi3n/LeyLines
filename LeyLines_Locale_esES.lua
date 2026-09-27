@@ -1,5 +1,8 @@
 -- LeyLines_Locale_esES.lua — overlay ESPAGNOL (esES/esMX). Clé FR → texte ES.
 -- Chargé APRÈS LeyLines_Locale.lua. Sur un client non espagnol : early-return.
+--
+-- Les phrases qui nomment l'objet le prennent en %s (Nodes:Word). Les deux noms sont FÉMININS
+-- (la línea telúrica, la convergencia elemental) : articles et adjectifs s'accordent dans les deux.
 
 local _, LL = ...
 LL = LL or _G.LeyLines
@@ -9,10 +12,16 @@ local locale = GetLocale and GetLocale() or "enUS"
 if locale ~= "esES" and locale ~= "esMX" then return end
 
 local es = {
-    -- Nombres
-    ["Ligne tellurique"]   = "Línea telúrica",
-    ["Vergence élémentaire"] = "Elemental Vergence",   -- nom client ES non relevé
-    ["Lignes telluriques"] = "Líneas telúricas",
+    -- Nombres. Nom client ES de la tornade non relevé : traduction à confirmer en jeu.
+    ["Ligne tellurique"]                = "Línea telúrica",
+    ["Convergence élémentaire"]         = "Convergencia elemental",
+    ["ligne tellurique"]                = "línea telúrica",
+    ["convergence élémentaire"]         = "convergencia elemental",
+    ["ligne(s) tellurique(s)"]          = "línea(s) telúrica(s)",
+    ["convergence(s) élémentaire(s)"]   = "convergencia(s) elemental(es)",
+    ["lignes telluriques"]              = "líneas telúricas",
+    ["convergences élémentaires"]       = "convergencias elementales",
+    ["Lignes telluriques"]              = "Líneas telúricas",
 
     -- Fuentes
     ["vignette du client"] = "viñeta del cliente",
@@ -26,29 +35,26 @@ local es = {
     -- Estado y comandos
     ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
         "v%s cargada. /ley para el estado, /ley help para lo demás.",
-    ["v%s — %s ligne(s) ici, %s au total."] = "v%s — %s línea(s) aquí, %s en total.",
+    ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s aquí, %s en total.",
     ["La plus proche : %s à %s yd."]        = "La más cercana: %s a %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimapa %s — mapa %s — seguimiento %s — captura automática %s.",
-    ["%s ligne(s) tellurique(s) dans %s :"] = "%s línea(s) telúrica(s) en %s:",
+    ["%s %s dans %s :"]                     = "%s %s en %s:",
     ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
         "Comandos: /ley (estado), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texto>, scale <n>, probe.",
-    ["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."] =
-        "Cómo se usa: colócate SOBRE la línea telúrica y escribe /ley add (o usa el atajo de teclado).",
+    ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
+        "Cómo se usa: colócate SOBRE la %s y escribe /ley add (o usa el atajo de teclado).",
 
     -- Captura
-    ["Nouvelle ligne tellurique enregistrée dans %s (%s ici)."] =
-        "Nueva línea telúrica registrada en %s (%s aquí).",
-    ["Ligne tellurique déjà connue — position confirmée (%s relevés)."] =
-        "Línea telúrica ya conocida — posición confirmada (%s lecturas).",
-    ["Ligne tellurique effacée : %s."] = "Línea telúrica borrada: %s.",
-    ["%s ligne(s) tellurique(s) effacée(s)."] = "%s línea(s) telúrica(s) borrada(s).",
-    ["Effacer toutes les lignes telluriques connues dans %s ?"] =
-        "¿Borrar todas las líneas telúricas conocidas en %s?",
-    ["Aucune ligne tellurique connue dans cette zone."] =
-        "No se conoce ninguna línea telúrica en esta zona.",
-    ["Aucune ligne tellurique à moins de 60 yd — place-toi dessus pour l'effacer."] =
-        "Ninguna línea telúrica a menos de 60 yd — colócate encima para borrarla.",
+    ["Nouvelle %s enregistrée dans %s (%s ici)."] = "Nueva %s registrada en %s (%s aquí).",
+    ["%s déjà connue — position confirmée (%s relevés)."] =
+        "%s ya conocida — posición confirmada (%s lecturas).",
+    ["%s effacée."]                         = "%s borrada.",
+    ["%s %s effacée(s)."]                   = "%s %s borrada(s).",
+    ["Effacer toutes les %s connues dans %s ?"] = "¿Borrar todas las %s conocidas en %s?",
+    ["Aucune %s connue dans cette zone."]   = "No se conoce ninguna %s en esta zona.",
+    ["Aucune %s à moins de 60 yd — place-toi dessus pour l'effacer."] =
+        "Ninguna %s a menos de 60 yd — colócate encima para borrarla.",
     ["Position indisponible ici — le client ne donne pas de coordonnées."] =
         "Posición no disponible aquí — el cliente no da coordenadas.",
     ["Capture automatique : %s."] = "Captura automática: %s.",
@@ -57,14 +63,14 @@ local es = {
     ["%s relevé(s) d'infobulle effacé(s)."] = "%s lectura(s) de información borrada(s).",
     ["Noms reconnus : %s."]       = "Nombres reconocidos: %s.",
     ["Nom reconnu ajouté : %s."]  = "Nombre reconocido añadido: %s.",
-    ["Lance maintenant ton sort de ligne tellurique : le prochain sort réussi sera retenu."] =
-        "Lanza ahora tu hechizo de línea telúrica: se recordará el próximo hechizo lanzado con éxito.",
+    ["Lance maintenant ton sort de %s : le prochain sort réussi sera retenu."] =
+        "Lanza ahora tu hechizo de %s: se recordará el próximo hechizo lanzado con éxito.",
     ["Apprentissage abandonné : aucun sort lancé."] =
         "Aprendizaje cancelado: no se lanzó ningún hechizo.",
-    ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une faille."] =
-        "Hechizo recordado: %s (%s). A partir de ahora, solo un lanzamiento con buff LARGO marca una línea telúrica.",
-    ["Buff court : pas de faille ici, rien n'a été enregistré."] =
-        "Buff corto: aquí no hay línea telúrica, no se registró nada.",
+    ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
+        "Hechizo recordado: %s (%s). A partir de ahora, solo un lanzamiento con buff LARGO marca una %s.",
+    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
+        "Buff corto: aquí no hay %s, no se registró nada.",
 
     -- Visualización
     ["Affichage sur la minicarte : %s."]      = "Mostrar en el minimapa: %s.",
@@ -81,33 +87,33 @@ local es = {
     ["Point de route posé sur %s."]            = "Punto de ruta colocado en %s.",
     ["Cette zone n'accepte pas de point de route."] = "Esta zona no admite puntos de ruta.",
 
-    ["Buff de faille : %s min restantes — la plus proche à %s yd."] =
-        "Buff de línea telúrica: quedan %s min — la más cercana a %s yd.",
-    ["Buff de faille : %s min restantes — aucune faille connue dans cette zone."] =
-        "Buff de línea telúrica: quedan %s min — ninguna línea conocida en esta zona.",
+    ["%s : buff à %s min de la fin — la plus proche à %s yd."] =
+        "%s: el buff termina en %s min — la más cercana a %s yd.",
+    ["%s : buff à %s min de la fin — aucune connue dans cette zone."] =
+        "%s: el buff termina en %s min — ninguna conocida en esta zona.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Recordatorio de buff: a %s min restantes (0 = desactivado).",
 
     -- Compartir
-    ["Partage des lignes telluriques"] = "Compartir líneas telúricas",
-    ["Aucune ligne tellurique à exporter."] = "Ninguna línea telúrica que exportar.",
+    ["Partage des positions"] = "Compartir posiciones",
+    ["Aucune position à exporter."] = "Ninguna posición que exportar.",
     ["Copie ce texte (Ctrl+C) et partage-le."] = "Copia este texto (Ctrl+C) y compártelo.",
     ["Colle un code reçu, puis clique sur Importer."] = "Pega un código recibido y haz clic en Importar.",
     ["Importer"] = "Importar",
     ["Fermer"]   = "Cerrar",
     ["Code invalide : ce n'est pas un export de Ley Lines."] = "Ese código no es una exportación de Ley Lines.",
-    ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s línea(s) telúrica(s) importada(s), %s ya conocida(s).",
-    ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
-        "%s línea(s) telúrica(s) añadida(s) desde los datos incluidos.",
+    ["%s position(s) importée(s), %s déjà connue(s)."] = "%s posición(es) importada(s), %s ya conocida(s).",
+    ["%s position(s) ajoutée(s) depuis les données livrées."] =
+        "%s posición(es) añadida(s) desde los datos incluidos.",
     ["restauré"] = "restaurada",
-    ["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."] =
-        "%s línea(s) telúrica(s) restaurada(s) desde la copia interna.",
+    ["%s position(s) restaurée(s) depuis la sauvegarde interne."] =
+        "%s posición(es) restaurada(s) desde la copia interna.",
     ["import"]              = "importación",
     ["livré avec l'addon"] = "incluida con el addon",
 
     -- Atajos de teclado
-    ["Enregistrer une ligne tellurique ici"]      = "Registrar una línea telúrica aquí",
-    ["Suivre la ligne tellurique la plus proche"] = "Seguir la línea telúrica más cercana",
+    ["Enregistrer une %s ici"]      = "Registrar una %s aquí",
+    ["Suivre la %s la plus proche"] = "Seguir la %s más cercana",
 }
 
 for k, v in pairs(es) do LL.L[k] = v end

@@ -4,10 +4,21 @@
 -- colle où il veut (ticket GitHub, Discord, message). C'est volontaire — une base de positions
 -- n'a pas besoin de temps réel, et un bout de texte se relit, se corrige et s'archive.
 --
--- Format `LL1` : `LL1;<uiMapID>=<x>,<y>[,<x>,<y>…][;<uiMapID>=…]`, coordonnées en dix-millièmes
--- (0..10000), donc ~0,5 yd de précision sur une zone de 5000 yd. Entiers seulement : pas de
--- virgule flottante à recoller entre deux locales (un client FR écrit « 0,35 »), pas de guillemets
--- à échapper dans un ticket, et ça se relit à l'œil.
+-- Format `LL2` : `LL2;<segment>[;<segment>…]`, un segment par (espèce, carte) :
+--
+--   [-][L|V]<uiMapID>=<x>,<y>[,<x>,<y>…]
+--
+--   L = fissure (Ley Line, Alliance), V = tornade (Elemental Convergence, Horde), rien = inconnue.
+--   `-` = RETRAIT (« ces points n'existent plus »), réservé à la contribution par ticket
+--   (docs/specs/contribution-positions.md). Ce client-ci ne sait pas l'appliquer, il l'IGNORE —
+--   surtout pas le lire comme un ajout. Même règle pour une espèce qu'il ne connaît pas.
+--
+-- Coordonnées en dix-millièmes (0..10000), donc ~0,5 yd de précision sur une zone de 5000 yd.
+-- Entiers seulement : pas de virgule flottante à recoller entre deux locales (un client FR écrit
+-- « 0,35 »), pas de guillemets à échapper dans un ticket, et ça se relit à l'œil.
+--
+-- `LL1` (v1.0.x, jamais publié mais présent dans des bases de développement) est le même texte
+-- sans espèce : il se lit encore, ses points sont d'espèce inconnue.
 local _, LL = ...
 local L = LL.L
 
@@ -15,51 +26,62 @@ local Share = {}
 LL.Share = Share
 
 local SCALE = 10000
+local KNOWN = { [""] = true, L = true, V = true }
 
 -- ---------------------------------------------------------------------------
 -- Codec (pur, testable sans client)
 -- ---------------------------------------------------------------------------
 function Share:Encode()
-    local parts = {}
+    local groups = {}
     for map, list in pairs(LL.db.nodes) do
-        if #list > 0 then
-            local nums = {}
-            for _, node in ipairs(list) do
-                nums[#nums + 1] = string.format("%d,%d",
-                    math.floor(node.x * SCALE + 0.5), math.floor(node.y * SCALE + 0.5))
-            end
-            parts[#parts + 1] = tostring(map) .. "=" .. table.concat(nums, ",")
+        for _, node in ipairs(list) do
+            local key = (node.kind or "") .. tostring(map)
+            local nums = groups[key] or {}
+            groups[key] = nums
+            nums[#nums + 1] = string.format("%d,%d",
+                math.floor(node.x * SCALE + 0.5), math.floor(node.y * SCALE + 0.5))
         end
     end
+    local parts = {}
+    for key, nums in pairs(groups) do parts[#parts + 1] = key .. "=" .. table.concat(nums, ",") end
     if #parts == 0 then return nil end
     table.sort(parts)   -- sortie stable : deux exports de la même base sont identiques
-    return "LL1;" .. table.concat(parts, ";")
+    return "LL2;" .. table.concat(parts, ";")
 end
 
--- Rend une table { [uiMapID] = { x, y, … } } et le nombre de points, ou nil + une raison.
--- Tout ce qui est douteux est JETÉ point par point plutôt que de faire échouer l'import entier :
--- un code recopié à la main perd souvent un caractère, et sauver 19 points sur 20 vaut mieux que
--- refuser les 20.
+-- Un segment, ou nil s'il est à ignorer (retrait, espèce inconnue de ce client, rien d'utilisable).
+local function DecodeSegment(seg)
+    local minus, kind, map, nums = seg:match("^(%-?)(%a?)(%d+)=([%d,]+)$")
+    if not map or minus ~= "" or not KNOWN[kind] then return nil end
+    local id = tonumber(map)
+    if not id or id <= 0 then return nil end
+
+    local coords = {}
+    for n in nums:gmatch("%d+") do coords[#coords + 1] = tonumber(n) end
+    local pts = {}
+    for i = 1, #coords - 1, 2 do
+        local x, y = coords[i] / SCALE, coords[i + 1] / SCALE
+        if x <= 1 and y <= 1 then pts[#pts + 1], pts[#pts + 2] = x, y end
+    end
+    if #pts == 0 then return nil end
+    return { map = id, kind = (kind ~= "" and kind or nil), pts = pts }
+end
+
+-- Rend une liste de segments { map, kind, pts = { x, y, … } } et le nombre de points, ou nil + une
+-- raison. Tout ce qui est douteux est JETÉ point par point plutôt que de faire échouer l'import
+-- entier : un code recopié à la main perd souvent un caractère, et sauver 19 points sur 20 vaut
+-- mieux que refuser les 20.
 function Share:Decode(text)
     if type(text) ~= "string" then return nil, "format" end
-    local body = text:gsub("%s+", ""):match("^LL1;(.+)$")
+    local body = text:gsub("%s+", ""):match("^LL[12];(.+)$")
     if not body then return nil, "format" end
 
     local out, total = {}, 0
-    for map, nums in body:gmatch("(%d+)=([%d,]+)") do
-        local id = tonumber(map)
-        local coords = {}
-        for n in nums:gmatch("%d+") do coords[#coords + 1] = tonumber(n) end
-        if id and id > 0 and #coords >= 2 then
-            local pts = {}
-            for i = 1, #coords - 1, 2 do
-                local x, y = coords[i] / SCALE, coords[i + 1] / SCALE
-                if x <= 1 and y <= 1 then
-                    pts[#pts + 1], pts[#pts + 2] = x, y
-                    total = total + 1
-                end
-            end
-            if #pts > 0 then out[id] = pts end
+    for raw in body:gmatch("[^;]+") do
+        local seg = DecodeSegment(raw)
+        if seg then
+            out[#out + 1] = seg
+            total = total + #seg.pts / 2
         end
     end
     if total == 0 then return nil, "empty" end
@@ -70,20 +92,14 @@ end
 -- Import
 -- ---------------------------------------------------------------------------
 function Share:Import(text)
-    local data, total = self:Decode(text)
-    if not data then
+    local segments, total = self:Decode(text)
+    if not segments then
         LL:Print(L["Code invalide : ce n'est pas un export de Ley Lines."])
         return
     end
-    local added = 0
-    for map, pts in pairs(data) do
-        for i = 1, #pts - 1, 2 do
-            local _, isNew = LL.Nodes:Add(map, pts[i], pts[i + 1], { src = "import" })
-            if isNew then added = added + 1 end
-        end
-    end
+    local added = LL.Nodes:AddSegments(segments, "import")
     LL:Refresh()
-    LL:Printf(L["%s ligne(s) importée(s), %s déjà connue(s)."], added, total - added)
+    LL:Printf(L["%s position(s) importée(s), %s déjà connue(s)."], added, total - added)
 end
 
 -- ---------------------------------------------------------------------------
@@ -124,7 +140,7 @@ function Share:Build()
 
     f.title = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     f.title:SetPoint("TOPLEFT", 12, -10)
-    f.title:SetText(L["Partage des lignes telluriques"])
+    f.title:SetText(L["Partage des positions"])
 
     f.hint = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     f.hint:SetPoint("TOPLEFT", 12, -30)
@@ -171,7 +187,7 @@ end
 function Share:ShowExport()
     local blob = self:Encode()
     if not blob then
-        LL:Print(L["Aucune ligne tellurique à exporter."])
+        LL:Print(L["Aucune position à exporter."])
         return
     end
     self:Open(blob, L["Copie ce texte (Ctrl+C) et partage-le."])

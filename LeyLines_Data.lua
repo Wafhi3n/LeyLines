@@ -8,18 +8,26 @@
 -- Leur précision est volontairement basse (voir PRECISION dans LeyLines_Nodes.lua) : un relevé
 -- fait par le joueur lui-même, sort à l'appui, ne doit JAMAIS être déplacé par une donnée livrée.
 --
--- Format : [uiMapID] = { x1, y1, x2, y2, ... } en coordonnées de carte (0..1). Liste plate parce
--- qu'elle grossira, et qu'une table par point coûterait dix fois la place pour rien.
+-- Format : [espèce][uiMapID] = { x1, y1, x2, y2, ... } en coordonnées de carte (0..1). Espèce :
+-- L = fissure (Alliance), V = tornade (Horde), voir LeyLines_Nodes.lua. Liste plate parce qu'elle
+-- grossira, et qu'une table par point coûterait dix fois la place pour rien.
 --
 -- Source des points : exports de joueurs (`/ley export`), recopiés ici tels quels.
+--
+-- DATA_VERSION 2 (v1.1.0) : même contenu que la 1, rangé par espèce. Le palier est franchi exprès :
+-- une base qui avait déjà fusionné ces points les avait reçus SANS espèce, et la nouvelle fusion
+-- la leur donne (Nodes:Confirm fixe l'espèce d'un point qui n'en a pas).
 local _, LL = ...
 
-LL.DATA_VERSION = 1
+LL.DATA_VERSION = 2
 
 LL.DATA = {
-    -- Zephras Isle — relevés au sort (buff long) le 2026-09-20.
-    [2521] = {
-        0.3537, 0.3370,
-        0.3881, 0.4759,
+    L = {
+        -- Zephras Isle — relevés au sort (buff long) le 2026-09-20.
+        [2521] = {
+            0.3537, 0.3370,
+            0.3881, 0.4759,
+        },
     },
+    V = {},
 }

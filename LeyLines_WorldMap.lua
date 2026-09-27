@@ -105,9 +105,12 @@ function WM:Plot()
         return self:HideFrom(1)
     end
 
+    -- Seul l'objet de la faction du joueur, comme sur la minicarte.
+    local kind = LL.Nodes:PlayerKind()
     for nodeMap, list in pairs(LL.db.nodes) do
         for _, node in ipairs(list) do
-            local x, y = LL.Geo:Translate(nodeMap, node.x, node.y, map)
+            local x, y
+            if LL.Nodes:Shows(node, kind) then x, y = LL.Geo:Translate(nodeMap, node.x, node.y, map) end
             if x then table.insert(self.plot, { node = node, x = x, y = y }) end
         end
     end

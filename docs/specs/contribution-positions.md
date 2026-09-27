@@ -1,7 +1,8 @@
 # Contribution des positions (crowdsourcing)
 
-> État : **validée** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4 tranchés par le
-> user le 2026-09-27 · Pas encore implémentée
+> État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
+> tranchés par le user le 2026-09-27 (A4 amendé depuis, à confirmer) · Espèce des points et format
+> `LL2` codés pour la v1.1.0 (branche `feat/espece-des-points`) ; la contribution elle-même, non
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Lines
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -89,8 +90,8 @@ désormais l'espèce de chaque point.
   Lua exécuté par chaque client. Le décodeur n'accepte que la grammaire du contrat (chiffres,
   `L`/`V`, séparateurs). Tout le reste est jeté, et aucun caractère du ticket n'est recopié tel quel
   dans le fichier généré.
-- **Code `LL1` reçu** (d'un build antérieur) → encore lu. L'espèce inconnue prend celle du personnage
-  qui importe.
+- **Code `LL1` reçu** (d'un build antérieur) → encore lu. Ses points sont d'espèce inconnue :
+  visibles des deux factions, jusqu'à ce qu'un relevé ou une donnée livrée la fixe (A4).
 - **Client plus ancien qui reçoit un code `LL2`** → « code invalide ». Accepté : il doit mettre à
   jour.
 - **Carte dont la taille n'a jamais été transmise** → points gardés, mais le dédoublonnage en yards
@@ -106,6 +107,10 @@ désormais l'espèce de chaque point.
 - **D4 — 2026-09-27, user** : Alliance = fissures au sol (Ley Line), Horde = tornades (Elemental
   Convergence — nom relevé par le client, compte #4). Même mécanisme, objets différents →
   **l'espèce est une propriété du point**, jamais déduite de celui qui regarde.
+  Précisé par le user le même jour : **chaque faction ne peut absorber que SON objet** (Skysight ne
+  part pas sur une ley line). L'espèce d'une capture au sort ou manuelle est donc la faction du
+  personnage, sans rien deviner ; seuls une infobulle ou une vignette se fient au nom lu. Et chaque
+  message nomme l'objet de la faction du joueur (« Short buff: no elemental convergence here »).
 - **D5 — 2026-09-27, contrainte technique** : l'addon fabrique un lien, il ne poste pas.
 
 ## Arbitrages — proposés par l'agent, validés par le user le 2026-09-27
@@ -125,9 +130,14 @@ désormais l'espèce de chaque point.
 - **A3 — Un retrait livré n'efface jamais un relevé du joueur.** Il n'efface que les points
   `shipped` et `import`. Même logique que `PRECISION` : une donnée reçue comble un trou, elle ne
   corrige pas une vérité locale.
-- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` sinon. Avant
-  la v1.1.0, la Horde ne capturait rien par sort : le seul cas mal classé serait un `/ley add` fait
-  sur un personnage Horde, qui ne part de toute façon pas en contribution (A2).
+- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` s'il dit
+  « ley » ou « tellurique ».
+  **Amendé par l'agent le 2026-09-27, à confirmer par le user** : la version validée classait `L`
+  tout point sans nom parlant. Or la base du compte #4 contient des captures Horde au sort SANS nom
+  (Tarides, Serres-Rocheuses) : elles seraient devenues des fissures, donc invisibles du personnage
+  Horde qui les a relevées. Un point sans nom parlant garde donc une espèce **inconnue** : visible
+  des deux factions comme avant, et fixée par le premier relevé ou la première donnée livrée qui
+  tombe dessus. On ne devine rien.
 
 ## Critères d'acceptation
 
@@ -169,15 +179,20 @@ désormais l'espèce de chaque point.
 
 ```
 LL2;<segment>[;<segment>...]
-segment := [-]<espèce><uiMapID>=<x>,<y>[,<x>,<y>...]
+segment := [-][<espèce>]<uiMapID>=<x>,<y>[,<x>,<y>...]
 espèce  := L   fissure / Ley Line (Alliance)
          | V   tornade / Elemental Convergence (Horde)
+         | (absente) espèce inconnue
 -       := retrait : « ces points n'existent plus »
 x, y    := dix-millièmes de la carte, entiers 0..10000 (inchangé depuis LL1)
 ```
 
 Exemple : `LL2;L2521=3537,3370,3881,4759;-L2521=5012,4410`. Segments triés, sortie stable.
 Le décodeur jette point par point ce qui est douteux, comme `LL1` aujourd'hui.
+
+**Livré en v1.1.0** (sauf le retrait) : la v1.1.0 écrit et lit `LL2`, lit encore `LL1`, et
+**ignore** un segment de retrait ou d'espèce qu'elle ne connaît pas — un client v1.1.0 qui reçoit un
+code v1.2.0 ne prendra jamais un retrait pour un ajout. Verrouillé dans `tests/test_leylines.lua`.
 
 ### Lien de contribution
 
@@ -193,11 +208,11 @@ peut pas fusionner deux points à 20 yd. C'est le client qui la connaît, c'est 
 transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du formulaire
 `.github/ISSUE_TEMPLATE/positions.yml`.
 
-### Base persistée — `schemaVer` 4
+### Base persistée
 
 | Champ | Sens |
 |---|---|
-| `node.kind` | `"L"` ou `"V"`. Fixé à la capture d'après le buff obtenu (1259691 → L, 1270893 → V) ou le nom lu sur le client ; à défaut, la faction du personnage. |
+| `node.kind` | **Livré en v1.1.0, sans changer `schemaVer`** (posé par `Nodes:Init` à chaque chargement). `"L"`, `"V"`, ou absent = inconnue (A4). Fixé à la capture : faction du personnage pour un sort ou un relevé manuel (D4), nom lu pour une infobulle ou une vignette. Un point inconnu prend l'espèce du premier relevé ou de la première donnée livrée qui le confirme. |
 | `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
 | `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
 | `db.contrib.at` | Date de la dernière contribution générée. |
@@ -209,6 +224,8 @@ LL.DATA_VERSION = <n>
 LL.DATA = { L = { [uiMapID] = { x1, y1, ... } }, V = { ... } }   -- ajouts
 LL.GONE = { L = { [uiMapID] = { x1, y1, ... } }, V = { ... } }   -- retraits (A3)
 ```
+
+`LL.DATA` par espèce est livré en v1.1.0 (`DATA_VERSION` 2) ; `LL.GONE` attend la v1.2.0.
 
 Le fichier cesse d'être écrit à la main : il est produit à partir de `data/contrib/<n° de ticket>.ll`
 (une contribution validée par fichier, texte `LL2` + `maps` + date), qui devient la source de
@@ -225,19 +242,18 @@ vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pk
 
 ## Plan — 2026-09-27 (volatile, à rayer au fil de l'eau)
 
-- **T0 — Publier la v1.1.0 telle quelle, indépendamment de cette spec.** Les joueurs Horde ne
-  peuvent rien capturer avec la v1.0.0. Avant le tag : un aller-retour `/ley export` → `/ley import`
-  à 2 comptes (jamais relevé en jeu), `CHANGELOG.md` et `CURSEFORGE.md` à jour (ni la Horde ni le
-  partage n'y figurent), `.toc` à la main (`bump_version.ps1` ne connaît que COC).
-  Relevé le 2026-09-27 dans la base du compte #4 : le libellé enUS « Elemental Vergence » est faux,
-  le client nomme l'objet **Elemental Convergence**. Côté sort, rien à changer : `/ley learn` sur
-  Horde retient **1270893** (vu en jeu par le user), déjà livré en dur. L'entrée `1259686 = Skysight`
-  de cette base vient du repli par NOM (`spellNames`), qui a attrapé un AUTRE sort : une première
-  lecture de la base en avait conclu le contraire, à tort. Reste à savoir ce qu'est ce sort-là, et
-  si chacun de ses lancers imprime « Buff court : pas de faille ici ».
-- **T1** — Schéma v4 : `kind`, `seen`, `gone`, migration (A4) ; anti-doublon et affichage par espèce
-  (A1) ; couleur « à confirmer » et absorption par le lancer (A2). Critères 2, 3b, 10, 10b.
-- **T2** — Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`. Critère 1.
+- **T0 — v1.1.0.** ~~Publier telle quelle~~ : le test d'aller-retour à 2 comptes du 2026-09-27 a
+  reproduit le défaut d'espèce (tornades Horde affichées en « Ley Line » chez le gnome). Le format
+  d'échange n'ayant jamais été publié, c'était le seul moment où le changer ne coûtait rien : la
+  v1.1.0 embarque donc l'espèce (T1 partiel + T2, branche LeyLines `feat/espece-des-points`).
+  Reste avant le tag : refaire l'aller-retour en jeu sur cette branche (base du gnome vidée),
+  `CHANGELOG.md` et `CURSEFORGE.md` à jour, `.toc` à la main (`bump_version.ps1` ne connaît que COC).
+  Libellé « Elemental Convergence » : FAIT (nom relevé sur le client). Côté sort, rien à changer :
+  `/ley learn` sur Horde retient **1270893**, déjà livré en dur.
+- **T1** — ~~espèce, anti-doublon et affichage par espèce (A1), A4 amendé~~ (v1.1.0) ; reste pour la
+  v1.2.0 : `seen`, `gone`, couleur « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
+- **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
+  hors retraits.
 - **T3** — `/ley contribute` : filtre (A2), lien, cas « trop long ». Critères 3, 4, 9.
 - **T4** — `LL.DATA` / `LL.GONE` par espèce, retraits dans `ApplyShipped` (A3). Critère 5.
 - **T5** — Dépôt : formulaire de ticket + Action de validation et de commentaire. Le corps du

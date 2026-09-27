@@ -168,21 +168,19 @@ end
 
 function HUD:WarnExpiring(left)
     local mins = math.max(0, math.floor(left / 60 + 0.5))
+    local title = LL.Nodes:Word("title")
     local node, dist = LL.Nodes:NearestToPlayer()
     if not node then
-        LL:Printf(L["Buff de faille : %s min restantes — aucune faille connue dans cette zone."], mins)
+        LL:Printf(L["%s : buff à %s min de la fin — aucune connue dans cette zone."], title, mins)
         return
     end
-    LL:Printf(L["Buff de faille : %s min restantes — la plus proche à %s yd."],
-        mins, math.floor(dist + 0.5))
+    LL:Printf(L["%s : buff à %s min de la fin — la plus proche à %s yd."],
+        title, mins, math.floor(dist + 0.5))
     self:Track(node)
 end
 
 function HUD:Track(node)
-    if not node then
-        LL:Print(L["Aucune ligne tellurique connue dans cette zone."])
-        return
-    end
+    if not node then return LL:NoneHere() end
     if C_Map.CanSetUserWaypointOnMap and not C_Map.CanSetUserWaypointOnMap(node.map) then
         LL:Print(L["Cette zone n'accepte pas de point de route."])
         return

@@ -95,10 +95,13 @@ function MM:Update()
     local half   = Minimap:GetWidth() / 2
     if not radius or radius <= 0 or half <= 0 then return self:HideFrom(1) end
 
+    -- Seul l'objet de la faction du joueur : celui de l'autre ne s'absorbe pas (voir _Nodes).
+    local kind    = LL.Nodes:PlayerKind()
     local perYard = half / radius
     local shown   = 0
     for _, node in ipairs(list) do
-        local east, north = LL.Geo:Offset(map, px, py, node.x, node.y)
+        local east, north
+        if LL.Nodes:Shows(node, kind) then east, north = LL.Geo:Offset(map, px, py, node.x, node.y) end
         if east then
             shown = self:PlaceNode(node, east, north, radius, perYard, shown)
         end

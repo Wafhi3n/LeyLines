@@ -1,8 +1,14 @@
 -- LeyLines_Nodes.lua — la base des positions connues, et l'anti-doublon.
 --
--- Forme persistée : LeyLinesDB.nodes[uiMapID] = { {x, y, map, name, src, hits, first, last}, ... }
+-- Forme persistée : LeyLinesDB.nodes[uiMapID] = { {x, y, map, kind, name, src, hits, first, last}, ... }
 -- x/y sont des coordonnées de CARTE (0..1). Tout le reste de l'addon LIT cette base et n'écrit
 -- jamais ailleurs : capture → base → affichage, jamais capture → affichage.
+--
+-- `kind`, l'ESPÈCE du point (depuis la v1.1.0) : chaque faction absorbe SON objet, et seulement
+-- le sien (dit par le joueur le 2026-09-27) — l'Alliance une fissure au sol (Ley Line), la Horde
+-- une tornade (Elemental Convergence). La base est au niveau du COMPTE, donc un joueur qui a des
+-- personnages des deux côtés mélange les deux : sans espèce, un code Horde importé chez un gnome
+-- posait des « Ley Line » dans les Tarides (vu en jeu le 2026-09-27).
 local _, LL = ...
 local L = LL.L
 
@@ -28,6 +34,54 @@ local SOURCE_LABEL = {
     shipped  = L["livré avec l'addon"],
     restored = L["restauré"],
 }
+
+-- ---------------------------------------------------------------------------
+-- Espèce : L = fissure (Alliance), V = tornade (Horde), nil = inconnue
+--
+-- Inconnue = un point d'avant la v1.1.0 dont le nom ne dit rien, ou reçu d'un code LL1. Il reste
+-- visible des DEUX factions, comme avant, et la première capture ou donnée livrée qui tombe dessus
+-- fixe son espèce. On ne devine pas : un point Horde sans nom, classé fissure d'office, disparaîtrait
+-- de la carte du joueur Horde qui l'a relevé.
+-- ---------------------------------------------------------------------------
+local KINDS = { L = true, V = true }
+
+-- Les deux noms sont FÉMININS dans les quatre langues livrées (ligne / convergence, Linie /
+-- Konvergenz, línea / convergencia) : une seule phrase par message suffit, l'accord tient. Une
+-- langue où ce n'est plus vrai demandera deux phrases.
+local WORDS = {
+    L = { title = L["Ligne tellurique"], one = L["ligne tellurique"],
+          many = L["ligne(s) tellurique(s)"], all = L["lignes telluriques"] },
+    V = { title = L["Convergence élémentaire"], one = L["convergence élémentaire"],
+          many = L["convergence(s) élémentaire(s)"], all = L["convergences élémentaires"] },
+}
+
+function Nodes:PlayerKind()
+    local faction = UnitFactionGroup and UnitFactionGroup("player")
+    return faction == "Horde" and "V" or "L"
+end
+
+-- L'espèce qu'un nom lu sur le client trahit, ou nil. « vergence » attrape Elemental Convergence
+-- et ses traductions du même tronc ; « ley » et « tellurique », la fissure.
+function Nodes:KindOfName(name)
+    if type(name) ~= "string" then return nil end
+    local ok, lowered = pcall(string.lower, name)
+    if not ok then return nil end
+    if string.find(lowered, "vergence", 1, true) then return "V" end
+    if string.find(lowered, "ley", 1, true) or string.find(lowered, "tellurique", 1, true) then
+        return "L"
+    end
+    return nil
+end
+
+-- Le nom de l'objet pour les MESSAGES : title (début de phrase), one, many (« ligne(s) »), all.
+function Nodes:Word(form, kind)
+    return (WORDS[kind] or WORDS[self:PlayerKind()])[form]
+end
+
+-- Ce point s'affiche-t-il pour l'espèce `kind` ? Un point d'espèce inconnue s'affiche partout.
+function Nodes:Shows(node, kind)
+    return node.kind == nil or node.kind == kind
+end
 
 -- Nettoie un nom lu sur le client : le texte d'une infobulle peut porter du balisage (icône
 -- |T...|t, atlas |A...|a, couleur |c...|r) qui s'affiche ensuite en glyphe parasite dans NOS
@@ -56,6 +110,7 @@ function Nodes:Init()
             else
                 node.map  = map
                 node.name = self:CleanName(node.name)
+                node.kind = KINDS[node.kind] and node.kind or self:KindOfName(node.name)
             end
         end
     end
@@ -104,16 +159,22 @@ function Nodes:RestoreIfEmpty()
     local backup = LL.db.backup
     if self:Count() > 0 or not backup or not backup.blob or (backup.n or 0) == 0 then return 0 end
 
-    local data = LL.Share and LL.Share:Decode(backup.blob)
-    if not data then return 0 end
-    local restored = 0
-    for map, pts in pairs(data) do
-        for i = 1, #pts - 1, 2 do
-            local _, isNew = self:Add(map, pts[i], pts[i + 1], { src = "restored" })
-            if isNew then restored = restored + 1 end
+    local segments = LL.Share and LL.Share:Decode(backup.blob)
+    if not segments then return 0 end
+    return self:AddSegments(segments, "restored")
+end
+
+-- Verse dans la base des segments décodés par Share:Decode ({ map, kind, pts }). Rend le nombre de
+-- points NOUVEAUX ; les autres ont confirmé un point existant.
+function Nodes:AddSegments(segments, src)
+    local added = 0
+    for _, seg in ipairs(segments) do
+        for i = 1, #seg.pts - 1, 2 do
+            local _, isNew = self:Add(seg.map, seg.pts[i], seg.pts[i + 1], { src = src, kind = seg.kind })
+            if isNew then added = added + 1 end
         end
     end
-    return restored
+    return added
 end
 
 -- Fusionne les positions livrées avec l'addon (LeyLines_Data.lua), UNE fois par palier de
@@ -124,10 +185,12 @@ function Nodes:ApplyShipped()
     if (LL.db.dataVersion or 0) >= version then return 0 end
 
     local added = 0
-    for map, list in pairs(LL.DATA or {}) do
-        for i = 1, #list - 1, 2 do
-            local _, isNew = self:Add(map, list[i], list[i + 1], { src = "shipped" })
-            if isNew then added = added + 1 end
+    for kind, maps in pairs(LL.DATA or {}) do
+        for map, list in pairs(maps) do
+            for i = 1, #list - 1, 2 do
+                local _, isNew = self:Add(map, list[i], list[i + 1], { src = "shipped", kind = kind })
+                if isNew then added = added + 1 end
+            end
         end
     end
     LL.db.dataVersion = version
@@ -138,25 +201,33 @@ function Nodes:All(map)
     return map and LL.db.nodes[map] or nil
 end
 
-function Nodes:CountMap(map)
+-- Sans `kind`, compte TOUT (le filet de sécurité en a besoin) ; avec, ce que cette espèce voit.
+function Nodes:CountMap(map, kind)
     local list = self:All(map)
-    return list and #list or 0
+    if not list then return 0 end
+    if not kind then return #list end
+    local n = 0
+    for _, node in ipairs(list) do
+        if self:Shows(node, kind) then n = n + 1 end
+    end
+    return n
 end
 
-function Nodes:Count()
+function Nodes:Count(kind)
     local total = 0
-    for _, list in pairs(LL.db.nodes) do total = total + #list end
+    for map in pairs(LL.db.nodes) do total = total + self:CountMap(map, kind) end
     return total
 end
 
 -- Point le plus proche de x/y sur cette carte. `range` filtre le résultat ; sans `range`, rend le
--- plus proche quelle que soit la distance. Renvoie node, index, distance.
-function Nodes:Find(map, x, y, range)
+-- plus proche quelle que soit la distance. `kind` écarte l'AUTRE espèce : une fissure et une tornade
+-- à 5 yd l'une de l'autre sont deux objets. Renvoie node, index, distance.
+function Nodes:Find(map, x, y, range, kind)
     local list = self:All(map)
     if not list then return nil end
     local best, bestIdx, bestDist
     for i, node in ipairs(list) do
-        local d = LL.Geo:Distance(map, x, y, node.x, node.y)
+        local d = (not kind or self:Shows(node, kind)) and LL.Geo:Distance(map, x, y, node.x, node.y)
         if d and (not bestDist or d < bestDist) then best, bestIdx, bestDist = node, i, d end
     end
     if best and (not range or bestDist <= range) then return best, bestIdx, bestDist end
@@ -167,7 +238,7 @@ function Nodes:Add(map, x, y, info)
     if not map or type(x) ~= "number" or type(y) ~= "number" then return nil, false end
     info = info or {}
 
-    local existing = self:Find(map, x, y, LL.db.mergeRange)
+    local existing = self:Find(map, x, y, LL.db.mergeRange, info.kind)
     if existing then
         self:Confirm(existing, x, y, info)
         return existing, false
@@ -177,6 +248,7 @@ function Nodes:Add(map, x, y, info)
     if not list then list = {}; LL.db.nodes[map] = list end
     local node = {
         map = map, x = x, y = y,
+        kind  = KINDS[info.kind] and info.kind or nil,
         name  = info.name,
         src   = info.src or "manual",
         hits  = 1,
@@ -190,6 +262,7 @@ function Nodes:Confirm(node, x, y, info)
     node.hits = (node.hits or 1) + 1
     node.last = time()
     if info.name and not node.name then node.name = info.name end
+    if not node.kind and KINDS[info.kind] then node.kind = info.kind end
 
     local incoming = PRECISION[info.src or "manual"] or 1
     local current  = PRECISION[node.src or "manual"] or 1
@@ -207,16 +280,27 @@ function Nodes:Remove(node)
     return false
 end
 
-function Nodes:ClearMap(map)
-    local n = self:CountMap(map)
-    LL.db.nodes[map] = nil
+-- Avec `kind`, n'efface que ce que cette espèce VOIT : un joueur Horde qui vide les Tarides ne
+-- touche pas aux fissures qu'un personnage Alliance du même compte y aurait relevées.
+function Nodes:ClearMap(map, kind)
+    local list = self:All(map)
+    if not list then return 0 end
+    local n = 0
+    for i = #list, 1, -1 do
+        if not kind or self:Shows(list[i], kind) then
+            table.remove(list, i)
+            n = n + 1
+        end
+    end
+    if #list == 0 then LL.db.nodes[map] = nil end
     return n
 end
 
+-- Le plus proche parmi ce que le JOUEUR voit : l'objet de sa faction.
 function Nodes:NearestToPlayer()
     local map, x, y = LL.Geo:PlayerPos()
     if not map then return nil end
-    local node, _, dist = self:Find(map, x, y)
+    local node, _, dist = self:Find(map, x, y, nil, self:PlayerKind())
     if not node then return nil end
     return node, dist or 0
 end
@@ -228,13 +312,11 @@ function Nodes:DistanceToPlayer(node)
     return LL.Geo:Distance(map, x, y, node.x, node.y)
 end
 
--- Libellé par défaut selon la faction du joueur : la Horde absorbe une vergence élémentaire,
--- l'Alliance une ligne tellurique. Un nom lu sur le client (node.name) passe toujours devant.
+-- Libellé d'un point : le nom lu sur le client s'il existe, sinon celui de son ESPÈCE — et, pour
+-- une espèce inconnue, celui de l'objet de la faction du joueur.
 function Nodes:Label(node)
     if node and node.name then return node.name end
-    local faction = UnitFactionGroup and UnitFactionGroup("player")
-    if faction == "Horde" then return L["Vergence élémentaire"] end
-    return L["Ligne tellurique"]
+    return self:Word("title", node and node.kind)
 end
 
 function Nodes:SourceLabel(node)

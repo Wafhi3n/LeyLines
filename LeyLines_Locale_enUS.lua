@@ -1,5 +1,9 @@
 -- LeyLines_Locale_enUS.lua — overlay ANGLAIS (enUS/enGB). Clé FR → texte EN.
 -- Chargé APRÈS LeyLines_Locale.lua (qui crée LL.L). Sur un client non anglais : early-return.
+--
+-- Les phrases qui nomment l'objet le prennent en %s (Nodes:Word) : « ley line » pour l'Alliance,
+-- « elemental convergence » pour la Horde. D'où aucun article devant ce %s en anglais — « a ley
+-- line » deviendrait « a elemental convergence ».
 
 local _, LL = ...
 LL = LL or _G.LeyLines
@@ -9,10 +13,16 @@ local locale = GetLocale and GetLocale() or "enUS"
 if locale ~= "enUS" and locale ~= "enGB" then return end
 
 local en = {
-    -- Noms
-    ["Ligne tellurique"]  = "Ley Line",
-    ["Vergence élémentaire"] = "Elemental Vergence",
-    ["Lignes telluriques"] = "Ley Lines",
+    -- Noms. « Elemental Convergence » est le nom relevé sur le client (base du compte #4).
+    ["Ligne tellurique"]                = "Ley Line",
+    ["Convergence élémentaire"]         = "Elemental Convergence",
+    ["ligne tellurique"]                = "ley line",
+    ["convergence élémentaire"]         = "elemental convergence",
+    ["ligne(s) tellurique(s)"]          = "ley line(s)",
+    ["convergence(s) élémentaire(s)"]   = "elemental convergence(s)",
+    ["lignes telluriques"]              = "ley lines",
+    ["convergences élémentaires"]       = "elemental convergences",
+    ["Lignes telluriques"]              = "Ley Lines",
 
     -- Sources
     ["vignette du client"] = "client vignette",
@@ -26,28 +36,26 @@ local en = {
     -- État et commandes
     ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
         "v%s loaded. /ley for status, /ley help for the rest.",
-    ["v%s — %s ligne(s) ici, %s au total."] = "v%s — %s line(s) here, %s in total.",
+    ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s here, %s in total.",
     ["La plus proche : %s à %s yd."]        = "Nearest: %s at %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
-    ["%s ligne(s) tellurique(s) dans %s :"] = "%s ley line(s) in %s:",
+    ["%s %s dans %s :"]                     = "%s %s in %s:",
     ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
         "Commands: /ley (status), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
-    ["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."] =
-        "How it works: stand ON the ley line, then type /ley add (or use the keybind).",
+    ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
+        "How it works: stand ON the %s, then type /ley add (or use the keybind).",
 
     -- Capture
-    ["Nouvelle ligne tellurique enregistrée dans %s (%s ici)."] =
-        "New ley line recorded in %s (%s here).",
-    ["Ligne tellurique déjà connue — position confirmée (%s relevés)."] =
-        "Ley line already known — position confirmed (%s readings).",
-    ["Ligne tellurique effacée : %s."] = "Ley line erased: %s.",
-    ["%s ligne(s) tellurique(s) effacée(s)."] = "%s ley line(s) erased.",
-    ["Effacer toutes les lignes telluriques connues dans %s ?"] =
-        "Erase every known ley line in %s?",
-    ["Aucune ligne tellurique connue dans cette zone."] = "No ley line known in this zone.",
-    ["Aucune ligne tellurique à moins de 60 yd — place-toi dessus pour l'effacer."] =
-        "No ley line within 60 yd — stand on it to erase it.",
+    ["Nouvelle %s enregistrée dans %s (%s ici)."] = "New %s recorded in %s (%s here).",
+    ["%s déjà connue — position confirmée (%s relevés)."] =
+        "%s already known — position confirmed (%s readings).",
+    ["%s effacée."]                         = "%s erased.",
+    ["%s %s effacée(s)."]                   = "%s %s erased.",
+    ["Effacer toutes les %s connues dans %s ?"] = "Erase all known %s in %s?",
+    ["Aucune %s connue dans cette zone."]   = "No %s known in this zone.",
+    ["Aucune %s à moins de 60 yd — place-toi dessus pour l'effacer."] =
+        "No %s within 60 yd — stand on it to erase it.",
     ["Position indisponible ici — le client ne donne pas de coordonnées."] =
         "Position unavailable here — the client gives no coordinates.",
     ["Capture automatique : %s."] = "Automatic capture: %s.",
@@ -56,13 +64,13 @@ local en = {
     ["%s relevé(s) d'infobulle effacé(s)."] = "%s tooltip reading(s) erased.",
     ["Noms reconnus : %s."]       = "Recognised names: %s.",
     ["Nom reconnu ajouté : %s."]  = "Recognised name added: %s.",
-    ["Lance maintenant ton sort de ligne tellurique : le prochain sort réussi sera retenu."] =
-        "Cast your ley line spell now: the next successful cast will be remembered.",
+    ["Lance maintenant ton sort de %s : le prochain sort réussi sera retenu."] =
+        "Cast your %s spell now: the next successful cast will be remembered.",
     ["Apprentissage abandonné : aucun sort lancé."] = "Learning cancelled: no spell was cast.",
-    ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une faille."] =
-        "Spell remembered: %s (%s). From now on, only a cast followed by a LONG buff marks a ley line.",
-    ["Buff court : pas de faille ici, rien n'a été enregistré."] =
-        "Short buff: no ley line here, nothing was recorded.",
+    ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
+        "Spell remembered: %s (%s). From now on, only a cast followed by a LONG buff records the %s.",
+    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
+        "Short buff: no %s here, nothing was recorded.",
 
     -- Affichage
     ["Affichage sur la minicarte : %s."]      = "Minimap display: %s.",
@@ -79,33 +87,33 @@ local en = {
     ["Point de route posé sur %s."]            = "Map pin set on %s.",
     ["Cette zone n'accepte pas de point de route."] = "This zone does not accept a map pin.",
 
-    ["Buff de faille : %s min restantes — la plus proche à %s yd."] =
-        "Ley line buff: %s min left — nearest one %s yd away.",
-    ["Buff de faille : %s min restantes — aucune faille connue dans cette zone."] =
-        "Ley line buff: %s min left — no known ley line in this zone.",
+    ["%s : buff à %s min de la fin — la plus proche à %s yd."] =
+        "%s: buff ends in %s min — nearest one %s yd away.",
+    ["%s : buff à %s min de la fin — aucune connue dans cette zone."] =
+        "%s: buff ends in %s min — none known in this zone.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Buff reminder: at %s min left (0 = off).",
 
     -- Partage
-    ["Partage des lignes telluriques"] = "Ley line sharing",
-    ["Aucune ligne tellurique à exporter."] = "No ley line to export.",
+    ["Partage des positions"] = "Position sharing",
+    ["Aucune position à exporter."] = "No position to export.",
     ["Copie ce texte (Ctrl+C) et partage-le."] = "Copy this text (Ctrl+C) and share it.",
     ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
     ["Importer"] = "Import",
     ["Fermer"]   = "Close",
     ["Code invalide : ce n'est pas un export de Ley Lines."] = "That code isn't a Ley Lines export.",
-    ["%s ligne(s) importée(s), %s déjà connue(s)."] = "%s ley line(s) imported, %s already known.",
-    ["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."] =
-        "%s ley line(s) added from the shipped data.",
+    ["%s position(s) importée(s), %s déjà connue(s)."] = "%s position(s) imported, %s already known.",
+    ["%s position(s) ajoutée(s) depuis les données livrées."] =
+        "%s position(s) added from the shipped data.",
     ["restauré"] = "restored",
-    ["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."] =
-        "%s ley line(s) restored from the internal backup.",
+    ["%s position(s) restaurée(s) depuis la sauvegarde interne."] =
+        "%s position(s) restored from the internal backup.",
     ["import"]              = "import",
     ["livré avec l'addon"] = "shipped with the addon",
 
     -- Raccourcis clavier
-    ["Enregistrer une ligne tellurique ici"]     = "Record a ley line here",
-    ["Suivre la ligne tellurique la plus proche"] = "Track the nearest ley line",
+    ["Enregistrer une %s ici"]      = "Record the %s here",
+    ["Suivre la %s la plus proche"] = "Track the nearest %s",
 }
 
 for k, v in pairs(en) do LL.L[k] = v end

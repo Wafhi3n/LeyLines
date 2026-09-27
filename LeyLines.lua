@@ -102,7 +102,11 @@ end
 function LL:Record()      LL.Capture:Record("manual") end
 function LL:TrackNearest()
     local node = LL.Nodes:NearestToPlayer()
-    if node then LL.HUD:Track(node) else LL:Print(L["Aucune ligne tellurique connue dans cette zone."]) end
+    if node then LL.HUD:Track(node) else LL:NoneHere() end
+end
+
+function LL:NoneHere()
+    LL:Printf(L["Aucune %s connue dans cette zone."], LL.Nodes:Word("one"))
 end
 
 -- ---------------------------------------------------------------------------
@@ -110,10 +114,14 @@ end
 -- ---------------------------------------------------------------------------
 local CMD = {}
 
+-- Les comptes sont ceux de l'espèce du JOUEUR : ce qu'il voit sur sa carte, pas ce que la base
+-- du compte range pour ses personnages de l'autre faction.
 CMD.status = function()
+    local kind = LL.Nodes:PlayerKind()
     local map  = LL.Geo:PlayerMap()
-    local here = map and LL.Nodes:CountMap(map) or 0
-    LL:Printf(L["v%s — %s ligne(s) ici, %s au total."], LL.VERSION, here, LL.Nodes:Count())
+    local here = map and LL.Nodes:CountMap(map, kind) or 0
+    LL:Printf(L["v%s — %s %s ici, %s au total."], LL.VERSION, here, LL.Nodes:Word("many"),
+        LL.Nodes:Count(kind))
     local node, dist = LL.Nodes:NearestToPlayer()
     if node then
         LL:Printf(L["La plus proche : %s à %s yd."], LL.Nodes:Label(node), math.floor(dist + 0.5))
@@ -132,39 +140,36 @@ CMD.ici  = CMD.add
 CMD.del = function()
     local node, dist = LL.Nodes:NearestToPlayer()
     if not node or dist > 60 then
-        LL:Print(L["Aucune ligne tellurique à moins de 60 yd — place-toi dessus pour l'effacer."])
+        LL:Printf(L["Aucune %s à moins de 60 yd — place-toi dessus pour l'effacer."], LL.Nodes:Word("one"))
         return
     end
     LL.Nodes:Remove(node)
     LL.Nodes:Snapshot(true)   -- effacement VOULU : il doit tenir au prochain chargement
-    LL:Printf(L["Ligne tellurique effacée : %s."], LL.Nodes:Label(node))
+    LL:Printf(L["%s effacée."], LL.Nodes:Label(node))
     LL:Refresh()
 end
 CMD.suppr = CMD.del
 
 CMD.list = function()
-    local map = LL.Geo:PlayerMap()
-    local list = map and LL.Nodes:All(map)
-    if not list or #list == 0 then
-        LL:Print(L["Aucune ligne tellurique connue dans cette zone."])
-        return
-    end
-    LL:Printf(L["%s ligne(s) tellurique(s) dans %s :"], #list, LL.Geo:MapName(map))
-    for _, node in ipairs(list) do
-        local dist = LL.Nodes:DistanceToPlayer(node)
-        LL:Printf("  |cff9b6ef3%s|r  %.1f / %.1f  —  %s yd  (%s)", LL.Nodes:Label(node),
-            node.x * 100, node.y * 100, dist and math.floor(dist + 0.5) or "?", LL.Nodes:SourceLabel(node))
+    local kind = LL.Nodes:PlayerKind()
+    local map  = LL.Geo:PlayerMap()
+    local n    = map and LL.Nodes:CountMap(map, kind) or 0
+    if n == 0 then return LL:NoneHere() end
+    LL:Printf(L["%s %s dans %s :"], n, LL.Nodes:Word("many"), LL.Geo:MapName(map))
+    for _, node in ipairs(LL.Nodes:All(map)) do
+        if LL.Nodes:Shows(node, kind) then
+            local dist = LL.Nodes:DistanceToPlayer(node)
+            LL:Printf("  |cff9b6ef3%s|r  %.1f / %.1f  —  %s yd  (%s)", LL.Nodes:Label(node),
+                node.x * 100, node.y * 100, dist and math.floor(dist + 0.5) or "?", LL.Nodes:SourceLabel(node))
+        end
     end
 end
 CMD.liste = CMD.list
 
 CMD.clear = function()
     local map = LL.Geo:PlayerMap()
-    if not map or LL.Nodes:CountMap(map) == 0 then
-        LL:Print(L["Aucune ligne tellurique connue dans cette zone."])
-        return
-    end
-    StaticPopup_Show("LEYLINES_CLEAR_ZONE", LL.Geo:MapName(map), nil, map)
+    if not map or LL.Nodes:CountMap(map, LL.Nodes:PlayerKind()) == 0 then return LL:NoneHere() end
+    StaticPopup_Show("LEYLINES_CLEAR_ZONE", LL.Nodes:Word("all"), LL.Geo:MapName(map), map)
 end
 CMD.vider = CMD.clear
 
@@ -260,7 +265,8 @@ CMD.diag  = CMD.probe
 
 CMD.help = function()
     LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
-    LL:Print(L["Marche à suivre : place-toi SUR la ligne tellurique et fais /ley add (ou le raccourci clavier)."])
+    LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
+        LL.Nodes:Word("one"))
 end
 CMD.aide = CMD.help
 
@@ -284,13 +290,13 @@ function LL:Refresh()
 end
 
 StaticPopupDialogs["LEYLINES_CLEAR_ZONE"] = {
-    text         = L["Effacer toutes les lignes telluriques connues dans %s ?"],
+    text         = L["Effacer toutes les %s connues dans %s ?"],
     button1      = YES,
     button2      = NO,
     OnAccept     = function(_, map)
-        local n = LL.Nodes:ClearMap(map)
+        local n = LL.Nodes:ClearMap(map, LL.Nodes:PlayerKind())
         LL.Nodes:Snapshot(true)
-        LL:Printf(L["%s ligne(s) tellurique(s) effacée(s)."], n)
+        LL:Printf(L["%s %s effacée(s)."], n, LL.Nodes:Word("many"))
         LL:Refresh()
     end,
     timeout      = 0,
@@ -301,9 +307,15 @@ StaticPopupDialogs["LEYLINES_CLEAR_ZONE"] = {
 -- ---------------------------------------------------------------------------
 -- Démarrage
 -- ---------------------------------------------------------------------------
-_G.BINDING_HEADER_LEYLINES      = L["Lignes telluriques"]
-_G.BINDING_NAME_LEYLINES_RECORD = L["Enregistrer une ligne tellurique ici"]
-_G.BINDING_NAME_LEYLINES_TRACK  = L["Suivre la ligne tellurique la plus proche"]
+_G.BINDING_HEADER_LEYLINES = L["Lignes telluriques"]
+
+-- Les libellés de raccourcis nomment l'objet de la faction : ils attendent donc PLAYER_LOGIN, où
+-- la faction est connue. La fenêtre des raccourcis ne s'ouvre pas avant.
+local function NameBindings()
+    local word = LL.Nodes:Word("one")
+    _G.BINDING_NAME_LEYLINES_RECORD = string.format(L["Enregistrer une %s ici"], word)
+    _G.BINDING_NAME_LEYLINES_TRACK  = string.format(L["Suivre la %s la plus proche"], word)
+end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
@@ -333,6 +345,7 @@ f:SetScript("OnEvent", function(_, event, arg1)
         LL.Nodes:Snapshot()
     elseif event == "PLAYER_LOGIN" then
         LL.Nodes:Init()
+        NameBindings()
         local restored = LL.Nodes:RestoreIfEmpty()
         LL.Capture:Init()
         LL.Minimap:Init()
@@ -341,7 +354,7 @@ f:SetScript("OnEvent", function(_, event, arg1)
         LL:Refresh()
         LL:Printf(L["v%s chargée. /ley pour l'état, /ley help pour le reste."], LL.VERSION)
         if restored > 0 then
-            LL:Printf(L["%s ligne(s) tellurique(s) restaurée(s) depuis la sauvegarde interne."], restored)
+            LL:Printf(L["%s position(s) restaurée(s) depuis la sauvegarde interne."], restored)
         end
         -- Les données livrées attendent 3 s : l'anti-doublon a besoin de la TAILLE de la zone
         -- (C_Map.GetMapWorldSize), que le client ne donne pas toujours dès PLAYER_LOGIN. Fusionner
@@ -349,7 +362,7 @@ f:SetScript("OnEvent", function(_, event, arg1)
         C_Timer.After(3, function()
             local shipped = LL.Nodes:ApplyShipped()
             if shipped > 0 then
-                LL:Printf(L["%s ligne(s) tellurique(s) ajoutée(s) depuis les données livrées."], shipped)
+                LL:Printf(L["%s position(s) ajoutée(s) depuis les données livrées."], shipped)
                 LL:Refresh()
             end
             LL.Nodes:Snapshot()

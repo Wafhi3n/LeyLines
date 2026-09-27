@@ -49,6 +49,9 @@ function Probe:DumpPosition()
     LL:Printf("taille de la zone : %s x %s yards%s", w and math.floor(w) or "?",
         h and math.floor(h) or "?", w and "" or "  <<< sans taille, aucun calcul de distance")
     LL:Printf("lignes connues : %s ici, %s au total", LL.Nodes:CountMap(map), LL.Nodes:Count())
+    local kind = LL.Nodes:PlayerKind()
+    LL:Printf("espece du joueur : %s — %s visible(s) ici, %s au total (inconnues comprises)",
+        kind, LL.Nodes:CountMap(map, kind), LL.Nodes:Count(kind))
 end
 
 function Probe:DumpMinimap()

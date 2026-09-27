@@ -298,19 +298,25 @@ end
 function Capture:ResolveCast(map, x, y)
     local aura = self:FreshLongBuff()
     if not aura then
-        LL:Print(L["Buff court : pas de faille ici, rien n'a été enregistré."])
+        LL:Printf(L["Buff court : pas de %s ici, rien n'a été enregistré."], LL.Nodes:Word("one"))
         return
     end
     if aura.spellId then LL.db.auras[aura.spellId] = aura.name or true end
+    -- Le sort n'absorbe que l'objet de SA faction (dit par le joueur le 2026-09-27) : l'espèce d'une
+    -- capture au sort est donc celle du joueur, sans rien deviner.
+    local kind = LL.Nodes:PlayerKind()
     -- Si la faille a été survolée juste avant, on hérite de son VRAI nom ; sinon le libellé par
-    -- défaut fera l'affaire. On ne prend le texte que s'il correspond aux noms reconnus.
+    -- défaut fera l'affaire. On ne prend le texte que s'il correspond aux noms reconnus, et pas
+    -- s'il nomme l'objet de l'AUTRE faction (survolé en chemin, il n'est pas celui qu'on a absorbé).
     local seen = self:Matches(self.lastText) and LL.Nodes:CleanName(self.lastText) or nil
-    self:Store(map, x, y, { src = "spell", name = seen })
+    if seen and (LL.Nodes:KindOfName(seen) or kind) ~= kind then seen = nil end
+    self:Store(map, x, y, { src = "spell", name = seen, kind = kind })
 end
 
 function Capture:ArmLearn()
     self.learning = true
-    LL:Print(L["Lance maintenant ton sort de ligne tellurique : le prochain sort réussi sera retenu."])
+    LL:Printf(L["Lance maintenant ton sort de %s : le prochain sort réussi sera retenu."],
+        LL.Nodes:Word("one"))
     C_Timer.After(LEARN_TIMEOUT, function()
         if Capture.learning then
             Capture.learning = nil
@@ -324,8 +330,8 @@ function Capture:Learn(spellID)
     if not spellID then return end
     local name = SpellName(spellID) or tostring(spellID)
     LL.db.spells[spellID] = name
-    LL:Printf(L["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une faille."],
-        name, spellID)
+    LL:Printf(L["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."],
+        name, spellID, LL.Nodes:Word("one"))
     -- Ce lancer-ci compte comme les suivants : le sort vient d'être retenu, la garde ne bloque plus.
     self:OnSpellCast(spellID)
 end
@@ -333,17 +339,24 @@ end
 -- ---------------------------------------------------------------------------
 -- Entrée unique dans la base
 -- ---------------------------------------------------------------------------
+-- L'espèce vient de l'appelant (le sort la connaît) ; à défaut, du NOM lu sur le client pour une
+-- infobulle ou une vignette (on peut survoler l'objet de l'autre faction) ; à défaut, du joueur.
 function Capture:Store(map, x, y, info)
-    local before = LL.Nodes:CountMap(map)
+    if not info.kind then
+        local byName = (info.src == "tooltip" or info.src == "vignette") and LL.Nodes:KindOfName(info.name)
+        info.kind = byName or LL.Nodes:PlayerKind()
+    end
+    local before = LL.Nodes:CountMap(map, info.kind)
     local node, isNew = LL.Nodes:Add(map, x, y, info)
     if not node then return nil, false end
 
     if isNew then
-        LL:Printf(L["Nouvelle ligne tellurique enregistrée dans %s (%s ici)."],
-            LL.Geo:MapName(map), before + 1)
+        LL:Printf(L["Nouvelle %s enregistrée dans %s (%s ici)."],
+            LL.Nodes:Word("one", info.kind), LL.Geo:MapName(map), before + 1)
         LL:Refresh()
     elseif info.src == "manual" or info.src == "spell" then
-        LL:Printf(L["Ligne tellurique déjà connue — position confirmée (%s relevés)."], node.hits)
+        LL:Printf(L["%s déjà connue — position confirmée (%s relevés)."],
+            LL.Nodes:Word("title", node.kind), node.hits)
         LL:Refresh()
     end
     return node, isNew
