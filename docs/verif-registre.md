@@ -23,6 +23,18 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-27 - jusqu'a d612768 - Forever, compte #1 (Joa-Joa, Alliance), base au format v1.0.0
+  EXACT installee a la main (2 captures au sort dont une sans nom, 1 releve manuel, `auras` sans
+  buff Horde) - **GO sur la conversion v1.0.0 -> v1.1.0 et sur /ley contribute** - rapporte par le
+  user : « 1 position(s) added from the shipped data », puis `/ley contribute` =
+  `LL2;L2521=3539,3372,5200,6100,4626,1778` : les 2 captures au sort + une capture faite pendant
+  la seance, SANS le releve manuel. Relu sur le disque apres /reload : schemaVer 2 -> 3,
+  dataVersion 2, `vergence` ajoute aux noms, copie `db.legacy` prise au 1er chargement (LL2 sans
+  espece, les 3 points d'origine), tous les points en `L`, aucun perdu, la capture sans nom NON
+  deplacee par le point livre voisin (hits 3 -> 4).
+  PAS observe : la vieille base qui a capture cote Horde (buff 1270893 dans `auras`), couverte
+  seulement par les tests ; aucune erreur Lua rapportee, sans releve explicite de BugGrabber.
+
 - 2026-09-27 - jusqu'a 420b093 - Forever, 2 comptes sur le meme PC (#4 Horde, #1 Joa-Joa,
   personnage Alliance neuf), un client a la fois - **GO sur l'espece des points** - sur #4, apres
   rattachement a la main des 2 tornades SANS nom d'une base de developpement (`/run`, kind = V) :
