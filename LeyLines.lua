@@ -259,12 +259,14 @@ CMD.import = function(rest)
     if rest ~= "" then LL.Share:Import(rest) else LL.Share:ShowImport() end
 end
 CMD.partage = CMD.export
+CMD.contribute = function() LL.Share:ShowContribute() end
+CMD.contribuer = CMD.contribute
 
 CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end
@@ -332,6 +334,10 @@ f:SetScript("OnEvent", function(_, event, arg1)
         local state = { restored = (given ~= nil), nodes = 0,
                         dataVersion = given and given.dataVersion or nil,
                         backup = given and given.backup and given.backup.n or nil }
+        -- Lu AVANT CopyDefaults, qui y ajoute le buff Horde par défaut : la v1.0.0 n'inscrivait
+        -- 1270893 (Elemental Blessing) dans `auras` qu'après une VRAIE capture côté Horde. C'est
+        -- ce qui permet de classer sans deviner les points sans nom d'une vieille base (Nodes:Init).
+        state.legacyHorde = (given and type(given.auras) == "table" and given.auras[1270893] ~= nil) or false
         if given and type(given.nodes) == "table" then
             for _, list in pairs(given.nodes) do state.nodes = state.nodes + #list end
         end

@@ -29,18 +29,28 @@ LL.Share = Share
 local SCALE = 10000
 local KNOWN = { [""] = true, L = true, V = true }
 
+-- Ce qui part vers la LISTE COMMUNE (`/ley contribute`) : les captures que le JEU a tranchées, et
+-- rien d'autre. Un relevé manuel ou d'infobulle peut être à 30 yd ; un point livré ou importé
+-- reviendrait à l'identique, sans que personne soit allé le voir. Un point livré que le joueur a
+-- ensuite confirmé au sort passe en `spell` (Nodes:Confirm) : il repart, et c'est mérité.
+local VERIFIED = { spell = true, vignette = true }
+
 -- ---------------------------------------------------------------------------
 -- Codec (pur, testable sans client)
 -- ---------------------------------------------------------------------------
-function Share:Encode()
+
+-- `sources` (facultatif) : ne garder que les points dont la source y figure.
+function Share:Encode(sources)
     local groups = {}
     for map, list in pairs(LL.db.nodes) do
         for _, node in ipairs(list) do
-            local key = (node.kind or "") .. tostring(map)
-            local nums = groups[key] or {}
-            groups[key] = nums
-            nums[#nums + 1] = string.format("%d,%d",
-                math.floor(node.x * SCALE + 0.5), math.floor(node.y * SCALE + 0.5))
+            if not sources or sources[node.src] then
+                local key = (node.kind or "") .. tostring(map)
+                local nums = groups[key] or {}
+                groups[key] = nums
+                nums[#nums + 1] = string.format("%d,%d",
+                    math.floor(node.x * SCALE + 0.5), math.floor(node.y * SCALE + 0.5))
+            end
         end
     end
     local parts = {}
@@ -206,6 +216,16 @@ function Share:ShowExport()
         return
     end
     self:Open(blob, L["Copie ce texte (Ctrl+C) et partage-le."])
+end
+
+-- Le code à coller dans un ticket GitHub pour la liste commune (docs/specs/contribution-positions.md).
+function Share:ShowContribute()
+    local blob = self:Encode(VERIFIED)
+    if not blob then
+        LL:Print(L["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."])
+        return
+    end
+    self:Open(blob, L["Colle ce code dans un ticket : github.com/Wafhi3n/LeyLines"])
 end
 
 function Share:ShowImport()

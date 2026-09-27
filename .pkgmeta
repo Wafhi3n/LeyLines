@@ -4,3 +4,6 @@ ignore:
   - .gitignore
   - .pkgmeta
   - docs
+  - tools
+  - data
+  - .github

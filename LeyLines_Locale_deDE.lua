@@ -40,8 +40,8 @@ local de = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minikarte %s — Karte %s — Verfolgung %s — Auto-Erfassung %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "So geht's: Stell dich AUF die %s und tippe /ley add (oder nutze die Tastenbelegung).",
 
@@ -98,6 +98,10 @@ local de = {
     ["Partage des positions"] = "Positionen teilen",
     ["Aucune position à exporter."] = "Keine Position zum Exportieren.",
     ["Copie ce texte (Ctrl+C) et partage-le."] = "Kopiere diesen Text (Strg+C) und teile ihn.",
+    ["Colle ce code dans un ticket : github.com/Wafhi3n/LeyLines"] =
+        "Füge diesen Code in ein Issue ein: github.com/Wafhi3n/LeyLines",
+    ["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."] =
+        "Nichts zu teilen: Nur deine vom Spiel bestätigten Erfassungen (Zauber vor Ort gewirkt) kommen in die gemeinsame Liste.",
     ["Colle un code reçu, puis clique sur Importer."] = "Füge einen erhaltenen Code ein und klicke auf Importieren.",
     ["Importer"] = "Importieren",
     ["Fermer"]   = "Schließen",

@@ -1,33 +1,25 @@
--- LeyLines_Data.lua — positions LIVRÉES avec l'addon.
+-- LeyLines_Data.lua — positions LIVRÉES avec l'addon, communes à tous les joueurs.
 --
--- Pourquoi un fichier séparé de la base du joueur : ces points sont fusionnés UNE fois dans sa
--- base (au palier `DATA_VERSION`), puis ils lui appartiennent. S'il en efface un, il reste effacé
--- — on ne le lui remet pas au prochain /reload. Un nouveau lot se livre en incrémentant
--- DATA_VERSION, et seul le delta est repris.
+-- ATTENTION : FICHIER GÉNÉRÉ par tools/ll_ingest.lua (scripts\ll_ingest.ps1 -Build) à partir des
+-- contributions data/contrib/*.ll. NE PAS L'ÉDITER À LA MAIN : la génération suivante écraserait
+-- la modification. Pour retirer un point, corriger ou supprimer sa contribution, puis régénérer.
 --
--- Leur précision est volontairement basse (voir PRECISION dans LeyLines_Nodes.lua) : un relevé
--- fait par le joueur lui-même, sort à l'appui, ne doit JAMAIS être déplacé par une donnée livrée.
---
--- Format : [espèce][uiMapID] = { x1, y1, x2, y2, ... } en coordonnées de carte (0..1). Espèce :
--- L = fissure (Alliance), V = tornade (Horde), voir LeyLines_Nodes.lua. Liste plate parce qu'elle
--- grossira, et qu'une table par point coûterait dix fois la place pour rien.
---
--- Source des points : exports de joueurs (`/ley export`), recopiés ici tels quels.
---
--- DATA_VERSION 2 (v1.1.0) : même contenu que la 1, rangé par espèce. Une base qui avait déjà
--- fusionné ces points les a reçus sans espèce ; Nodes:Init les range en fissures au chargement,
--- ce qui est juste pour ces deux-là.
+-- Format : [espèce][uiMapID] = { x, y, palier, ... } — coordonnées de carte (0..1) ; palier =
+-- DATA_VERSION qui a introduit le point : Nodes:ApplyShipped ne fusionne que ceux qu'un joueur n'a
+-- pas encore reçus, pour qu'un point qu'il a effacé ne revienne pas. Espèce : L = fissure
+-- (Alliance), V = tornade (Horde). Un point par ligne, pour que la relecture d'une PR se fasse
+-- ligne à ligne.
 local _, LL = ...
 
 LL.DATA_VERSION = 2
 
 LL.DATA = {
     L = {
-        -- Zephras Isle — relevés au sort (buff long) le 2026-09-20.
         [2521] = {
-            0.3537, 0.3370,
-            0.3881, 0.4759,
+            0.3537, 0.3370, 2,
+            0.3881, 0.4759, 2,
         },
     },
-    V = {},
+    V = {
+    },
 }

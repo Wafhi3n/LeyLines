@@ -131,9 +131,13 @@ désormais l'espèce de chaque point.
 - **A3 — Un retrait livré n'efface jamais un relevé du joueur.** Il n'efface que les points
   `shipped` et `import`. Même logique que `PRECISION` : une donnée reçue comble un trou, elle ne
   corrige pas une vérité locale.
-- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` sinon. Aucune
-  version publiée avant la v1.1.0 ne capturait côté Horde : un point sans nom parlant est une
-  fissure.
+- **A4 — Migration des points existants** : `V` si leur nom contient « vergence », `L` sinon.
+  **Affiné le 2026-09-27 à la relecture du tag `v1.0.0`** (demande du user : les données du premier
+  contributeur ne doivent pas être corrompues) : la v1.0.0 capturait AUSSI côté Horde, via
+  `/ley learn` + Skysight, et inscrivait alors le buff Horde (1270893) dans `auras`. D'où : base
+  rendue par le client SANS ce buff → `L` (certain) ; AVEC → faction du personnage qui la charge
+  en premier (juste pour un compte d'une seule faction). Et avant tout classement, une copie texte
+  de la base telle quelle (`db.legacy`), jamais réécrite : aucun classement ne peut rien perdre.
   **Amendement essayé puis RETIRÉ le 2026-09-27.** L'agent avait remplacé « `L` sinon » par une
   espèce « inconnue, visible des deux factions », pour épargner les deux captures Horde SANS nom de
   la base de développement #4. Testé en jeu le jour même : ces deux points, exportés sans espèce,
@@ -219,21 +223,50 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 | `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
 | `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
 | `db.contrib.at` | Date de la dernière contribution générée. |
+| `db.legacy` | **Livré en v1.1.0.** Copie texte (`{ at, blob }`) d'une base d'avant l'espèce, prise AVANT de lui donner ses espèces et jamais réécrite : si le classement A4 se trompe, rien n'est perdu. |
 
 ### Données livrées — `LeyLines_Data.lua`, **généré**
 
 ```lua
 LL.DATA_VERSION = <n>
-LL.DATA = { L = { [uiMapID] = { x1, y1, ... } }, V = { ... } }   -- ajouts
-LL.GONE = { L = { [uiMapID] = { x1, y1, ... } }, V = { ... } }   -- retraits (A3)
+LL.DATA = { L = { [uiMapID] = { x, y, palier, ... } }, V = { ... } }   -- ajouts
+LL.GONE = { L = { [uiMapID] = { x, y, palier, ... } }, V = { ... } }   -- retraits (A3), v1.2.0
 ```
 
-`LL.DATA` par espèce est livré en v1.1.0 (`DATA_VERSION` 2) ; `LL.GONE` attend la v1.2.0.
+**Livré en v1.1.0 : `LL.DATA` en triplets.** Le palier est le `DATA_VERSION` qui a introduit le
+point ; `Nodes:ApplyShipped` ne fusionne que les points plus récents que la dernière fusion du
+joueur. Avant, chaque livraison recopiait la liste ENTIÈRE : un point effacé exprès revenait à
+chaque release de données.
 
-Le fichier cesse d'être écrit à la main : il est produit à partir de `data/contrib/<n° de ticket>.ll`
-(une contribution validée par fichier, texte `LL2` + `maps` + date), qui devient la source de
-vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pkgmeta` ignore `data`,
-`tools` et `.github`.
+Le fichier n'est plus écrit à la main : `tools/ll_ingest.lua` le produit à partir de
+`data/contrib/<id>.ll` (une contribution par fichier : `from`, `date`, `source`, `version`, `code`
+en LL2), qui sont la source de vérité. Retirer une contribution = supprimer son fichier et
+régénérer. Les deux points de Zephras Isle sont la contribution `seed-zephras` (palier 2).
+`.pkgmeta` ignore `data`, `tools` et `.github`.
+
+### Pipeline v1 — outillé mais à la main (v1.1.0)
+
+Décidé le 2026-09-27 avec le user : un seul contributeur pour l'instant, donc pas encore d'Action.
+
+```
+joueur   /ley contribute  →  code LL2 (sort + vignette seulement, A2)
+           ↓ formulaire .github/ISSUE_TEMPLATE/positions.yml (code + faction)
+nous     .\scripts\ll_ingest.ps1 -Issue <n>          (ou -Code / -SavedVariables, voir l'en-tête)
+           → data/contrib/<id>.ll, puis LeyLines_Data.lua régénéré, rapport par contribution
+toi      relire le diff, 4 portes, commit, release
+```
+
+Trois entrées, parce que le premier contributeur est resté en v1.0.0, sans export :
+- **code `LL2`** : le cas normal ;
+- **code `LL1`** : accepté seulement avec `-Faction` (un point sans espèce ne se devine pas) ;
+- **fichier de SavedVariables** d'un joueur : c'est du CODE venu d'un inconnu. Il est filtré avant
+  toute évaluation (tables seulement : ni parenthèse, ni `:`, ni `..`, ni mot-clé ; pas de
+  bytecode ; 2 Mo au plus), puis évalué dans un environnement vide, sans méthodes de chaîne, sous
+  un plafond d'instructions. N'en sort que ce que le jeu a tranché (sort, vignette) ; une vieille
+  base qui a capturé côté Horde exige `-Faction`.
+
+Le dédoublonnage de l'outil est approximatif (écart de carte < 0,003, sans taille de zone) : c'est
+le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
 
 ## Renvois
 
@@ -257,9 +290,15 @@ vérité. Les deux points de Zephras Isle deviennent la contribution n° 0. `.pk
   v1.2.0 : `seen`, `gone`, couleur « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.
-- **T3** — `/ley contribute` : filtre (A2), lien, cas « trop long ». Critères 3, 4, 9.
-- **T4** — `LL.DATA` / `LL.GONE` par espèce, retraits dans `ApplyShipped` (A3). Critère 5.
-- **T5** — Dépôt : formulaire de ticket + Action de validation et de commentaire. Le corps du
-  ticket passe par une variable d'environnement, jamais par `${{ }}` dans un `run:`. Critère 11.
-- **T6** — Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`, PR unique. Critères 6, 7.
+- **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli
+  et le cas « trop long ». Critères 3 (hors `seen`), 9.
+- **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les
+  retraits dans `ApplyShipped` (A3). Critère 5.
+- **T5** — ~~formulaire de ticket~~ (écrit, branche `feat/pipeline-donnees`, PAS encore poussé ;
+  l'étiquette `positions` n'existe pas encore sur le dépôt) ; reste l'Action de validation et de
+  commentaire. Le corps du ticket passe par une variable d'environnement, jamais par `${{ }}` dans
+  un `run:`. Critère 11.
+- **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`
+  + `scripts\ll_ingest.ps1`, lancé à la main ; critères 6 partiel, 7 → `tests/test_ll_ingest.lua`) ;
+  reste la PR unique ouverte par l'Action.
 - **T7** — Release v1.2.0, réponse sur le commentaire CurseForge avec le lien du formulaire.

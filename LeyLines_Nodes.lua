@@ -39,11 +39,10 @@ local SOURCE_LABEL = {
 -- Espèce : L = fissure (Alliance), V = tornade (Horde). TOUT point en a une.
 --
 -- Un point d'avant la v1.1.0 n'en a pas : il la reçoit au chargement (Init), d'après son nom s'il
--- en dit quelque chose, sinon FISSURE — aucune version publiée avant la v1.1.0 ne capturait côté
--- Horde (A4, validé par le joueur le 2026-09-27). Une espèce « inconnue, visible des deux » a été
--- essayée le même jour et rejetée en jeu : c'est exactement ce qui posait des « Ley Line » Horde
--- dans les Tarides chez un personnage Alliance. Un code d'échange sans espèce ne s'importe donc
--- plus (Share:Import).
+-- en dit quelque chose, sinon d'après LegacyKind (A4). Une espèce « inconnue, visible des deux » a
+-- été essayée le 2026-09-27 et rejetée en jeu : c'est exactement ce qui posait des « Ley Line »
+-- Horde dans les Tarides chez un personnage Alliance. Un code d'échange sans espèce ne s'importe
+-- donc plus (Share:Import).
 -- ---------------------------------------------------------------------------
 local KINDS = { L = true, V = true }
 
@@ -112,7 +111,38 @@ function Nodes:Init()
             else
                 node.map  = map
                 node.name = self:CleanName(node.name)
-                node.kind = KINDS[node.kind] and node.kind or self:KindOfName(node.name) or "L"
+            end
+        end
+    end
+    self:KeepLegacyCopy()
+    local legacy = self:LegacyKind()
+    for _, list in pairs(LL.db.nodes) do
+        for _, node in ipairs(list) do
+            node.kind = KINDS[node.kind] and node.kind or self:KindOfName(node.name) or legacy
+        end
+    end
+end
+
+-- Espèce d'un point d'avant la v1.1.0 dont le nom ne dit rien (A4). La v1.0.0 capturait AUSSI côté
+-- Horde, via `/ley learn`, et inscrivait alors le buff Horde dans `auras` (LeyLines.lua le relève
+-- avant que les défauts ne l'y ajoutent). Base qui n'en porte aucun : tout y a été capturé côté
+-- Alliance, fissure. Sinon, la faction du personnage qui la charge en premier — juste pour un compte
+-- d'une seule faction, c'est-à-dire presque toujours, et KeepLegacyCopy couvre le reste.
+function Nodes:LegacyKind()
+    if LL.loadState and LL.loadState.legacyHorde then return self:PlayerKind() end
+    return "L"
+end
+
+-- Avant de donner une espèce aux points d'une vieille base, on en garde UNE copie texte telle
+-- quelle, jamais réécrite : si le classement se trompe, rien n'est perdu. Le joueur ne voit rien,
+-- c'est une assurance que l'on relit dans son fichier de SavedVariables.
+function Nodes:KeepLegacyCopy()
+    if LL.db.legacy or not LL.Share then return end
+    for _, list in pairs(LL.db.nodes) do
+        for _, node in ipairs(list) do
+            if not KINDS[node.kind] then
+                LL.db.legacy = { at = time(), blob = LL.Share:Encode() }
+                return
             end
         end
     end
@@ -182,19 +212,24 @@ function Nodes:AddSegments(segments, src, defaultKind)
     return added
 end
 
--- Fusionne les positions livrées avec l'addon (LeyLines_Data.lua), UNE fois par palier de
--- DATA_VERSION. Sans ce palier, un point que le joueur a effacé exprès reviendrait à chaque
--- chargement : la base lui appartient dès la première fusion.
+-- Fusionne les positions livrées avec l'addon (LeyLines_Data.lua) : seulement celles qu'un palier
+-- de DATA_VERSION a introduites DEPUIS la dernière fusion de ce joueur. Chaque point livré porte
+-- son palier (triplets x, y, palier) : sans ça, chaque nouvelle livraison recopiait la liste
+-- ENTIÈRE, et un point que le joueur avait effacé exprès revenait à chaque mise à jour des données.
+-- La base lui appartient dès la première fusion.
 function Nodes:ApplyShipped()
     local version = LL.DATA_VERSION or 0
-    if (LL.db.dataVersion or 0) >= version then return 0 end
+    local since   = LL.db.dataVersion or 0
+    if since >= version then return 0 end
 
     local added = 0
     for kind, maps in pairs(LL.DATA or {}) do
         for map, list in pairs(maps) do
-            for i = 1, #list - 1, 2 do
-                local _, isNew = self:Add(map, list[i], list[i + 1], { src = "shipped", kind = kind })
-                if isNew then added = added + 1 end
+            for i = 1, #list - 2, 3 do
+                if (list[i + 2] or 0) > since then
+                    local _, isNew = self:Add(map, list[i], list[i + 1], { src = "shipped", kind = kind })
+                    if isNew then added = added + 1 end
+                end
             end
         end
     end

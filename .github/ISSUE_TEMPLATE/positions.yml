@@ -1,0 +1,43 @@
+name: Share positions
+description: Send the ley lines or elemental convergences you found, so everyone gets them in the next update.
+title: "Positions from "
+labels: ["positions"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping map Forever!
+
+        **In game**, type `/ley contribute`, press Ctrl+C to copy the code, and paste it below.
+        Only spots you confirmed yourself (spell cast on the spot, long buff) are in that code, so the shared list stays clean.
+
+        **Still on Ley Lines 1.0.0?** Update first: `/ley contribute` doesn't exist there.
+        If you can't update, attach your saved file instead:
+        `World of Warcraft\_classic_beta_\WTF\Account\<ACCOUNT>\SavedVariables\LeyLines.lua`
+        (rename it to `LeyLines.txt`, GitHub refuses `.lua` attachments).
+  - type: textarea
+    id: code
+    attributes:
+      label: Code
+      description: The text from `/ley contribute`. It starts with `LL2;`.
+      placeholder: "LL2;L2521=3537,3370,..."
+      render: text
+    validations:
+      required: false
+  - type: dropdown
+    id: faction
+    attributes:
+      label: Faction
+      description: Alliance absorbs ley lines, Horde absorbs elemental convergences.
+      options:
+        - Alliance
+        - Horde
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: A spot that's gone, a zone you haven't finished, anything that looked off.
+    validations:
+      required: false
