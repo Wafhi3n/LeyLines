@@ -58,6 +58,8 @@ LL.DEFAULTS = {
     -- contrib.at : date (time()) de la dernière contribution générée par `/ley contribute`. La
     -- suivante ne porte que les points confirmés APRÈS (node.seen, voir _Nodes).
     contrib    = {},
+    -- Le signal des positions à partager (LeyLines_Signal.lua) : `/ley signal off` le coupe.
+    signal     = true,
 }
 
 function LL:Print(msg)
@@ -272,11 +274,26 @@ CMD.contribute = function(rest)
 end
 CMD.contribuer = CMD.contribute
 
+-- `/ley signal on|off` ; sans argument, bascule, comme hud / pins / map. Coupé, le signal se tait
+-- mais le nombre reste calculé : il est redonné ici.
+CMD.signal = function(rest)
+    local arg = string.lower(rest)
+    if arg == "on" then LL.db.signal = true
+    elseif arg == "off" then LL.db.signal = false
+    else LL.db.signal = not LL.db.signal end
+    LL:Refresh()
+    LL:Printf(L["Signal des positions à partager : %s."], LL:OnOff(LL.db.signal))
+    local pending = LL.Signal:Count()
+    if pending > 0 then
+        LL:Printf(L["%s position(s) à partager, absente(s) de la liste commune."], pending)
+    end
+end
+
 CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end
@@ -382,6 +399,7 @@ f:SetScript("OnEvent", function(_, event, arg1)
                 LL:Refresh()
             end
             LL.Nodes:Snapshot()
+            LL.Signal:Init()
         end)
     end
 end)

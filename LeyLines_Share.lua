@@ -300,6 +300,7 @@ function Share:ShowContribute(all)
         return
     end
     LL.db.contrib.at = time()
+    LL:Refresh()   -- le signal des positions à partager s'éteint (LeyLines_Signal.lua, S1)
     local url = self:ContributeURL(blob, true)
     if #url <= MAX_URL then
         self:Open(url, L["Ouvre ce lien dans ton navigateur (Ctrl+C) : le formulaire sera déjà rempli."], blob)

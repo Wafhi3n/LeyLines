@@ -40,8 +40,8 @@ local de = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minikarte %s — Karte %s — Verfolgung %s — Auto-Erfassung %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "So geht's: Stell dich AUF die %s und tippe /ley add (oder nutze die Tastenbelegung).",
 
@@ -114,6 +114,11 @@ local de = {
         "Zu lang für einen Link: Öffne diesen und füge dann den Code ein (Knopf Code).",
     ["Code"] = "Code",
     ["Lien"] = "Link",
+    ["Position absente de la liste commune : /ley contribute pour la partager avec tous."] =
+        "Diese Position fehlt in der gemeinsamen Liste: /ley contribute, um sie mit allen zu teilen.",
+    ["Signal des positions à partager : %s."] = "Hinweis auf zu teilende Positionen: %s.",
+    ["%s position(s) à partager, absente(s) de la liste commune."] =
+        "%s Position(en) zu teilen, fehlen in der gemeinsamen Liste.",
     ["Colle un code reçu, puis clique sur Importer."] = "Füge einen erhaltenen Code ein und klicke auf Importieren.",
     ["Importer"] = "Importieren",
     ["Fermer"]   = "Schließen",
