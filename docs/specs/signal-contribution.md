@@ -1,6 +1,8 @@
 # Signal « position à partager » sur la minicarte
 
-> État : **validée, pas commencée** · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
+> État : **codée et vue en jeu** (P0-P4, branche `feat/signal-contribution`, pas publiée ;
+> critères 8, 9 et 10 vus le 2026-09-28, sauf la ligne de chat du critère 8, voir le registre) ·
+> Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
 > S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec ») ; décision I2
 > (faction facultative) prise le même jour après l'essai P0
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine, dont celle-ci dépend :
@@ -74,8 +76,9 @@ d'addons donne toujours le nombre de positions à partager.
 - **Joueur à deux factions** → un seul ticket, qui mélange fissures et tornades sans les
   confondre : le code porte l'espèce de chaque point, et le formulaire ne demande plus de faction
   (I2). Un champ unique l'aurait forcé à mentir sur la moitié de ses points.
-- **Lien trop long** → même repli que la spec voisine : le code seul, et un lien court sans code.
-  Le titre suit le même repli.
+- **Lien trop long** (plus de 6000 caractères) → la fenêtre montre un lien court, qui ne porte que
+  le titre, et le bouton « Code » donne le code à coller dans le formulaire. Le bouton est là aussi
+  quand le lien tient : il sert au joueur sans compte GitHub (commentaire CurseForge).
 - **Mise à jour qui livre ces positions** → le nombre baisse, et l'icône s'éteint à zéro sans clic.
 - **En combat** → le clic ouvre une fenêtre à nous, non protégée : autorisé.
 - **Barre d'icônes absente** (Blizzard la retire ou la change) → pas d'icône, la ligne de chat reste.
@@ -104,8 +107,10 @@ d'addons donne toujours le nombre de positions à partager.
   livré de même espèce à moins de `mergeRange` (20 yd). Raison : voir « Ce qu'on NE fait PAS ».
 - **S4 — Emplacement : la barre d'icônes de la minicarte** (`MinimapCluster.IndicatorFrame`), avec la
   méthode A mesurée pour COC dans TaintLab le 2026-09-27 et vue en jeu le 2026-09-28 : icône enfant
-  de la barre, `layoutIndex`, `Layout()` à chaque bascule. **Rang 4** (1 et 2 sont à Blizzard, 3 à la
-  mise à jour de COC). Image : l'icône de l'addon, 22 px.
+  de la barre, `layoutIndex`, `Layout()` à chaque bascule. Image : l'icône de l'addon, 22 px.
+  **Rang 10**, et plus 4 comme accepté d'abord : le même jour, la branche COC
+  `feat/icone-commande-recue` (autre session, déjà au banc) a pris 4.01-4.99 pour ses commandes et
+  réservé 5. Changement fait par l'agent en P4 ; 10 laisse à COC la place de ses futurs types.
 - **S5 — Le titre du ticket est pré-rempli** avec les zones du code. Raison : le malentendu du ticket
   #1 (voir « Le problème »).
 
@@ -119,8 +124,12 @@ d'addons donne toujours le nombre de positions à partager.
 4. [test] Le signal se déduit de la base : après rechargement, il est identique ; une liste livrée
    qui contient la position l'éteint.
 5. [test] Signal coupé : aucune icône, aucune ligne de chat ; `/ley contribute` rend le même lien.
+
+   Critères 1 à 5 → `tests/test_leylines_signal.lua`, icône comprise (fausse barre qui compte ses
+   `Layout()`, comme `test_minimap_indicator.lua` de COC).
 6. [test] Le lien porte `template=positions.yml`, le code et le titre, encodés en pourcent, et pas
    de faction (I2) ; aucun caractère du nom de zone ne sort non encodé.
+   → `tests/test_leylines_contribute.lua` § 7 (titre, ordre des zones, « +N », repli trop long)
 7. [porte] Les quatre portes passent ; chaque chaîne nouvelle est dans les overlays enUS, deDE et
    esES. → `deploy.ps1`
 8. [humain] Après un lancer réussi sur une fissure absente de la liste, l'icône apparaît dans la
@@ -138,14 +147,31 @@ d'addons donne toujours le nombre de positions à partager.
 
 ## Contrat
 
-- **Base persistée** : `db.signal` (booléen, `true` par défaut), rien d'autre. L'état du signal
-  (combien de positions attendent) **n'est pas stocké** : il se déduit de la base (`node.seen`), de
-  la date de la dernière contribution (`db.contrib.at`) et de la liste livrée. Ces deux champs sont
-  au contrat de la spec voisine ; cette fonctionnalité en a besoin et les implémente si ce n'est pas
-  déjà fait. Raison : une seule source de vérité, et l'extinction quand une mise à jour livre le point
-  vient sans code dédié.
-- **Barre d'icônes** : rang 4, à réserver aussi dans la liste des rangs de
-  `CraftingOrderClassic\docs\specs\icone-minicarte.md`, puisque les deux addons partagent la barre.
+- **Base persistée** : `db.signal` (booléen, `true` par défaut) et `node.found`. L'état du signal
+  (combien de positions attendent) **n'est pas stocké** : il se déduit de la base (`node.found`,
+  `node.src`), de la date de la dernière contribution (`db.contrib.at`) et de la liste livrée.
+  Raison : une seule source de vérité, et l'extinction quand une mise à jour livre le point vient
+  sans code dédié.
+- **`node.found`** (ajouté en P3, 2026-09-28, par l'agent) : date de la PREMIÈRE confirmation par le
+  jeu, jamais déplacée ensuite. La version d'origine de ce contrat se contentait de `node.seen`, mais
+  `seen` avance à chaque lancer : une position déjà partagée puis reconfirmée serait repassée
+  « à partager », contre le critère 3. Un point confirmé d'une base plus ancienne reçoit son `seen`
+  au chargement. La contribution, elle, filtre toujours sur `seen` (spec voisine, critère 3).
+- **Compte** : un point est « à partager » si sa source est confirmée par le jeu (`spell`,
+  `vignette` ; un point redescendu en `manual` par un `/ley add` n'est plus envoyé, il ne compte donc
+  plus), si `found` est postérieur à `db.contrib.at`, et s'il est absent de la liste livrée (S3).
+  Taille de zone inconnue : le point est tenu pour livré, le signal se tait.
+- **Ligne de chat** : à l'allumage seulement, de 0 à au moins 1, signal actif. Le premier calcul se
+  fait 3 s après la connexion, après la fusion des données livrées (avant, la taille des zones peut
+  manquer), et il ne dit rien : une découverte d'avant la déconnexion est signalée par l'icône (P4),
+  pas par un rappel dans le chat. La ligne renvoie à l'icône quand la barre existe, à
+  `/ley contribute` sinon. `/ley signal on` avec des positions en attente rallume l'icône sans
+  ligne : la commande répond elle-même, avec le nombre.
+- **Barre d'icônes** (`LeyLines_Indicator.lua`) : rang 10 (S4), méthode de COC recopiée, aucun appel
+  à COC. Au clic : la fenêtre de contribution. Au survol : le nombre en attente. **À inscrire dans
+  la liste des rangs de `CraftingOrderClassic\docs\specs\icone-minicarte.md`** une fois
+  `feat/icone-commande-recue` fusionnée : cette branche réécrit justement la ligne des rangs, la
+  toucher avant ferait un conflit au banc.
 - **Lien** : celui de la spec voisine (§ Lien de contribution), plus `title`, et **sans**
   `faction` (I2). Le formulaire publié n'a que les champs `code`, `faction` (facultatif depuis I2)
   et `notes` : les paramètres `maps` et `version` prévus là-bas n'ont pas encore de champ où
@@ -170,11 +196,18 @@ d'addons donne toujours le nombre de positions à partager.
 - **P0** — ~~Essayer à la main un lien `issues/new?template=positions.yml&title=…&code=…&faction=Alliance`~~
   (2026-09-28 : titre et code remplis, faction NON remplie → I2, formulaire corrigé sur la branche
   LeyLines `fix/formulaire-faction-facultative`).
-- **P1** — `node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
-  ce qui est postérieur à la précédente. Critère 3 de la spec voisine.
-- **P2** — Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine).
-  Critères 6 et 9.
-- **P3** — Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment.
-  Critères 1 à 5.
-- **P4** — L'icône : recopier la méthode de COC, rang 4, et réserver ce rang dans la spec COC.
-  Critères 8 et 10.
+- **P1** — ~~`node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
+  ce qui est postérieur à la précédente~~ (codé le 2026-09-28, branche `feat/signal-contribution`
+  des dépôts LeyLines et outillage ; `/ley contribute all` renvoie tout ; vu en jeu le même jour,
+  voir le registre). Critère 3 de la spec voisine → `tests/test_leylines_contribute.lua`.
+- **P2** — ~~Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine)~~ (codé le
+  2026-09-28, même branche : `Share:ContributeURL` / `Share:Title`, bouton « Code » / « Lien » dans
+  la fenêtre). Critère 6 → le test ; critère 9 vu en jeu le même jour (ticket #2, par le lien de
+  la fenêtre, puisque l'icône n'existe pas encore), voir le registre.
+- **P3** — ~~Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment~~
+  (codé le 2026-09-28, même branche : `LeyLines_Signal.lua`, `node.found`). Critères 1 à 5 → le
+  test ; rien de vu en jeu.
+- **P4** — ~~L'icône : recopier la méthode de COC~~ (codé le 2026-09-28, même branche :
+  `LeyLines_Indicator.lua`, rang 10 et pas 4, voir S4). Critères 8 et 10 vus en jeu le même jour
+  (registre, relevés de 17:58 et 19:25 ; la ligne de chat à l'allumage n'a pas été rapportée).
+  Reste : inscrire le rang 10 dans la spec COC (après fusion de `feat/icone-commande-recue`).

@@ -42,6 +42,11 @@ LeyLines_HUD.lua
 # Echange de positions entre joueurs : un texte a copier-coller, aucun reseau.
 LeyLines_Share.lua
 
+# Signal des positions a partager (docs/specs/signal-contribution.md), et son icone dans la barre
+# de la minicarte.
+LeyLines_Signal.lua
+LeyLines_Indicator.lua
+
 # Entree dans le compartiment d'addons de la minicarte (fonctions nommees par ## AddonCompartmentFunc).
 LeyLines_Compartment.lua
 

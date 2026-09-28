@@ -3,8 +3,9 @@
 > État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
 > tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · **Publié** : v1.1.0
 > (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
-> icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). Reste : lien pré-rempli,
-> retraits (`gone`/`LL.GONE`), couleur « à confirmer », GitHub Action
+> icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
+> `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
+> couleur « à confirmer », GitHub Action
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -79,12 +80,18 @@ désormais l'espèce de chaque point.
 - **Rien de neuf depuis la dernière contribution** → message « rien de neuf à partager », pas de
   lien. `/ley contribute all` renvoie tout ce que le joueur a observé lui-même.
 - **Lien trop long** (au-delà d'environ 6000 caractères, GitHub refuse l'adresse) → la fenêtre montre
-  le code seul et un lien court sans code : le joueur colle le code dans le champ.
+  un lien court sans code, et le bouton « Code » donne le code : le joueur le colle dans le champ.
 - **Joueur à deux factions** → chaque point porte son espèce ; la contribution les mélange sans les
   confondre.
 - **Même contribution envoyée deux fois** → sans effet : les mêmes points se fusionnent, aucun
   doublon.
 - **Retrait d'un point jamais livré** → sans effet sur la liste.
+- **Objet absent à un passage, revenu ensuite** → une absence vue une fois n'est PAS un retrait.
+  Vu en jeu le 2026-09-28 (registre, relevé de 19:25) : une tornade des Tarides absente, revenue
+  au même endroit dans la soirée ; cause inconnue (serveur de la bêta, réapparition après
+  absorption, couche). **À trancher avant de coder T4** : un retrait n'entre dans `LL.GONE` que
+  confirmé (deux passages espacés, ou deux joueurs), sinon un simple décalage de réapparition
+  effacerait l'objet chez tout le monde à la mise à jour suivante.
 - **Deux contributions contradictoires** (l'une ajoute, l'autre retire au même endroit) → la plus
   récente l'emporte, par date du ticket.
 - **Ticket édité** → l'Action revalide et met à jour son commentaire.
@@ -155,11 +162,13 @@ désormais l'espèce de chaque point.
 2. [test] Un point `L` et un point `V` à 5 yd l'un de l'autre restent DEUX points.
 3. [test] La contribution exclut les sources `shipped`, `import`, `restored`, `tooltip` et `manual`
    (A2). Elle n'inclut que les observations et les retraits postérieurs à la précédente.
+   → `tests/test_leylines.lua` § 17 (sources), `tests/test_leylines_contribute.lua` (« postérieurs »,
+   hors retraits ; codé le 2026-09-28, branche `feat/signal-contribution`)
 3b. [test] Un lancer réussi à 40 yd d'un point `manual` de même espèce le déplace et le fait passer
    en `spell`, sans créer de second point ; à 40 yd d'un point `manual` de l'AUTRE espèce, il crée
    un point à part.
 4. [test] Un point confirmé par une fusion de données livrées n'est PAS considéré comme revu : il ne
-   repart pas dans la contribution suivante.
+   repart pas dans la contribution suivante. → `tests/test_leylines_contribute.lua` § 3
 5. [test] Un retrait livré efface un point `shipped` ou `import` voisin, et laisse un point `spell`
    (A3).
 6. [test] Compilation : ajout (#12) puis retrait (#15) au même endroit → absent ; retrait puis ajout
@@ -207,10 +216,16 @@ code v1.2.0 ne prendra jamais un retrait pour un ajout. Verrouillé dans `tests/
 
 ```
 https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml
+    &title=<« Positions: » + les zones du code, encodé en pourcent>   (signal-contribution.md, S5)
     &code=<LL2, encodé en pourcent>
     &maps=<uiMapID>:<largeur>x<hauteur>[,...]   tailles en yards, lues par C_Map.GetMapWorldSize
     &version=<LL.VERSION>
 ```
+
+**Codé le 2026-09-28** (branche `feat/signal-contribution`, `Share:ContributeURL`) : `title` et
+`code` seulement, et jamais `faction` (I2 de `signal-contribution.md`). `maps` et `version`
+attendent un champ du formulaire où arriver. Encodage : tout octet hors `[A-Za-z0-9-._~]` passe en
+`%XX`, les `;` et `=` du code compris.
 
 `maps` existe parce que la CI ne peut pas appeler `C_Map` : sans la taille de la carte, elle ne
 peut pas fusionner deux points à 20 yd. C'est le client qui la connaît, c'est donc lui qui la
@@ -222,9 +237,10 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 | Champ | Sens |
 |---|---|
 | `node.kind` | **Livré en v1.1.0, sans changer `schemaVer`** (posé par `Nodes:Init` à chaque chargement). `"L"` ou `"V"`, **toujours présent** : un point ancien le reçoit au chargement (A4). Fixé à la capture : faction du personnage pour un sort ou un relevé manuel (D4), nom lu pour une infobulle ou une vignette. |
-| `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
+| `node.seen` | **Codé le 2026-09-28** (branche `feat/signal-contribution`, pas publié). Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. Un point confirmé d'une base plus ancienne reçoit son `last` au chargement. |
+| `node.found` | **Codé le 2026-09-28** (même branche, P3 de `signal-contribution.md`). PREMIÈRE observation confirmée par le jeu, jamais déplacée : sert au signal des positions à partager, pas à la contribution. Un point confirmé d'une base plus ancienne reçoit son `seen`. |
 | `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
-| `db.contrib.at` | Date de la dernière contribution générée. |
+| `db.contrib.at` | **Codé le 2026-09-28** (même branche). Date (`time()`) de la dernière contribution générée, posée à l'ouverture de la fenêtre ; une contribution vide (« rien de neuf ») ne la change pas. |
 | `db.legacy` | **Livré en v1.1.0.** Copie texte (`{ at, blob }`) d'une base d'avant l'espèce, prise AVANT de lui donner ses espèces et jamais réécrite : si le classement A4 se trompe, rien n'est perdu. |
 
 ### Données livrées — `LeyLines_Data.lua`, **généré**
@@ -290,12 +306,13 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   Libellé « Elemental Convergence » : FAIT (nom relevé sur le client). Côté sort, rien à changer :
   `/ley learn` sur Horde retient **1270893**, déjà livré en dur.
 - **T1** — ~~espèce, anti-doublon et affichage par espèce (A1), A4~~ (v1.1.0) ; reste pour la
-  v1.2.0 : `seen`, `gone`, couleur « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
+  v1.2.0 : ~~`seen`~~ (codé le 2026-09-28, P1 de `signal-contribution.md`), `gone`, couleur
+  « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.
-- **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli
-  et le cas « trop long ». Critères 3 (hors `seen`), 9. **Repris le 2026-09-28 par
-  `signal-contribution.md`** (plan P1-P2), qui y ajoute le titre pré-rempli. Constat
+- **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; ~~le lien pré-rempli et
+  le cas « trop long »~~ (codés le 2026-09-28 par `signal-contribution.md` P1-P2, avec le titre
+  pré-rempli ; pas publiés). Critère 3 → le test ; critère 9 vu en jeu (ticket #2, registre). Constat
   du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
   et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les

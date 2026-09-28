@@ -26,10 +26,12 @@ is and drops the game's own map pin on it, so you don't need TomTom.
 Each spot knows its faction. Your Alliance characters see ley lines, your Horde characters see
 convergences, and all of them share one list.
 
-Found spots the addon doesn't ship with? Type /ley contribute, or left-click the addon in the addon
-compartment (top right, next to the clock), and paste the code in the form at
-https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml. Only spots you confirmed with
-the spell go in. They're added to the list that comes with the next update, so everyone gets them.
+Found a spot the addon doesn't ship with? As soon as the spell confirms it, the addon's icon shows
+up at the top of the minimap, next to the mail letter. Click it (or type /ley contribute) and copy
+the link it shows (Ctrl+C). Open it in your browser: the GitHub form is already filled in, so you
+just hit Create. No GitHub account? Click Code for the code alone and paste it in a comment here.
+Only spots you confirmed with the spell go in. They're added to the list that comes with the next
+update, so everyone gets them. Don't want the icon? /ley signal off.
 
 Nothing goes over the network, sharing is copy and paste.
 

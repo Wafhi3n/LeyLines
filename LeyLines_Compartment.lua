@@ -33,6 +33,12 @@ function LeyLines_OnCompartmentEnter(_, frame)
     GameTooltip:AddLine(L["Lignes telluriques / Convergences élémentaires"], 0.75, 0.55, 1)
     GameTooltip:AddLine(string.format(L["%s %s connue(s) au total."], LL.Nodes:Count(kind),
         LL.Nodes:Word("many", kind)), 1, 1, 1)
+    -- Donné même signal coupé (signal-contribution.md) : c'est ici qu'on le retrouve.
+    local pending = LL.Signal:Count()
+    if pending > 0 then
+        GameTooltip:AddLine(string.format(L["%s position(s) à partager, absente(s) de la liste commune."],
+            pending), 1, 0.82, 0)
+    end
     GameTooltip:AddLine(L["Clic gauche : partager tes captures pour la liste commune."], 0.4, 0.8, 0.4)
     GameTooltip:AddLine(L["Clic droit : afficher ou masquer le suivi."], 0.7, 0.7, 0.7)
     GameTooltip:Show()

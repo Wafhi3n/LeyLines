@@ -41,8 +41,8 @@ local en = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "How it works: stand ON the %s, then type /ley add (or use the keybind).",
 
@@ -106,6 +106,22 @@ local en = {
         "Paste this code in an issue: github.com/Wafhi3n/LeyLines",
     ["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."] =
         "Nothing to share: only your captures confirmed by the game (spell cast on the spot) go into the shared list.",
+    ["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."] =
+        "Nothing new since your last contribution. /ley contribute all sends everything you've confirmed.",
+    ["Ouvre ce lien dans ton navigateur (Ctrl+C) : le formulaire sera déjà rempli."] =
+        "Open this link in your browser (Ctrl+C): the form comes pre-filled.",
+    ["Trop long pour un seul lien : ouvre celui-ci, puis colle le code (bouton Code)."] =
+        "Too long for one link: open this one, then paste the code (Code button).",
+    ["Code"] = "Code",
+    ["Lien"] = "Link",
+    ["Position absente de la liste commune : /ley contribute pour la partager avec tous."] =
+        "This spot isn't in the shared list yet: /ley contribute to share it with everyone.",
+    ["Signal des positions à partager : %s."] = "Reminder for spots to share: %s.",
+    ["%s position(s) à partager, absente(s) de la liste commune."] =
+        "%s spot(s) to share, missing from the shared list.",
+    ["Position absente de la liste commune : clique sur l'icône apparue en haut de la minicarte pour la partager avec tous."] =
+        "This spot isn't in the shared list yet: click the new icon at the top of the minimap to share it with everyone.",
+    ["Clic : le lien du ticket, déjà rempli."] = "Click: the issue link, already filled in.",
     ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
     ["Importer"] = "Import",
     ["Fermer"]   = "Close",

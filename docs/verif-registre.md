@@ -29,6 +29,82 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 19:35 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:36 - Forever, comptes #4 et
+  #1 - **GO sur `/ley signal off` / `on` icone allumee, et sur « une position livree n'allume
+  pas »** - rapporte par le user : l'icone allumee, `/ley signal off` la retire, `/ley signal on`
+  la ramene. Compte #1 (Gnomi Short) : `/ley del` sur la fissure 46,26 / 17,78 puis lancer
+  reussi, et PAS d'icone : la liste livree la contient depuis le palier 4 (`wafhien-zephras`,
+  fusionnee dans cette base a 18:02:49, relu sur le disque), donc S3 / critere 1. Le del et le
+  lancer eux-memes ne sont PAS relus sur le disque (bases non reecrites depuis 19:23:49 / 19:25:43).
+  PAS observe : l'icone qui s'eteint AU MOMENT ou une livraison arrive (critere 4 : le clic de
+  17:56:59 l'avait eteinte avant ; prouve par les tests seulement), la ligne de chat a l'allumage.
+
+- 2026-09-28 19:25 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:02 - Forever, compte #4,
+  personnage Horde, Tarides - **GO sur le critere 8 de `signal-contribution.md`** (icone allumee
+  par un VRAI lancer sur une position absente de la liste) - `/ley signal on` (signal coupe depuis
+  la seance precedente), puis `/ley del` sur la tornade 49,80 / 28,58 et Skysight : relu sur le
+  disque (base ecrite a 19:25:06), nouveau point `V` 1413 en 49,81 / 28,54, `spell`, `found` =
+  `seen` = 19:24:42, posterieur a `contrib.at` (17:58:26) ; la liste livree n'a aucune tornade.
+  Rapporte par le user : « le point est revenu et l'icone est la ». `signal = true` sur le disque.
+  Au passage (rapporte) : une tornade des Tarides etait ABSENTE a un premier passage dans la
+  soiree, puis revenue au meme endroit (cause inconnue : serveur, reapparition apres absorption,
+  couche ; laquelle des deux, non precise) ; celle des
+  Serres-Rocheuses (74,90 / 94,50) etait la. Consequence notee dans `contribution-positions.md` :
+  une absence vue une fois n'est pas un retrait.
+  PAS observe : la ligne de chat a l'allumage (question posee, non rapportee), `/ley signal off`
+  puis `on` avec l'icone allumee, le survol et le clic sur cette icone-la.
+
+- 2026-09-28 18:05 - jusqu'a d3b4673 - main-dev@7a783a3 2026-09-28 18:02 - Forever, compte #4 -
+  **GO sur la fusion de la fissure `wafhien-zephras`** (liste livree palier 4,
+  `feat/positions-wafhien-zephras`) - relu sur le disque (base ecrite a 19:25:06) : `dataVersion`
+  3 -> 4, point `L` 2521 en 46,26 / 17,78, `shipped`, ajoute a 18:05:17, sans doublon.
+  PAS observe : le compte #1, dont c'est la capture (base non reecrite depuis 18:00:31, encore au
+  palier 3) ; l'icone de ce compte eteinte PAR la livraison (le clic de 17:56:59 l'avait deja
+  eteinte : critere 4 prouve par les tests seulement) ; la carte du monde.
+
+- 2026-09-28 17:58 - jusqu'a 580c4d5 - main-dev@580c4d5 2026-09-28 17:40 - Forever, comptes #4 et
+  #1 - **GO sur l'icone de la minicarte et le signal** (P3-P4 de `signal-contribution.md`) -
+  compte #4 : `/run LeyLines.db.contrib.at=0 LeyLines:Refresh()` -> icone dans la barre de la
+  minicarte, « 3 » au survol, le clic ouvre la fenetre et l'eteint (rapporte ; `contrib.at` =
+  17:42:26 relu sur le disque). Relancer apres `/ley del` sur la fissure de `gh-0001` : point
+  reenregistre en 53,77 / 66,32 (`found` 17:47:37, disque), a 4 yd du point livre, et AUCUNE icone
+  - voulu (S3, critere 1). Compte #1 (Gnomi Short) : icone presente des la connexion, sans ligne
+  de chat (capture d'ecran du user) ; sa base porte la fissure 46,26 / 17,78, capturee au sort le
+  2026-09-27, jamais partagee, absente de la liste ; clic a 17:56:59 (disque). Ticket #3 cree a
+  17:58:42 depuis la contribution du compte #4 de 17:58:26 : titre et code pre-remplis (ferme sans
+  versement). Taint : mode Edition et combat, aucune action bloquee (rapporte par le user ;
+  `Logs\taint.log` date du 22/09, donc pas de journal pour le corroborer).
+  PAS observe : la ligne de chat a l'allumage, `/ley signal off` puis `on` avec l'icone allumee
+  (fait avec un compte a 0 : rien a ramener, conforme), les textes deDE / esES.
+
+- 2026-09-28 16:18 - jusqu'a 67d12b4 - main-dev@67d12b4 2026-09-28 16:16 - Forever, compte #4 -
+  **GO sur le lien pre-rempli de /ley contribute** (P2 de `docs/specs/signal-contribution.md`,
+  critere 9 ; critere 9 de `contribution-positions.md`) - ticket GitHub #2 cree par le user a 16:18
+  depuis le lien de la fenetre, relu par `gh issue view 2` : titre « Positions: Zephras Isle, The
+  Barrens, Stonetalon Mountains » (3 zones, dans l'ordre du code) et champ Code
+  `LL2;L2521=5375,6639;V1413=4980,2858,4848,4629;V1442=7490,9450` remplis par le lien, Faction
+  « No response » (« Create » passe sans rien choisir, I2), etiquette `positions`. Le code est
+  identique caractere pour caractere a celui de la 1re contribution (13:28, releve ci-dessous).
+  Rapporte par le user : le bouton « Code » montre le code seul. Ticket ferme sans versement
+  (essai). PAS observe : le repli « lien trop long » (tests seulement), le retour par « Lien », un
+  nom de zone accentue dans un vrai titre (client enUS), les textes deDE / esES.
+
+- 2026-09-28 13:41 - jusqu'a b224c0f - main-dev@b224c0f 2026-09-28 13:22 - Forever, compte #4 -
+  **GO sur « /ley contribute n'envoie que le neuf »** (P1 de `docs/specs/signal-contribution.md`) -
+  code colle par le user a la 1re contribution apres la mise a jour :
+  `LL2;L2521=5375,6639;V1413=4980,2858,4848,4629;V1442=7490,9450`. Recoupe sur le disque (base
+  ecrite a 13:27) : exactement les 4 points confirmes du compte, les 3 tornades au sort et une
+  fissure de `gh-0001` passee de `shipped` a `spell` par un lancer du user (deplacee de ~6 yd, donc
+  confirmee sur place) ; aucun des 5 points restes `shipped`. Migration vue : `seen` = `last` sur
+  les 4 points confirmes, rien sur les points livres. Rapporte par le user : le 2e
+  `/ley contribute` n'ouvre pas de fenetre et affiche « Nothing new since your last
+  contribution... » ; `/ley contribute all` fonctionne. Relu sur le disque apres /reload (13:41) :
+  `contrib.at` = 1790594887 (13:28), la date survit au rechargement.
+  PAS observe : une capture faite APRES la contribution qui repart seule a la suivante, une liste
+  livree qui recoupe un point sans le faire repartir (couverts par les tests seulement), le code
+  de `all` compare caractere par caractere a celui de la 1re contribution, « Nothing to share »
+  sur une base sans capture.
+
 - 2026-09-28 12:38 - jusqu'a 03761ea - main-dev@03761ea 2026-09-28 12:10 - Forever, compte #4,
   personnage Alliance - **GO sur la premiere contribution par ticket** (ticket GitHub #1 de
   wasdconnor, verse par `ll_ingest.ps1 -Issue 1`, liste livree au palier 3) - relu sur le disque

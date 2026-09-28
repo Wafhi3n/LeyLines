@@ -33,18 +33,26 @@ local KNOWN = { [""] = true, L = true, V = true }
 -- rien d'autre. Un relevé manuel ou d'infobulle peut être à 30 yd ; un point livré ou importé
 -- reviendrait à l'identique, sans que personne soit allé le voir. Un point livré que le joueur a
 -- ensuite confirmé au sort passe en `spell` (Nodes:Confirm) : il repart, et c'est mérité.
-local VERIFIED = { spell = true, vignette = true }
+-- Nodes est chargé avant ce fichier (.toc) : une seule définition de « confirmé par le jeu ».
+local VERIFIED = LL.Nodes.VERIFIED
+
+-- Le formulaire de ticket, et la longueur au-delà de laquelle GitHub refuse l'adresse (« 414 URI
+-- Too Long » ; la doc ne donne pas de chiffre, la spec retient ~6000 caractères).
+local ISSUE_URL = "https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml"
+local MAX_URL   = 6000
+local MAX_ZONES = 3   -- zones nommées dans le titre ; au-delà, « +N »
 
 -- ---------------------------------------------------------------------------
 -- Codec (pur, testable sans client)
 -- ---------------------------------------------------------------------------
 
 -- `sources` (facultatif) : ne garder que les points dont la source y figure.
-function Share:Encode(sources)
+-- `since` (facultatif) : ne garder que les points CONFIRMÉS par le jeu après cette date (`seen`).
+function Share:Encode(sources, since)
     local groups = {}
     for map, list in pairs(LL.db.nodes) do
         for _, node in ipairs(list) do
-            if not sources or sources[node.src] then
+            if (not sources or sources[node.src]) and (not since or (node.seen or 0) > since) then
                 local key = (node.kind or "") .. tostring(map)
                 local nums = groups[key] or {}
                 groups[key] = nums
@@ -128,6 +136,43 @@ function Share:Import(text)
 end
 
 -- ---------------------------------------------------------------------------
+-- Lien de contribution (docs/specs/signal-contribution.md, P2)
+-- ---------------------------------------------------------------------------
+
+-- Tout ce qui n'est pas « non réservé » (RFC 3986) passe en %XX, octet par octet : un nom de zone
+-- accentué, les « ; », « = » et virgules du code. Un serveur peut couper ses paramètres sur `&` ET
+-- sur `;` : rien du code ne doit pouvoir y ressembler.
+local function PercentEncode(s)
+    return (s:gsub("[^%w%-%._~]", function(c) return string.format("%%%02X", c:byte()) end))
+end
+
+-- « Positions: Zephras Isle, Durotar » : chaque zone du code une fois, dans l'ordre du code, au plus
+-- MAX_ZONES. Le titre sert au mainteneur ; le ticket #1 a montré qu'un titre à compléter à la main
+-- fait croire qu'on n'envoie qu'une zone.
+function Share:Title(blob)
+    local names, seen = {}, {}
+    for _, seg in ipairs(self:Decode(blob) or {}) do
+        if not seen[seg.map] then
+            seen[seg.map] = true
+            names[#names + 1] = LL.Geo:MapName(seg.map)
+        end
+    end
+    local shown = {}
+    for i = 1, math.min(#names, MAX_ZONES) do shown[i] = names[i] end
+    local title = "Positions: " .. table.concat(shown, ", ")
+    if #names > MAX_ZONES then title = title .. " +" .. (#names - MAX_ZONES) end
+    return title
+end
+
+-- Le lien qui ouvre le formulaire DÉJÀ rempli : titre et code, pas de faction (le code porte
+-- l'espèce de chaque point, décision I2). Sans `withCode`, le lien court du repli.
+function Share:ContributeURL(blob, withCode)
+    local url = ISSUE_URL .. "&title=" .. PercentEncode(self:Title(blob))
+    if withCode then url = url .. "&code=" .. PercentEncode(blob) end
+    return url
+end
+
+-- ---------------------------------------------------------------------------
 -- Fenêtre de copier-coller
 -- ---------------------------------------------------------------------------
 local function MakeButton(parent, label, onClick)
@@ -198,15 +243,34 @@ function Share:BuildBox(f)
     end):SetPoint("BOTTOMRIGHT", -116, 12)
 
     MakeButton(f, L["Fermer"], function() f:Hide() end):SetPoint("BOTTOMRIGHT", -12, 12)
+
+    -- Contribution seulement : bascule entre le lien et le code seul. Le code sert au joueur sans
+    -- compte GitHub (commentaire CurseForge, D1) et au repli « lien trop long ».
+    f.toggle = MakeButton(f, L["Code"], function() Share:ToggleCode() end)
+    f.toggle:SetPoint("BOTTOMRIGHT", -220, 12)
 end
 
-function Share:Open(text, hint)
+-- `code` (facultatif) : le code seul, que le bouton « Code » montre à la place du texte.
+function Share:Open(text, hint, code)
     local f = self.frame or self:Build()
+    f.link, f.linkHint, f.code, f.showingCode = text, hint, code, false
+    f.toggle:SetShown(code ~= nil)
+    f.toggle.text:SetText(L["Code"])
     f.hint:SetText(hint)
     f.box:SetText(text or "")
     f:Show()
     f.box:SetFocus()
     if text then f.box:HighlightText() end
+end
+
+function Share:ToggleCode()
+    local f = self.frame
+    f.showingCode = not f.showingCode
+    f.box:SetText(f.showingCode and f.code or f.link)
+    f.hint:SetText(f.showingCode and L["Colle ce code dans un ticket : github.com/Wafhi3n/LeyLines"] or f.linkHint)
+    f.toggle.text:SetText(f.showingCode and L["Lien"] or L["Code"])
+    f.box:SetFocus()
+    f.box:HighlightText()
 end
 
 function Share:ShowExport()
@@ -218,14 +282,32 @@ function Share:ShowExport()
     self:Open(blob, L["Copie ce texte (Ctrl+C) et partage-le."])
 end
 
--- Le code à coller dans un ticket GitHub pour la liste commune (docs/specs/contribution-positions.md).
-function Share:ShowContribute()
-    local blob = self:Encode(VERIFIED)
+-- Le lien du ticket GitHub pour la liste commune (docs/specs/contribution-positions.md), qui ouvre le
+-- formulaire déjà rempli ; le bouton « Code » donne le code seul. Seulement ce que le jeu a
+-- confirmé DEPUIS la contribution précédente : un joueur qui contribue deux fois ne renvoie pas la
+-- première. `all` (`/ley contribute all`) renvoie tout ce qu'il a confirmé. Ouvrir la fenêtre vaut
+-- contribution : l'addon ne peut pas savoir si le ticket est parti.
+function Share:ShowContribute(all)
+    LL.db.contrib = LL.db.contrib or {}
+    local since = not all and LL.db.contrib.at or nil
+    local blob = self:Encode(VERIFIED, since)
     if not blob then
-        LL:Print(L["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."])
+        if since and self:Encode(VERIFIED) then
+            LL:Print(L["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."])
+        else
+            LL:Print(L["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."])
+        end
         return
     end
-    self:Open(blob, L["Colle ce code dans un ticket : github.com/Wafhi3n/LeyLines"])
+    LL.db.contrib.at = time()
+    LL:Refresh()   -- le signal des positions à partager s'éteint (LeyLines_Signal.lua, S1)
+    local url = self:ContributeURL(blob, true)
+    if #url <= MAX_URL then
+        self:Open(url, L["Ouvre ce lien dans ton navigateur (Ctrl+C) : le formulaire sera déjà rempli."], blob)
+    else
+        self:Open(self:ContributeURL(blob, false),
+            L["Trop long pour un seul lien : ouvre celui-ci, puis colle le code (bouton Code)."], blob)
+    end
 end
 
 function Share:ShowImport()

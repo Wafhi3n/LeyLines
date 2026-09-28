@@ -33,7 +33,8 @@ les SavedVariables.
 | `/ley clean` | efface tous les relevés faits **par infobulle** (les approximatifs) |
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |
 | `/ley import` | colle un code reçu et fusionne les positions |
-| `/ley contribute` | code des seules captures confirmées par le jeu, pour la liste commune |
+| `/ley contribute [all]` | lien du ticket GitHub déjà rempli (titre + code) avec les captures confirmées par le jeu depuis ta dernière contribution (`all` : toutes) ; bouton « Code » = le code seul |
+| `/ley signal [on\|off]` | le signal « position absente de la liste commune, à partager » (actif par défaut) ; donne le nombre en attente |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
 | `/ley track` | pose un point de route natif sur la plus proche |
@@ -45,6 +46,12 @@ les SavedVariables.
 L'addon est aussi dans le **compartiment d'addons** de la minicarte (le bouton natif qui liste les
 addons) : clic gauche = `/ley contribute`, clic droit = bandeau. Inscription par les lignes
 `## AddonCompartmentFunc*` du `.toc` ; les fonctions globales vivent dans `LeyLines_Compartment.lua`.
+
+Quand le jeu confirme une position absente de la liste livrée, l'icône de l'addon apparaît dans la
+**barre d'icônes de la minicarte** (celle de la lettre du courrier, rang 10), avec une ligne de
+chat : clic = `/ley contribute`, et l'ouvrir l'éteint. `/ley signal off` la coupe. Code :
+`LeyLines_Signal.lua` (le compte, déduit de la base) et `LeyLines_Indicator.lua` (l'icône, méthode
+recopiée de COC) ; spec `docs/specs/signal-contribution.md`.
 
 Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Line / Elemental Convergence Tracker* (enregistrer ici,
 suivre la plus proche).
