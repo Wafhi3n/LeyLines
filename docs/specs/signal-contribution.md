@@ -1,7 +1,8 @@
 # Signal « position à partager » sur la minicarte
 
-> État : **codée** (P0-P4, branche `feat/signal-contribution`, pas publiée ; critère 9 vu en jeu,
-> 8 et 10 à voir) · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
+> État : **codée et vue en jeu** (P0-P4, branche `feat/signal-contribution`, pas publiée ;
+> critères 8, 9 et 10 vus le 2026-09-28, sauf la ligne de chat du critère 8, voir le registre) ·
+> Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
 > S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec ») ; décision I2
 > (faction facultative) prise le même jour après l'essai P0
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine, dont celle-ci dépend :
@@ -207,5 +208,6 @@ d'addons donne toujours le nombre de positions à partager.
   (codé le 2026-09-28, même branche : `LeyLines_Signal.lua`, `node.found`). Critères 1 à 5 → le
   test ; rien de vu en jeu.
 - **P4** — ~~L'icône : recopier la méthode de COC~~ (codé le 2026-09-28, même branche :
-  `LeyLines_Indicator.lua`, rang 10 et pas 4, voir S4). Reste : inscrire le rang 10 dans la spec
-  COC (après fusion de `feat/icone-commande-recue`), et les critères 8 et 10 en jeu.
+  `LeyLines_Indicator.lua`, rang 10 et pas 4, voir S4). Critères 8 et 10 vus en jeu le même jour
+  (registre, relevés de 17:58 et 19:25 ; la ligne de chat à l'allumage n'a pas été rapportée).
+  Reste : inscrire le rang 10 dans la spec COC (après fusion de `feat/icone-commande-recue`).

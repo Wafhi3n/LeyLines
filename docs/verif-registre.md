@@ -29,6 +29,44 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 19:25 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:02 - Forever, compte #4,
+  personnage Horde, Tarides - **GO sur le critere 8 de `signal-contribution.md`** (icone allumee
+  par un VRAI lancer sur une position absente de la liste) - `/ley signal on` (signal coupe depuis
+  la seance precedente), puis `/ley del` sur la tornade 49,80 / 28,58 et Skysight : relu sur le
+  disque (base ecrite a 19:25:06), nouveau point `V` 1413 en 49,81 / 28,54, `spell`, `found` =
+  `seen` = 19:24:42, posterieur a `contrib.at` (17:58:26) ; la liste livree n'a aucune tornade.
+  Rapporte par le user : « le point est revenu et l'icone est la ». `signal = true` sur le disque.
+  Au passage (rapporte) : une tornade des Tarides etait ABSENTE a un premier passage dans la
+  soiree, puis revenue au meme endroit (cause inconnue : serveur, reapparition apres absorption,
+  couche ; laquelle des deux, non precise) ; celle des
+  Serres-Rocheuses (74,90 / 94,50) etait la. Consequence notee dans `contribution-positions.md` :
+  une absence vue une fois n'est pas un retrait.
+  PAS observe : la ligne de chat a l'allumage (question posee, non rapportee), `/ley signal off`
+  puis `on` avec l'icone allumee, le survol et le clic sur cette icone-la.
+
+- 2026-09-28 18:05 - jusqu'a d3b4673 - main-dev@7a783a3 2026-09-28 18:02 - Forever, compte #4 -
+  **GO sur la fusion de la fissure `wafhien-zephras`** (liste livree palier 4,
+  `feat/positions-wafhien-zephras`) - relu sur le disque (base ecrite a 19:25:06) : `dataVersion`
+  3 -> 4, point `L` 2521 en 46,26 / 17,78, `shipped`, ajoute a 18:05:17, sans doublon.
+  PAS observe : le compte #1, dont c'est la capture (base non reecrite depuis 18:00:31, encore au
+  palier 3) ; l'icone de ce compte eteinte PAR la livraison (le clic de 17:56:59 l'avait deja
+  eteinte : critere 4 prouve par les tests seulement) ; la carte du monde.
+
+- 2026-09-28 17:58 - jusqu'a 580c4d5 - main-dev@580c4d5 2026-09-28 17:40 - Forever, comptes #4 et
+  #1 - **GO sur l'icone de la minicarte et le signal** (P3-P4 de `signal-contribution.md`) -
+  compte #4 : `/run LeyLines.db.contrib.at=0 LeyLines:Refresh()` -> icone dans la barre de la
+  minicarte, « 3 » au survol, le clic ouvre la fenetre et l'eteint (rapporte ; `contrib.at` =
+  17:42:26 relu sur le disque). Relancer apres `/ley del` sur la fissure de `gh-0001` : point
+  reenregistre en 53,77 / 66,32 (`found` 17:47:37, disque), a 4 yd du point livre, et AUCUNE icone
+  - voulu (S3, critere 1). Compte #1 (Gnomi Short) : icone presente des la connexion, sans ligne
+  de chat (capture d'ecran du user) ; sa base porte la fissure 46,26 / 17,78, capturee au sort le
+  2026-09-27, jamais partagee, absente de la liste ; clic a 17:56:59 (disque). Ticket #3 cree a
+  17:58:42 depuis la contribution du compte #4 de 17:58:26 : titre et code pre-remplis (ferme sans
+  versement). Taint : mode Edition et combat, aucune action bloquee (rapporte par le user ;
+  `Logs\taint.log` date du 22/09, donc pas de journal pour le corroborer).
+  PAS observe : la ligne de chat a l'allumage, `/ley signal off` puis `on` avec l'icone allumee
+  (fait avec un compte a 0 : rien a ramener, conforme), les textes deDE / esES.
+
 - 2026-09-28 16:18 - jusqu'a 67d12b4 - main-dev@67d12b4 2026-09-28 16:16 - Forever, compte #4 -
   **GO sur le lien pre-rempli de /ley contribute** (P2 de `docs/specs/signal-contribution.md`,
   critere 9 ; critere 9 de `contribution-positions.md`) - ticket GitHub #2 cree par le user a 16:18

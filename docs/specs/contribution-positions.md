@@ -86,6 +86,12 @@ désormais l'espèce de chaque point.
 - **Même contribution envoyée deux fois** → sans effet : les mêmes points se fusionnent, aucun
   doublon.
 - **Retrait d'un point jamais livré** → sans effet sur la liste.
+- **Objet absent à un passage, revenu ensuite** → une absence vue une fois n'est PAS un retrait.
+  Vu en jeu le 2026-09-28 (registre, relevé de 19:25) : une tornade des Tarides absente, revenue
+  au même endroit dans la soirée ; cause inconnue (serveur de la bêta, réapparition après
+  absorption, couche). **À trancher avant de coder T4** : un retrait n'entre dans `LL.GONE` que
+  confirmé (deux passages espacés, ou deux joueurs), sinon un simple décalage de réapparition
+  effacerait l'objet chez tout le monde à la mise à jour suivante.
 - **Deux contributions contradictoires** (l'une ajoute, l'autre retire au même endroit) → la plus
   récente l'emporte, par date du ticket.
 - **Ticket édité** → l'Action revalide et met à jour son commentaire.
