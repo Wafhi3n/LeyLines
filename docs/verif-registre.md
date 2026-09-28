@@ -29,6 +29,22 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 13:41 - jusqu'a b224c0f - main-dev@b224c0f 2026-09-28 13:22 - Forever, compte #4 -
+  **GO sur « /ley contribute n'envoie que le neuf »** (P1 de `docs/specs/signal-contribution.md`) -
+  code colle par le user a la 1re contribution apres la mise a jour :
+  `LL2;L2521=5375,6639;V1413=4980,2858,4848,4629;V1442=7490,9450`. Recoupe sur le disque (base
+  ecrite a 13:27) : exactement les 4 points confirmes du compte, les 3 tornades au sort et une
+  fissure de `gh-0001` passee de `shipped` a `spell` par un lancer du user (deplacee de ~6 yd, donc
+  confirmee sur place) ; aucun des 5 points restes `shipped`. Migration vue : `seen` = `last` sur
+  les 4 points confirmes, rien sur les points livres. Rapporte par le user : le 2e
+  `/ley contribute` n'ouvre pas de fenetre et affiche « Nothing new since your last
+  contribution... » ; `/ley contribute all` fonctionne. Relu sur le disque apres /reload (13:41) :
+  `contrib.at` = 1790594887 (13:28), la date survit au rechargement.
+  PAS observe : une capture faite APRES la contribution qui repart seule a la suivante, une liste
+  livree qui recoupe un point sans le faire repartir (couverts par les tests seulement), le code
+  de `all` compare caractere par caractere a celui de la 1re contribution, « Nothing to share »
+  sur une base sans capture.
+
 - 2026-09-28 12:38 - jusqu'a 03761ea - main-dev@03761ea 2026-09-28 12:10 - Forever, compte #4,
   personnage Alliance - **GO sur la premiere contribution par ticket** (ticket GitHub #1 de
   wasdconnor, verse par `ll_ingest.ps1 -Issue 1`, liste livree au palier 3) - relu sur le disque
