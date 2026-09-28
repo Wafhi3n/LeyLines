@@ -252,7 +252,8 @@ Décidé le 2026-09-27 avec le user : un seul contributeur pour l'instant, donc 
 
 ```
 joueur   /ley contribute  →  code LL2 (sort + vignette seulement, A2)
-           ↓ formulaire .github/ISSUE_TEMPLATE/positions.yml (code + faction)
+           ↓ formulaire .github/ISSUE_TEMPLATE/positions.yml (code ; faction facultative, I2 de
+             signal-contribution.md : le code porte déjà l'espèce de chaque point)
 nous     .\scripts\ll_ingest.ps1 -Issue <n>          (ou -Code / -SavedVariables, voir l'en-tête)
            → data/contrib/<id>.ll, puis LeyLines_Data.lua régénéré, rapport par contribution
 toi      relire le diff, 4 portes, commit, release
@@ -294,7 +295,7 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   hors retraits.
 - **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli
   et le cas « trop long ». Critères 3 (hors `seen`), 9. **Repris le 2026-09-28 par
-  `signal-contribution.md`** (plan P1-P2), qui y ajoute le titre et la faction pré-remplis. Constat
+  `signal-contribution.md`** (plan P1-P2), qui y ajoute le titre pré-rempli. Constat
   du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
   et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les
