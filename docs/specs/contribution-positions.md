@@ -3,8 +3,9 @@
 > État : **validée, en cours** · Rédigée le 2026-09-27 · Décisions D1-D4 et arbitrages A1-A4
 > tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · **Publié** : v1.1.0
 > (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
-> icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). Reste : lien pré-rempli,
-> retraits (`gone`/`LL.GONE`), couleur « à confirmer », GitHub Action
+> icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
+> `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
+> couleur « à confirmer », GitHub Action
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -79,7 +80,7 @@ désormais l'espèce de chaque point.
 - **Rien de neuf depuis la dernière contribution** → message « rien de neuf à partager », pas de
   lien. `/ley contribute all` renvoie tout ce que le joueur a observé lui-même.
 - **Lien trop long** (au-delà d'environ 6000 caractères, GitHub refuse l'adresse) → la fenêtre montre
-  le code seul et un lien court sans code : le joueur colle le code dans le champ.
+  un lien court sans code, et le bouton « Code » donne le code : le joueur le colle dans le champ.
 - **Joueur à deux factions** → chaque point porte son espèce ; la contribution les mélange sans les
   confondre.
 - **Même contribution envoyée deux fois** → sans effet : les mêmes points se fusionnent, aucun
@@ -209,10 +210,16 @@ code v1.2.0 ne prendra jamais un retrait pour un ajout. Verrouillé dans `tests/
 
 ```
 https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml
+    &title=<« Positions: » + les zones du code, encodé en pourcent>   (signal-contribution.md, S5)
     &code=<LL2, encodé en pourcent>
     &maps=<uiMapID>:<largeur>x<hauteur>[,...]   tailles en yards, lues par C_Map.GetMapWorldSize
     &version=<LL.VERSION>
 ```
+
+**Codé le 2026-09-28** (branche `feat/signal-contribution`, `Share:ContributeURL`) : `title` et
+`code` seulement, et jamais `faction` (I2 de `signal-contribution.md`). `maps` et `version`
+attendent un champ du formulaire où arriver. Encodage : tout octet hors `[A-Za-z0-9-._~]` passe en
+`%XX`, les `;` et `=` du code compris.
 
 `maps` existe parce que la CI ne peut pas appeler `C_Map` : sans la taille de la carte, elle ne
 peut pas fusionner deux points à 20 yd. C'est le client qui la connaît, c'est donc lui qui la
@@ -296,9 +303,9 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.
-- **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli
-  et le cas « trop long ». Critères 3 (hors `seen`), 9. **Repris le 2026-09-28 par
-  `signal-contribution.md`** (plan P1-P2), qui y ajoute le titre pré-rempli. Constat
+- **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; ~~le lien pré-rempli et
+  le cas « trop long »~~ (codés le 2026-09-28 par `signal-contribution.md` P1-P2, avec le titre
+  pré-rempli ; pas publiés). Critère 3 → le test ; critère 9 **pas encore observé en jeu**. Constat
   du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
   et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les

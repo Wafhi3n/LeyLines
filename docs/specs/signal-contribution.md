@@ -1,6 +1,6 @@
 # Signal « position à partager » sur la minicarte
 
-> État : **validée, pas commencée** · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
+> État : **validée, en cours** (P0-P2 codés, P3-P4 à faire) · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
 > S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec ») ; décision I2
 > (faction facultative) prise le même jour après l'essai P0
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine, dont celle-ci dépend :
@@ -74,8 +74,9 @@ d'addons donne toujours le nombre de positions à partager.
 - **Joueur à deux factions** → un seul ticket, qui mélange fissures et tornades sans les
   confondre : le code porte l'espèce de chaque point, et le formulaire ne demande plus de faction
   (I2). Un champ unique l'aurait forcé à mentir sur la moitié de ses points.
-- **Lien trop long** → même repli que la spec voisine : le code seul, et un lien court sans code.
-  Le titre suit le même repli.
+- **Lien trop long** (plus de 6000 caractères) → la fenêtre montre un lien court, qui ne porte que
+  le titre, et le bouton « Code » donne le code à coller dans le formulaire. Le bouton est là aussi
+  quand le lien tient : il sert au joueur sans compte GitHub (commentaire CurseForge).
 - **Mise à jour qui livre ces positions** → le nombre baisse, et l'icône s'éteint à zéro sans clic.
 - **En combat** → le clic ouvre une fenêtre à nous, non protégée : autorisé.
 - **Barre d'icônes absente** (Blizzard la retire ou la change) → pas d'icône, la ligne de chat reste.
@@ -121,6 +122,7 @@ d'addons donne toujours le nombre de positions à partager.
 5. [test] Signal coupé : aucune icône, aucune ligne de chat ; `/ley contribute` rend le même lien.
 6. [test] Le lien porte `template=positions.yml`, le code et le titre, encodés en pourcent, et pas
    de faction (I2) ; aucun caractère du nom de zone ne sort non encodé.
+   → `tests/test_leylines_contribute.lua` § 7 (titre, ordre des zones, « +N », repli trop long)
 7. [porte] Les quatre portes passent ; chaque chaîne nouvelle est dans les overlays enUS, deDE et
    esES. → `deploy.ps1`
 8. [humain] Après un lancer réussi sur une fissure absente de la liste, l'icône apparaît dans la
@@ -172,10 +174,11 @@ d'addons donne toujours le nombre de positions à partager.
   LeyLines `fix/formulaire-faction-facultative`).
 - **P1** — ~~`node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
   ce qui est postérieur à la précédente~~ (codé le 2026-09-28, branche `feat/signal-contribution`
-  des dépôts LeyLines et outillage ; `/ley contribute all` renvoie tout ; pas vu en jeu).
-  Critère 3 de la spec voisine → `tests/test_leylines_contribute.lua`.
-- **P2** — Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine).
-  Critères 6 et 9.
+  des dépôts LeyLines et outillage ; `/ley contribute all` renvoie tout ; vu en jeu le même jour,
+  voir le registre). Critère 3 de la spec voisine → `tests/test_leylines_contribute.lua`.
+- **P2** — ~~Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine)~~ (codé le
+  2026-09-28, même branche : `Share:ContributeURL` / `Share:Title`, bouton « Code » / « Lien » dans
+  la fenêtre). Critère 6 → le test ; critère 9 (en jeu, dans le navigateur) **pas encore observé**.
 - **P3** — Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment.
   Critères 1 à 5.
 - **P4** — L'icône : recopier la méthode de COC, rang 4, et réserver ce rang dans la spec COC.

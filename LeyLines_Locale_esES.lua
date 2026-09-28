@@ -108,6 +108,12 @@ local es = {
         "Nada que compartir: solo tus capturas confirmadas por el juego (hechizo lanzado en el sitio) van a la lista común.",
     ["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."] =
         "Nada nuevo desde tu última contribución. /ley contribute all envía todo lo que has confirmado.",
+    ["Ouvre ce lien dans ton navigateur (Ctrl+C) : le formulaire sera déjà rempli."] =
+        "Abre este enlace en tu navegador (Ctrl+C): el formulario ya viene rellenado.",
+    ["Trop long pour un seul lien : ouvre celui-ci, puis colle le code (bouton Code)."] =
+        "Demasiado largo para un enlace: abre este y pega el código (botón Código).",
+    ["Code"] = "Código",
+    ["Lien"] = "Enlace",
     ["Colle un code reçu, puis clique sur Importer."] = "Pega un código recibido y haz clic en Importar.",
     ["Importer"] = "Importar",
     ["Fermer"]   = "Cerrar",

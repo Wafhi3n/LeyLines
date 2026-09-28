@@ -27,9 +27,10 @@ Each spot knows its faction. Your Alliance characters see ley lines, your Horde 
 convergences, and all of them share one list.
 
 Found spots the addon doesn't ship with? Type /ley contribute, or left-click the addon in the addon
-compartment (top right, next to the clock), and paste the code in the form at
-https://github.com/Wafhi3n/LeyLines/issues/new?template=positions.yml. Only spots you confirmed with
-the spell go in. They're added to the list that comes with the next update, so everyone gets them.
+compartment (top right, next to the clock). Copy the link it shows (Ctrl+C) and open it in your
+browser: the GitHub form is already filled in, so you just hit Create. No GitHub account? Click
+Code for the code alone and paste it in a comment here. Only spots you confirmed with the spell go
+in. They're added to the list that comes with the next update, so everyone gets them.
 
 Nothing goes over the network, sharing is copy and paste.
 

@@ -33,7 +33,7 @@ les SavedVariables.
 | `/ley clean` | efface tous les relevés faits **par infobulle** (les approximatifs) |
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |
 | `/ley import` | colle un code reçu et fusionne les positions |
-| `/ley contribute [all]` | code des captures confirmées par le jeu depuis ta dernière contribution (`all` : toutes), pour la liste commune |
+| `/ley contribute [all]` | lien du ticket GitHub déjà rempli (titre + code) avec les captures confirmées par le jeu depuis ta dernière contribution (`all` : toutes) ; bouton « Code » = le code seul |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
 | `/ley track` | pose un point de route natif sur la plus proche |

@@ -108,6 +108,12 @@ local en = {
         "Nothing to share: only your captures confirmed by the game (spell cast on the spot) go into the shared list.",
     ["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."] =
         "Nothing new since your last contribution. /ley contribute all sends everything you've confirmed.",
+    ["Ouvre ce lien dans ton navigateur (Ctrl+C) : le formulaire sera déjà rempli."] =
+        "Open this link in your browser (Ctrl+C): the form comes pre-filled.",
+    ["Trop long pour un seul lien : ouvre celui-ci, puis colle le code (bouton Code)."] =
+        "Too long for one link: open this one, then paste the code (Code button).",
+    ["Code"] = "Code",
+    ["Lien"] = "Link",
     ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
     ["Importer"] = "Import",
     ["Fermer"]   = "Close",

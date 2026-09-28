@@ -8,7 +8,8 @@ body:
       value: |
         Thanks for helping map Forever!
 
-        **In game**, type `/ley contribute`, press Ctrl+C to copy the code, and paste it below.
+        **In game**, type `/ley contribute`, copy the link (Ctrl+C) and open it in your browser: this form comes back filled in.
+        If the code below is empty, click **Code** in the game window and paste it there.
         Only spots you confirmed yourself (spell cast on the spot, long buff) are in that code, so the shared list stays clean.
 
         **Still on Ley Lines 1.0.0?** Update first: `/ley contribute` doesn't exist there.
