@@ -12,7 +12,7 @@ body:
         Only spots you confirmed yourself (spell cast on the spot, long buff) are in that code, so the shared list stays clean.
 
         **Still on Ley Lines 1.0.0?** Update first: `/ley contribute` doesn't exist there.
-        If you can't update, attach your saved file instead:
+        If you can't update, attach your saved file instead, and pick your faction below:
         `World of Warcraft\_classic_beta_\WTF\Account\<ACCOUNT>\SavedVariables\LeyLines.lua`
         (rename it to `LeyLines.txt`, GitHub refuses `.lua` attachments).
   - type: textarea
@@ -28,12 +28,12 @@ body:
     id: faction
     attributes:
       label: Faction
-      description: Alliance absorbs ley lines, Horde absorbs elemental convergences.
+      description: Only needed with a saved file. A code already says which spots are ley lines (Alliance) and which are elemental convergences (Horde).
       options:
         - Alliance
         - Horde
     validations:
-      required: true
+      required: false
   - type: textarea
     id: notes
     attributes:

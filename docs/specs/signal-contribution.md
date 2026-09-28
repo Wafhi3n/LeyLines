@@ -1,7 +1,8 @@
 # Signal « position à partager » sur la minicarte
 
 > État : **validée, pas commencée** · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
-> S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec »)
+> S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec ») ; décision I2
+> (faction facultative) prise le même jour après l'essai P0
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine, dont celle-ci dépend :
 > `contribution-positions.md` (le code partagé, le formulaire, le lien pré-rempli)
 
@@ -28,8 +29,9 @@ liste commune, clique sur l'icône pour la partager.
 partage.
 
 **Au clic**, la fenêtre de contribution s'ouvre avec le **lien** déjà sélectionné (Ctrl+C). Collé
-dans un navigateur, il ouvre le formulaire GitHub **déjà rempli** : le code, la faction, et un titre
-qui liste les zones du code (« Positions: Zephras Isle, Durotar »). Le joueur n'a plus qu'à envoyer.
+dans un navigateur, il ouvre le formulaire GitHub **déjà rempli** : le code et un titre qui liste
+les zones du code (« Positions: Zephras Isle, Durotar »). Le joueur n'a plus qu'à envoyer : la
+faction n'est pas demandée, le code la porte déjà (I2).
 
 **L'icône s'éteint** dès que la fenêtre de contribution s'ouvre, quel que soit le chemin : l'icône,
 `/ley contribute` ou le compartiment d'addons. Elle s'éteint aussi toute seule quand une mise à
@@ -69,8 +71,9 @@ d'addons donne toujours le nombre de positions à partager.
   chat, à l'allumage.
 - **Vignette de l'autre faction** (l'objet est nommé, l'espèce lue sur le nom) → compte comme les
   autres : elle est partageable, et le code porte son espèce.
-- **Joueur à deux factions** → la faction pré-remplie est celle du personnage qui ouvre la fenêtre.
-  Le code porte l'espèce de chaque point, donc rien ne se mélange.
+- **Joueur à deux factions** → un seul ticket, qui mélange fissures et tornades sans les
+  confondre : le code porte l'espèce de chaque point, et le formulaire ne demande plus de faction
+  (I2). Un champ unique l'aurait forcé à mentir sur la moitié de ses points.
 - **Lien trop long** → même repli que la spec voisine : le code seul, et un lien court sans code.
   Le titre suit le même repli.
 - **Mise à jour qui livre ces positions** → le nombre baisse, et l'icône s'éteint à zéro sans clic.
@@ -84,6 +87,13 @@ d'addons donne toujours le nombre de positions à partager.
 
 - **I1 — 2026-09-28, user** : l'idée. Une icône sur la minicarte après la découverte d'une position
   qu'on n'a pas, et au clic une fenêtre avec l'adresse du ticket à créer.
+- **I2 — 2026-09-28, user** : la faction voyage **dans le code** (la lettre `L` / `V` de chaque
+  segment, depuis la v1.1.0), pas dans un champ du formulaire. Le champ Faction devient
+  **facultatif**, réservé au fichier de SavedVariables joint par un joueur resté en v1.0.0 (une
+  vieille base ne dit pas son espèce), et le lien ne le remplit pas. Origine : l'essai P0 (liste
+  déroulante non pré-remplie, champ obligatoire, donc envoi refusé), puis la question du user
+  « pourquoi ne pas mettre cette info dans la chaîne copiée ? ». L'ingestion lit déjà l'espèce dans
+  le code ; sans faction déclarée, seule la vérification « point de l'autre faction » disparaît.
 
 ## Arbitrages — proposés par l'agent, acceptés par le user le 2026-09-28
 
@@ -109,8 +119,8 @@ d'addons donne toujours le nombre de positions à partager.
 4. [test] Le signal se déduit de la base : après rechargement, il est identique ; une liste livrée
    qui contient la position l'éteint.
 5. [test] Signal coupé : aucune icône, aucune ligne de chat ; `/ley contribute` rend le même lien.
-6. [test] Le lien porte `template=positions.yml`, le code, la faction et le titre, encodés en
-   pourcent ; aucun caractère du nom de zone ne sort non encodé.
+6. [test] Le lien porte `template=positions.yml`, le code et le titre, encodés en pourcent, et pas
+   de faction (I2) ; aucun caractère du nom de zone ne sort non encodé.
 7. [porte] Les quatre portes passent ; chaque chaîne nouvelle est dans les overlays enUS, deDE et
    esES. → `deploy.ps1`
 8. [humain] Après un lancer réussi sur une fissure absente de la liste, l'icône apparaît dans la
@@ -119,8 +129,9 @@ d'addons donne toujours le nombre de positions à partager.
    fissure (46,26 / 17,78) de Zephras Isle, capturée par le user le 2026-09-27 et absente de la
    liste livrée. Observateur : le user, en jeu.
 9. [humain] Clic sur l'icône → la fenêtre montre le lien sélectionné ; collé dans un navigateur
-   connecté à GitHub, il ouvre le formulaire avec le code, la faction **et** le titre remplis.
-   Témoin connu-bon : `/ley export`, qui affiche un code dans la même fenêtre. Observateur : le user.
+   connecté à GitHub, il ouvre le formulaire avec le code **et** le titre remplis, et « Create »
+   passe sans rien choisir. Témoin connu-bon : le lien écrit à la main de l'essai P0, qui a rempli
+   les deux. Observateur : le user.
 10. [humain] Avec COC et LeyLines allumés ensemble : mode Édition ouvert puis fermé, un combat, et
     aucune « action refusée à cause d'un addon ». Témoin : la même séance, LeyLines désactivé.
     Observateur : le user, `/console taintLog 1`.
@@ -135,11 +146,12 @@ d'addons donne toujours le nombre de positions à partager.
   vient sans code dédié.
 - **Barre d'icônes** : rang 4, à réserver aussi dans la liste des rangs de
   `CraftingOrderClassic\docs\specs\icone-minicarte.md`, puisque les deux addons partagent la barre.
-- **Lien** : celui de la spec voisine (§ Lien de contribution), plus `title` et `faction`. Le
-  formulaire publié n'a **que** les champs `code`, `faction` et `notes` : les paramètres `maps` et
-  `version` prévus là-bas n'ont pas encore de champ où arriver. La doc GitHub (lue le 2026-09-28)
-  dit que les champs `input`, `textarea` et `dropdown` se pré-remplissent par leur `id`. Pour la
-  liste déroulante, le critère 9 le vérifiera.
+- **Lien** : celui de la spec voisine (§ Lien de contribution), plus `title`, et **sans**
+  `faction` (I2). Le formulaire publié n'a que les champs `code`, `faction` (facultatif depuis I2)
+  et `notes` : les paramètres `maps` et `version` prévus là-bas n'ont pas encore de champ où
+  arriver. **Mesuré le 2026-09-28** (essai P0, capture du user) : `title` et `code` se
+  pré-remplissent, l'étiquette `positions` est posée, mais la liste déroulante `faction=Alliance`
+  reste sur « None ». La doc GitHub, qui annonce le contraire, est démentie pour ce cas.
 
 ## Renvois
 
@@ -155,11 +167,12 @@ d'addons donne toujours le nombre de positions à partager.
 
 ## Plan — 2026-09-28 (volatile, à rayer au fil de l'eau)
 
-- **P0** — Essayer à la main un lien `issues/new?template=positions.yml&title=…&code=…&faction=Alliance`
-  dans un navigateur. Il tranche le pré-remplissage de la liste déroulante avant d'écrire une ligne.
+- **P0** — ~~Essayer à la main un lien `issues/new?template=positions.yml&title=…&code=…&faction=Alliance`~~
+  (2026-09-28 : titre et code remplis, faction NON remplie → I2, formulaire corrigé sur la branche
+  LeyLines `fix/formulaire-faction-facultative`).
 - **P1** — `node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
   ce qui est postérieur à la précédente. Critère 3 de la spec voisine.
-- **P2** — Le lien pré-rempli, avec titre et faction, et son repli (T3 de la spec voisine).
+- **P2** — Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine).
   Critères 6 et 9.
 - **P3** — Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment.
   Critères 1 à 5.
