@@ -29,6 +29,16 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 19:35 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:36 - Forever, comptes #4 et
+  #1 - **GO sur `/ley signal off` / `on` icone allumee, et sur « une position livree n'allume
+  pas »** - rapporte par le user : l'icone allumee, `/ley signal off` la retire, `/ley signal on`
+  la ramene. Compte #1 (Gnomi Short) : `/ley del` sur la fissure 46,26 / 17,78 puis lancer
+  reussi, et PAS d'icone : la liste livree la contient depuis le palier 4 (`wafhien-zephras`,
+  fusionnee dans cette base a 18:02:49, relu sur le disque), donc S3 / critere 1. Le del et le
+  lancer eux-memes ne sont PAS relus sur le disque (bases non reecrites depuis 19:23:49 / 19:25:43).
+  PAS observe : l'icone qui s'eteint AU MOMENT ou une livraison arrive (critere 4 : le clic de
+  17:56:59 l'avait eteinte avant ; prouve par les tests seulement), la ligne de chat a l'allumage.
+
 - 2026-09-28 19:25 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:02 - Forever, compte #4,
   personnage Horde, Tarides - **GO sur le critere 8 de `signal-contribution.md`** (icone allumee
   par un VRAI lancer sur une position absente de la liste) - `/ley signal on` (signal coupe depuis
