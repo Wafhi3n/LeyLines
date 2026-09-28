@@ -296,8 +296,9 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   et le cas « trop long ». Critères 3 (hors `seen`), 9.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les
   retraits dans `ApplyShipped` (A3). Critère 5.
-- **T5** — ~~formulaire de ticket~~ (écrit, branche `feat/pipeline-donnees`, PAS encore poussé ;
-  l'étiquette `positions` n'existe pas encore sur le dépôt) ; reste l'Action de validation et de
+- **T5** — ~~formulaire de ticket~~ (publié sur `main`, étiquette `positions` en place ; premier
+  vrai ticket, #1 de wasdconnor, versé à la main le 2026-09-28 et vu en jeu : `gh-0001`, palier 3,
+  voir le registre) ; reste l'Action de validation et de
   commentaire. Le corps du ticket passe par une variable d'environnement, jamais par `${{ }}` dans
   un `run:`. Critère 11.
 - **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`

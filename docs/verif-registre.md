@@ -29,6 +29,19 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 12:38 - jusqu'a 03761ea - main-dev@03761ea 2026-09-28 12:10 - Forever, compte #4,
+  personnage Alliance - **GO sur la premiere contribution par ticket** (ticket GitHub #1 de
+  wasdconnor, verse par `ll_ingest.ps1 -Issue 1`, liste livree au palier 3) - relu sur le disque
+  (base ecrite a 12:12) : `dataVersion` 2 -> 3, les 4 points de `gh-0001` presents sur 2521 en
+  `shipped` / `L`, les 2 points de `seed-zephras` sans doublon. Capture d'ecran du user : la carte
+  du monde de Zephras Isle montre les 4 nouveaux points aux positions du fichier. Deux d'entre eux
+  (52,41 / 66,12 et 53,73 / 66,22) se chevauchent a l'ecran, pris d'abord pour un doublon : mesure
+  en jeu `LeyLines.Geo:Distance` = 73,5 yd (carte 2521 = 5562,5 x 3708,3 yd), et vu sur place par
+  le user : deux fissures reelles, une devant la grotte, une au-dessus. Lecon : sur la carte du
+  monde, deux icones collees ne sont PAS un doublon ; la distance se mesure avec `Geo:Distance`.
+  PAS observe : le message « 4 position(s) added from the shipped data » (non rapporte), le cote
+  Horde (points `L` masques par A1), la minicarte, un lancer sur un des nouveaux points.
+
 - 2026-09-27 - jusqu'a fb59d2f - Forever, compte #4 (Horde), client redemarre - **GO sur le
   compartiment d'addons** - captures du user : LeyLines figure dans le compartiment avec son icone.
   Sur Forever ce n'est PAS sur la minicarte : c'est le petit bouton « 2 » dans la barre en haut a
