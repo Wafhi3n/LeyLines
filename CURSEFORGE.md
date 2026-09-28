@@ -7,7 +7,7 @@
 
 Remembers every ley line and elemental convergence you find, pins them on your minimap and world
 map, and warns you before your buff runs out.
-²
+
 ## Description
 
 Skyborn soak a ley line for a fifteen minute buff, and Horde players get the same from an elemental

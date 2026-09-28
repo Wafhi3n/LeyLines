@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.1
+
+Four new ley lines on Zephras Isle, sent in by wasdconnor. They're the first spots to come in from a
+player through /ley contribute. You'll find them on your map the first time you log in after
+updating, and a line in chat tells you how many were added. Thanks, wasdconnor!
+
 ## v1.2.0
 
 The addon now has an entry in the addon compartment, the small button with a number at the top
