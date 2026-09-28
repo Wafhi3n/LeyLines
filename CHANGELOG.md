@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.3.0
+
+When the spell confirms a spot that isn't in the shared list yet, the addon's icon now shows up at
+the top of the minimap, next to the mail letter, and a line in chat tells you why. Hover it to see
+how many spots are waiting, click it to share them. Don't want it? /ley signal off.
+
+Sharing is quicker too. /ley contribute (or the icon) now gives you a link instead of a code. Open
+it in your browser and the GitHub form comes up already filled in, with a title that lists your
+zones, so you just hit Create. The Code button still gives you the code alone if you'd rather paste
+it in a comment here.
+
+/ley contribute only sends what you've confirmed since your last contribution, so the same spots
+don't go out twice. /ley contribute all still sends everything. The form doesn't ask for your
+faction anymore, since the code already says which spots are ley lines and which are convergences.
+
+One more ley line on Zephras Isle, at 46.3, 17.8.
+
 ## v1.2.1
 
 Four new ley lines on Zephras Isle, sent in by wasdconnor. They're the first spots to come in from a
