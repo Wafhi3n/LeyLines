@@ -1,6 +1,7 @@
 # Signal « position à partager » sur la minicarte
 
-> État : **validée, en cours** (P0-P3 codés, P4 à faire) · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
+> État : **codée** (P0-P4, branche `feat/signal-contribution`, pas publiée ; critère 9 vu en jeu,
+> 8 et 10 à voir) · Rédigée le 2026-09-28 · Idée du user (2026-09-28) ; arbitrages
 > S1-S5 proposés par l'agent, acceptés par le user le même jour (« oui fait la spec ») ; décision I2
 > (faction facultative) prise le même jour après l'essai P0
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine, dont celle-ci dépend :
@@ -105,8 +106,10 @@ d'addons donne toujours le nombre de positions à partager.
   livré de même espèce à moins de `mergeRange` (20 yd). Raison : voir « Ce qu'on NE fait PAS ».
 - **S4 — Emplacement : la barre d'icônes de la minicarte** (`MinimapCluster.IndicatorFrame`), avec la
   méthode A mesurée pour COC dans TaintLab le 2026-09-27 et vue en jeu le 2026-09-28 : icône enfant
-  de la barre, `layoutIndex`, `Layout()` à chaque bascule. **Rang 4** (1 et 2 sont à Blizzard, 3 à la
-  mise à jour de COC). Image : l'icône de l'addon, 22 px.
+  de la barre, `layoutIndex`, `Layout()` à chaque bascule. Image : l'icône de l'addon, 22 px.
+  **Rang 10**, et plus 4 comme accepté d'abord : le même jour, la branche COC
+  `feat/icone-commande-recue` (autre session, déjà au banc) a pris 4.01-4.99 pour ses commandes et
+  réservé 5. Changement fait par l'agent en P4 ; 10 laisse à COC la place de ses futurs types.
 - **S5 — Le titre du ticket est pré-rempli** avec les zones du code. Raison : le malentendu du ticket
   #1 (voir « Le problème »).
 
@@ -121,7 +124,8 @@ d'addons donne toujours le nombre de positions à partager.
    qui contient la position l'éteint.
 5. [test] Signal coupé : aucune icône, aucune ligne de chat ; `/ley contribute` rend le même lien.
 
-   Critères 1 à 5 → `tests/test_leylines_signal.lua` (sauf l'icône, P4).
+   Critères 1 à 5 → `tests/test_leylines_signal.lua`, icône comprise (fausse barre qui compte ses
+   `Layout()`, comme `test_minimap_indicator.lua` de COC).
 6. [test] Le lien porte `template=positions.yml`, le code et le titre, encodés en pourcent, et pas
    de faction (I2) ; aucun caractère du nom de zone ne sort non encodé.
    → `tests/test_leylines_contribute.lua` § 7 (titre, ordre des zones, « +N », repli trop long)
@@ -159,9 +163,14 @@ d'addons donne toujours le nombre de positions à partager.
 - **Ligne de chat** : à l'allumage seulement, de 0 à au moins 1, signal actif. Le premier calcul se
   fait 3 s après la connexion, après la fusion des données livrées (avant, la taille des zones peut
   manquer), et il ne dit rien : une découverte d'avant la déconnexion est signalée par l'icône (P4),
-  pas par un rappel dans le chat. Tant que P4 n'est pas fait, la ligne renvoie à `/ley contribute`.
-- **Barre d'icônes** : rang 4, à réserver aussi dans la liste des rangs de
-  `CraftingOrderClassic\docs\specs\icone-minicarte.md`, puisque les deux addons partagent la barre.
+  pas par un rappel dans le chat. La ligne renvoie à l'icône quand la barre existe, à
+  `/ley contribute` sinon. `/ley signal on` avec des positions en attente rallume l'icône sans
+  ligne : la commande répond elle-même, avec le nombre.
+- **Barre d'icônes** (`LeyLines_Indicator.lua`) : rang 10 (S4), méthode de COC recopiée, aucun appel
+  à COC. Au clic : la fenêtre de contribution. Au survol : le nombre en attente. **À inscrire dans
+  la liste des rangs de `CraftingOrderClassic\docs\specs\icone-minicarte.md`** une fois
+  `feat/icone-commande-recue` fusionnée : cette branche réécrit justement la ligne des rangs, la
+  toucher avant ferait un conflit au banc.
 - **Lien** : celui de la spec voisine (§ Lien de contribution), plus `title`, et **sans**
   `faction` (I2). Le formulaire publié n'a que les champs `code`, `faction` (facultatif depuis I2)
   et `notes` : les paramètres `maps` et `version` prévus là-bas n'ont pas encore de champ où
@@ -197,5 +206,6 @@ d'addons donne toujours le nombre de positions à partager.
 - **P3** — ~~Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment~~
   (codé le 2026-09-28, même branche : `LeyLines_Signal.lua`, `node.found`). Critères 1 à 5 → le
   test ; rien de vu en jeu.
-- **P4** — L'icône : recopier la méthode de COC, rang 4, et réserver ce rang dans la spec COC.
-  Critères 8 et 10.
+- **P4** — ~~L'icône : recopier la méthode de COC~~ (codé le 2026-09-28, même branche :
+  `LeyLines_Indicator.lua`, rang 10 et pas 4, voir S4). Reste : inscrire le rang 10 dans la spec
+  COC (après fusion de `feat/icone-commande-recue`), et les critères 8 et 10 en jeu.

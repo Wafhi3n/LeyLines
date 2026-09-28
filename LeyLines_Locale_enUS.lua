@@ -119,6 +119,9 @@ local en = {
     ["Signal des positions à partager : %s."] = "Reminder for spots to share: %s.",
     ["%s position(s) à partager, absente(s) de la liste commune."] =
         "%s spot(s) to share, missing from the shared list.",
+    ["Position absente de la liste commune : clique sur l'icône apparue en haut de la minicarte pour la partager avec tous."] =
+        "This spot isn't in the shared list yet: click the new icon at the top of the minimap to share it with everyone.",
+    ["Clic : le lien du ticket, déjà rempli."] = "Click: the issue link, already filled in.",
     ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
     ["Importer"] = "Import",
     ["Fermer"]   = "Close",

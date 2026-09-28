@@ -47,6 +47,12 @@ L'addon est aussi dans le **compartiment d'addons** de la minicarte (le bouton n
 addons) : clic gauche = `/ley contribute`, clic droit = bandeau. Inscription par les lignes
 `## AddonCompartmentFunc*` du `.toc` ; les fonctions globales vivent dans `LeyLines_Compartment.lua`.
 
+Quand le jeu confirme une position absente de la liste livrée, l'icône de l'addon apparaît dans la
+**barre d'icônes de la minicarte** (celle de la lettre du courrier, rang 10), avec une ligne de
+chat : clic = `/ley contribute`, et l'ouvrir l'éteint. `/ley signal off` la coupe. Code :
+`LeyLines_Signal.lua` (le compte, déduit de la base) et `LeyLines_Indicator.lua` (l'icône, méthode
+recopiée de COC) ; spec `docs/specs/signal-contribution.md`.
+
 Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Line / Elemental Convergence Tracker* (enregistrer ici,
 suivre la plus proche).
 

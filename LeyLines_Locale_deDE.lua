@@ -119,6 +119,9 @@ local de = {
     ["Signal des positions à partager : %s."] = "Hinweis auf zu teilende Positionen: %s.",
     ["%s position(s) à partager, absente(s) de la liste commune."] =
         "%s Position(en) zu teilen, fehlen in der gemeinsamen Liste.",
+    ["Position absente de la liste commune : clique sur l'icône apparue en haut de la minicarte pour la partager avec tous."] =
+        "Diese Position fehlt in der gemeinsamen Liste: Klicke auf das neue Symbol oben an der Minikarte, um sie mit allen zu teilen.",
+    ["Clic : le lien du ticket, déjà rempli."] = "Klick: der Link zum Issue, schon ausgefüllt.",
     ["Colle un code reçu, puis clique sur Importer."] = "Füge einen erhaltenen Code ein und klicke auf Importieren.",
     ["Importer"] = "Importieren",
     ["Fermer"]   = "Schließen",

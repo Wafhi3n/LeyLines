@@ -1,8 +1,8 @@
 -- LeyLines_Signal.lua — « des positions attendent d'être partagées » (docs/specs/signal-contribution.md).
 --
 -- `/ley contribute` ne sert que si le joueur y pense. Au moment où ça compte, quand le jeu vient de
--- confirmer une position que la liste livrée n'a pas, une ligne de chat le lui dit (et, P4, une
--- icône s'allume dans la barre de la minicarte).
+-- confirmer une position que la liste livrée n'a pas, une icône s'allume dans la barre de la
+-- minicarte (LeyLines_Indicator.lua) et une ligne de chat dit pourquoi.
 --
 -- RIEN N'EST STOCKÉ : le compte se déduit de la base (`node.found`, `node.src`), de la date de la
 -- dernière contribution (`db.contrib.at`) et de la liste livrée (`LL.DATA`). Une contribution, un
@@ -48,14 +48,22 @@ function Signal:Count()
     return n
 end
 
--- Recalcul après toute modification de la base (LL:Refresh). La ligne de chat part à l'ALLUMAGE
--- seulement, de rien à quelque chose : plusieurs découvertes avant le clic n'en donnent qu'une, et
--- il n'y a pas de rappel. Le premier calcul (Init) sert de point de départ et ne dit rien.
+-- Recalcul après toute modification de la base (LL:Refresh). L'icône suit le compte (signal actif).
+-- La ligne de chat part à l'ALLUMAGE seulement, quand une découverte fait passer le compte de rien à
+-- quelque chose : plusieurs découvertes avant le clic n'en donnent qu'une, `/ley signal on` n'en
+-- donne pas (la commande répond elle-même), et il n'y a pas de rappel. Le premier calcul (Init) sert
+-- de point de départ : l'icône apparaît, la ligne ne part pas.
 function Signal:Update()
     local count, before = self:Count(), self.count
     self.count = count
-    if before == 0 and count > 0 and LL.db.signal then
-        LL:Print(L["Position absente de la liste commune : /ley contribute pour la partager avec tous."])
+    local lit = (LL.db.signal and count > 0) and true or false
+    if lit == self.lit then return end
+    self.lit = lit
+    local onBar = LL.Indicator:Set(lit)
+    if lit and before == 0 then
+        LL:Print(onBar
+            and L["Position absente de la liste commune : clique sur l'icône apparue en haut de la minicarte pour la partager avec tous."]
+            or L["Position absente de la liste commune : /ley contribute pour la partager avec tous."])
     end
 end
 
