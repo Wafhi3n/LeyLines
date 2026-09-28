@@ -29,6 +29,18 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-09-28 16:18 - jusqu'a 67d12b4 - main-dev@67d12b4 2026-09-28 16:16 - Forever, compte #4 -
+  **GO sur le lien pre-rempli de /ley contribute** (P2 de `docs/specs/signal-contribution.md`,
+  critere 9 ; critere 9 de `contribution-positions.md`) - ticket GitHub #2 cree par le user a 16:18
+  depuis le lien de la fenetre, relu par `gh issue view 2` : titre « Positions: Zephras Isle, The
+  Barrens, Stonetalon Mountains » (3 zones, dans l'ordre du code) et champ Code
+  `LL2;L2521=5375,6639;V1413=4980,2858,4848,4629;V1442=7490,9450` remplis par le lien, Faction
+  « No response » (« Create » passe sans rien choisir, I2), etiquette `positions`. Le code est
+  identique caractere pour caractere a celui de la 1re contribution (13:28, releve ci-dessous).
+  Rapporte par le user : le bouton « Code » montre le code seul. Ticket ferme sans versement
+  (essai). PAS observe : le repli « lien trop long » (tests seulement), le retour par « Lien », un
+  nom de zone accentue dans un vrai titre (client enUS), les textes deDE / esES.
+
 - 2026-09-28 13:41 - jusqu'a b224c0f - main-dev@b224c0f 2026-09-28 13:22 - Forever, compte #4 -
   **GO sur « /ley contribute n'envoie que le neuf »** (P1 de `docs/specs/signal-contribution.md`) -
   code colle par le user a la 1re contribution apres la mise a jour :

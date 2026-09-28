@@ -305,7 +305,7 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   hors retraits.
 - **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; ~~le lien pré-rempli et
   le cas « trop long »~~ (codés le 2026-09-28 par `signal-contribution.md` P1-P2, avec le titre
-  pré-rempli ; pas publiés). Critère 3 → le test ; critère 9 **pas encore observé en jeu**. Constat
+  pré-rempli ; pas publiés). Critère 3 → le test ; critère 9 vu en jeu (ticket #2, registre). Constat
   du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
   et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les

@@ -178,7 +178,8 @@ d'addons donne toujours le nombre de positions à partager.
   voir le registre). Critère 3 de la spec voisine → `tests/test_leylines_contribute.lua`.
 - **P2** — ~~Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine)~~ (codé le
   2026-09-28, même branche : `Share:ContributeURL` / `Share:Title`, bouton « Code » / « Lien » dans
-  la fenêtre). Critère 6 → le test ; critère 9 (en jeu, dans le navigateur) **pas encore observé**.
+  la fenêtre). Critère 6 → le test ; critère 9 vu en jeu le même jour (ticket #2, par le lien de
+  la fenêtre, puisque l'icône n'existe pas encore), voir le registre.
 - **P3** — Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment.
   Critères 1 à 5.
 - **P4** — L'icône : recopier la méthode de COC, rang 4, et réserver ce rang dans la spec COC.
