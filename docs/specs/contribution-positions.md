@@ -293,7 +293,10 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.
 - **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli
-  et le cas « trop long ». Critères 3 (hors `seen`), 9.
+  et le cas « trop long ». Critères 3 (hors `seen`), 9. **Repris le 2026-09-28 par
+  `signal-contribution.md`** (plan P1-P2), qui y ajoute le titre et la faction pré-remplis. Constat
+  du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
+  et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les
   retraits dans `ApplyShipped` (A3). Critère 5.
 - **T5** — ~~formulaire de ticket~~ (écrit, branche `feat/pipeline-donnees`, PAS encore poussé ;
