@@ -155,11 +155,13 @@ désormais l'espèce de chaque point.
 2. [test] Un point `L` et un point `V` à 5 yd l'un de l'autre restent DEUX points.
 3. [test] La contribution exclut les sources `shipped`, `import`, `restored`, `tooltip` et `manual`
    (A2). Elle n'inclut que les observations et les retraits postérieurs à la précédente.
+   → `tests/test_leylines.lua` § 17 (sources), `tests/test_leylines_contribute.lua` (« postérieurs »,
+   hors retraits ; codé le 2026-09-28, branche `feat/signal-contribution`)
 3b. [test] Un lancer réussi à 40 yd d'un point `manual` de même espèce le déplace et le fait passer
    en `spell`, sans créer de second point ; à 40 yd d'un point `manual` de l'AUTRE espèce, il crée
    un point à part.
 4. [test] Un point confirmé par une fusion de données livrées n'est PAS considéré comme revu : il ne
-   repart pas dans la contribution suivante.
+   repart pas dans la contribution suivante. → `tests/test_leylines_contribute.lua` § 3
 5. [test] Un retrait livré efface un point `shipped` ou `import` voisin, et laisse un point `spell`
    (A3).
 6. [test] Compilation : ajout (#12) puis retrait (#15) au même endroit → absent ; retrait puis ajout
@@ -222,9 +224,9 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 | Champ | Sens |
 |---|---|
 | `node.kind` | **Livré en v1.1.0, sans changer `schemaVer`** (posé par `Nodes:Init` à chaque chargement). `"L"` ou `"V"`, **toujours présent** : un point ancien le reçoit au chargement (A4). Fixé à la capture : faction du personnage pour un sort ou un relevé manuel (D4), nom lu pour une infobulle ou une vignette. |
-| `node.seen` | Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. |
+| `node.seen` | **Codé le 2026-09-28** (branche `feat/signal-contribution`, pas publié). Dernière observation **confirmée par le jeu** (sort, vignette). Contrairement à `node.last`, une fusion de données livrées ou importées ne le touche pas. Un point confirmé d'une base plus ancienne reçoit son `last` au chargement. |
 | `db.gone[map]` | Retraits faits sur place par `/ley del` d'un point partageable (`spell`, `vignette`, `shipped`, `import`) : `{ x, y, kind, at }`. Pas `/ley clear` ni `/ley clean`, qui sont du ménage et pas une observation. |
-| `db.contrib.at` | Date de la dernière contribution générée. |
+| `db.contrib.at` | **Codé le 2026-09-28** (même branche). Date (`time()`) de la dernière contribution générée, posée à l'ouverture de la fenêtre ; une contribution vide (« rien de neuf ») ne la change pas. |
 | `db.legacy` | **Livré en v1.1.0.** Copie texte (`{ at, blob }`) d'une base d'avant l'espèce, prise AVANT de lui donner ses espèces et jamais réécrite : si le classement A4 se trompe, rien n'est perdu. |
 
 ### Données livrées — `LeyLines_Data.lua`, **généré**
@@ -290,7 +292,8 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   Libellé « Elemental Convergence » : FAIT (nom relevé sur le client). Côté sort, rien à changer :
   `/ley learn` sur Horde retient **1270893**, déjà livré en dur.
 - **T1** — ~~espèce, anti-doublon et affichage par espèce (A1), A4~~ (v1.1.0) ; reste pour la
-  v1.2.0 : `seen`, `gone`, couleur « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
+  v1.2.0 : ~~`seen`~~ (codé le 2026-09-28, P1 de `signal-contribution.md`), `gone`, couleur
+  « à confirmer » et absorption par le lancer (A2). Critères 3b, 10b.
 - **T2** — ~~Codec `LL2`, lecture `LL1` gardée ; `/ley export` passe en `LL2`~~ (v1.1.0). Critère 1,
   hors retraits.
 - **T3** — ~~`/ley contribute` : filtre (A2)~~ (v1.1.0, code à coller) ; reste le lien pré-rempli

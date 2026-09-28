@@ -33,18 +33,20 @@ local KNOWN = { [""] = true, L = true, V = true }
 -- rien d'autre. Un relevé manuel ou d'infobulle peut être à 30 yd ; un point livré ou importé
 -- reviendrait à l'identique, sans que personne soit allé le voir. Un point livré que le joueur a
 -- ensuite confirmé au sort passe en `spell` (Nodes:Confirm) : il repart, et c'est mérité.
-local VERIFIED = { spell = true, vignette = true }
+-- Nodes est chargé avant ce fichier (.toc) : une seule définition de « confirmé par le jeu ».
+local VERIFIED = LL.Nodes.VERIFIED
 
 -- ---------------------------------------------------------------------------
 -- Codec (pur, testable sans client)
 -- ---------------------------------------------------------------------------
 
 -- `sources` (facultatif) : ne garder que les points dont la source y figure.
-function Share:Encode(sources)
+-- `since` (facultatif) : ne garder que les points CONFIRMÉS par le jeu après cette date (`seen`).
+function Share:Encode(sources, since)
     local groups = {}
     for map, list in pairs(LL.db.nodes) do
         for _, node in ipairs(list) do
-            if not sources or sources[node.src] then
+            if (not sources or sources[node.src]) and (not since or (node.seen or 0) > since) then
                 local key = (node.kind or "") .. tostring(map)
                 local nums = groups[key] or {}
                 groups[key] = nums
@@ -219,12 +221,22 @@ function Share:ShowExport()
 end
 
 -- Le code à coller dans un ticket GitHub pour la liste commune (docs/specs/contribution-positions.md).
-function Share:ShowContribute()
-    local blob = self:Encode(VERIFIED)
+-- Seulement ce que le jeu a confirmé DEPUIS la contribution précédente : un joueur qui contribue
+-- deux fois ne renvoie pas la première. `all` (`/ley contribute all`) renvoie tout ce qu'il a
+-- confirmé. Ouvrir la fenêtre vaut contribution : l'addon ne peut pas savoir si le ticket est parti.
+function Share:ShowContribute(all)
+    LL.db.contrib = LL.db.contrib or {}
+    local since = not all and LL.db.contrib.at or nil
+    local blob = self:Encode(VERIFIED, since)
     if not blob then
-        LL:Print(L["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."])
+        if since and self:Encode(VERIFIED) then
+            LL:Print(L["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."])
+        else
+            LL:Print(L["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."])
+        end
         return
     end
+    LL.db.contrib.at = time()
     self:Open(blob, L["Colle ce code dans un ticket : github.com/Wafhi3n/LeyLines"])
 end
 

@@ -1,6 +1,6 @@
 -- LeyLines_Nodes.lua — la base des positions connues, et l'anti-doublon.
 --
--- Forme persistée : LeyLinesDB.nodes[uiMapID] = { {x, y, map, kind, name, src, hits, first, last}, ... }
+-- Forme persistée : LeyLinesDB.nodes[uiMapID] = { {x, y, map, kind, name, src, hits, first, last, seen}, ... }
 -- x/y sont des coordonnées de CARTE (0..1). Tout le reste de l'addon LIT cette base et n'écrit
 -- jamais ailleurs : capture → base → affichage, jamais capture → affichage.
 --
@@ -24,6 +24,14 @@ LL.Nodes = Nodes
 -- livrée avec l'addon ne doit JAMAIS déplacer un relevé que CE joueur a fait sur place. Elle
 -- comble un trou, elle ne corrige pas une vérité locale.
 local PRECISION = { vignette = 3, spell = 2, manual = 2, tooltip = 1, import = 1, shipped = 1, restored = 2 }
+
+-- Les sources que le JEU a tranchées : la position de l'objet donnée par le client (vignette), ou un
+-- lancer suivi du buff long (sort). Elles seules partent vers la liste commune (A2), et elles seules
+-- datent `seen`, la dernière observation CONFIRMÉE. `last` bouge aussi quand une donnée livrée ou
+-- importée recoupe le point : il ne dit pas que quelqu'un est allé voir.
+-- (docs/specs/contribution-positions.md, critères 3 et 4.)
+local VERIFIED = { spell = true, vignette = true }
+Nodes.VERIFIED = VERIFIED
 
 local SOURCE_LABEL = {
     vignette = L["vignette du client"],
@@ -101,6 +109,8 @@ end
 -- Remet la base d'aplomb au démarrage : `map` est dupliqué dans chaque point (il rend Remove et
 -- DistanceToPlayer autonomes), une entrée sans coordonnées est jetée plutôt que promenée, et les
 -- noms déjà stockés repassent par le nettoyage (la base survit aux versions, pas les bugs).
+-- Un point confirmé d'avant `seen` (v1.2.1 et avant) en reçoit un : la première contribution après
+-- la mise à jour le renvoie, comme elle l'aurait fait avant — l'ingestion dédoublonne.
 function Nodes:Init()
     LL.db.nodes = LL.db.nodes or {}
     for map, list in pairs(LL.db.nodes) do
@@ -111,6 +121,9 @@ function Nodes:Init()
             else
                 node.map  = map
                 node.name = self:CleanName(node.name)
+                if node.seen == nil and VERIFIED[node.src] then
+                    node.seen = node.last or node.first or 1
+                end
             end
         end
     end
@@ -294,6 +307,7 @@ function Nodes:Add(map, x, y, info)
         src   = info.src or "manual",
         hits  = 1,
         first = time(), last = time(),
+        seen  = VERIFIED[info.src] and time() or nil,
     }
     table.insert(list, node)
     return node, true
@@ -302,6 +316,7 @@ end
 function Nodes:Confirm(node, x, y, info)
     node.hits = (node.hits or 1) + 1
     node.last = time()
+    if VERIFIED[info.src] then node.seen = time() end
     if info.name and not node.name then node.name = info.name end
     if not node.kind and KINDS[info.kind] then node.kind = info.kind end
 

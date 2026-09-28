@@ -55,6 +55,9 @@ LL.DEFAULTS = {
     -- autre langue : `/ley learn` fait le même travail.
     spellNames = { "skysight" },
     nodes      = {},
+    -- contrib.at : date (time()) de la dernière contribution générée par `/ley contribute`. La
+    -- suivante ne porte que les points confirmés APRÈS (node.seen, voir _Nodes).
+    contrib    = {},
 }
 
 function LL:Print(msg)
@@ -262,7 +265,11 @@ CMD.import = function(rest)
     if rest ~= "" then LL.Share:Import(rest) else LL.Share:ShowImport() end
 end
 CMD.partage = CMD.export
-CMD.contribute = function() LL.Share:ShowContribute() end
+-- `/ley contribute all` (ou `tout`) renvoie tout ce que le joueur a confirmé, pas seulement le neuf.
+CMD.contribute = function(rest)
+    local arg = string.lower(rest)
+    LL.Share:ShowContribute(arg == "all" or arg == "tout")
+end
 CMD.contribuer = CMD.contribute
 
 CMD.probe = function() LL.Probe:Dump() end

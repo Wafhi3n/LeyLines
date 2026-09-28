@@ -170,8 +170,10 @@ d'addons donne toujours le nombre de positions à partager.
 - **P0** — ~~Essayer à la main un lien `issues/new?template=positions.yml&title=…&code=…&faction=Alliance`~~
   (2026-09-28 : titre et code remplis, faction NON remplie → I2, formulaire corrigé sur la branche
   LeyLines `fix/formulaire-faction-facultative`).
-- **P1** — `node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
-  ce qui est postérieur à la précédente. Critère 3 de la spec voisine.
+- **P1** — ~~`node.seen` et `db.contrib.at` (spec voisine, T1/T3) : la contribution ne porte plus que
+  ce qui est postérieur à la précédente~~ (codé le 2026-09-28, branche `feat/signal-contribution`
+  des dépôts LeyLines et outillage ; `/ley contribute all` renvoie tout ; pas vu en jeu).
+  Critère 3 de la spec voisine → `tests/test_leylines_contribute.lua`.
 - **P2** — Le lien pré-rempli, avec le titre, et son repli (T3 de la spec voisine).
   Critères 6 et 9.
 - **P3** — Le calcul du signal, `/ley signal`, la ligne de chat, l'infobulle du compartiment.

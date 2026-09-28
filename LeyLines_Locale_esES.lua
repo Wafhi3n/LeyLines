@@ -106,6 +106,8 @@ local es = {
         "Pega este código en un issue: github.com/Wafhi3n/LeyLines",
     ["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."] =
         "Nada que compartir: solo tus capturas confirmadas por el juego (hechizo lanzado en el sitio) van a la lista común.",
+    ["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."] =
+        "Nada nuevo desde tu última contribución. /ley contribute all envía todo lo que has confirmado.",
     ["Colle un code reçu, puis clique sur Importer."] = "Pega un código recibido y haz clic en Importar.",
     ["Importer"] = "Importar",
     ["Fermer"]   = "Cerrar",

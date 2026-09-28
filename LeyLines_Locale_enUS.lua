@@ -106,6 +106,8 @@ local en = {
         "Paste this code in an issue: github.com/Wafhi3n/LeyLines",
     ["Rien à partager : seules tes captures confirmées par le jeu (sort lancé sur place) vont dans la liste commune."] =
         "Nothing to share: only your captures confirmed by the game (spell cast on the spot) go into the shared list.",
+    ["Rien de neuf depuis ta dernière contribution. /ley contribute all renvoie tout ce que tu as confirmé."] =
+        "Nothing new since your last contribution. /ley contribute all sends everything you've confirmed.",
     ["Colle un code reçu, puis clique sur Importer."] = "Paste a code you were given, then click Import.",
     ["Importer"] = "Import",
     ["Fermer"]   = "Close",
