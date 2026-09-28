@@ -1,0 +1,5 @@
+# Le registre de verification recoit des releves de plusieurs sessions en parallele, chacune en
+# tete de la section sur sa branche : fusionner en gardant les lignes des DEUX cotes, sans conflit
+# (cf. l'en-tete de docs/verif-registre.md). Une ligne modifiee des deux cotes ressortirait en
+# double, a relire apres la fusion.
+docs/verif-registre.md merge=union

@@ -2,16 +2,22 @@
 
 Meme role que celui de Crafting Order - Classic : dire jusqu'ou l'addon a ete **vu fonctionner**
 dans le client, puisque aucune porte automatique ne sait le dire. `scripts/untested.ps1 -Addon
-LeyLines` lit la premiere ligne de releve ci-dessous et liste ce qui est venu apres.
+LeyLines` fait l'union de tous les releves ci-dessous et liste ce qu'aucun n'avait dans le client.
 
 Format d'un releve (le plus recent EN TETE) :
 
 ```
-- AAAA-MM-JJ - jusqu'a <sha> - <banc> - <verdict> - <ce qui a ete observe>
+- AAAA-MM-JJ HH:MM - jusqu'a <sha> - <build> - <verdict> - <ce qui a ete observe>
 ```
 
 Le `<sha>` est le dernier commit reellement present dans le client pendant la seance. On n'ecrit
 un releve qu'APRES avoir observe, et on dit ce qui n'a PAS ete observe.
+
+Depuis le 2026-09-28, le jeu ne recoit que le banc `main-dev` (CLAUDE.md de l'outillage) : le
+`<build>` est la signature `## X-Build` du `.toc` deploye, et le repere est le dernier commit de la
+BRANCHE eprouvee, pas la fusion `main-dev` (refaite a chaque release, et qui porte les branches des
+autres sessions). Plusieurs sessions peuvent ecrire ici en parallele : l'heure plutot qu'un numero
+du jour, et le fichier fusionne en `merge=union` (`.gitattributes`) sans conflit.
 
 ⚠️ **UN REBASE PERIME LE SHA D'UN RELEVE.** Vecu le 2026-09-27 : le releve Horde citait `93693eb`,
 le commit d'AVANT la remise a niveau de sa branche. Apres rebase le meme travail s'appelle
