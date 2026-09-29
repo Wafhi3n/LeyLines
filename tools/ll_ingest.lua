@@ -20,7 +20,15 @@ local Ingest = {}
 
 local VERIFIED  = { spell = true, vignette = true }   -- même règle que /ley contribute
 local HORDE_BUFF = 1270893                              -- Elemental Blessing (voir Nodes:LegacyKind)
-local TOL       = 0.003   -- écart de carte sous lequel deux points sont le même (~15 yd sur 5000)
+-- Même point = même règle que le client (mergeRange) : le buff long se donne jusqu'à REACH yd de
+-- l'objet (mesuré le 2026-09-29), deux contributions de la même fissure peuvent donc être à 2 ×
+-- REACH. Une fusion au-delà de REACH est probable, pas certaine : elle est SIGNALÉE à la relecture.
+local SAME_YD   = 50
+local REACH_YD  = 25
+-- Taille des zones en yards (C_Map.GetMapWorldSize, relevée en jeu). Zone absente : on compare en
+-- unités de carte, ~50 yd sur une zone de 5000 yd, et la fusion est signalée.
+local MAP_YARDS = { [2521] = { 5562, 3708 } }   -- Zephras Isle
+local TOL_UNKNOWN = 0.01
 local MAX_BYTES = 2 * 1024 * 1024
 local KINDS     = { L = true, V = true }
 
@@ -226,35 +234,47 @@ end
 -- La liste livrée : fusion de toutes les contributions, dans l'ordre (palier, id)
 -- ---------------------------------------------------------------------------
 
-local function Near(list, x, y)
+-- Le point connu le plus proche qui est le MÊME objet, et l'écart en yards (nil : zone inconnue).
+function Ingest.Near(list, map, x, y)
+    local size = MAP_YARDS[map]
+    local best, bestD
     for i = 1, #list do
         local p = list[i]
-        if math.abs(p.x - x) < TOL and math.abs(p.y - y) < TOL then return p end
+        if size then
+            local d = math.sqrt(((p.x - x) * size[1]) ^ 2 + ((p.y - y) * size[2]) ^ 2)
+            if d <= SAME_YD and (not bestD or d < bestD) then best, bestD = p, d end
+        elseif not best and math.abs(p.x - x) < TOL_UNKNOWN and math.abs(p.y - y) < TOL_UNKNOWN then
+            best = p
+        end
     end
-    return nil
+    return best, bestD
 end
 
 -- contribs : { {id=, version=, code=}, ... }. Rend la liste { L = { [map] = {pts} }, V = ... },
--- le palier maximal, et le nombre de points NOUVEAUX apportés par chaque contribution.
+-- le palier maximal, le nombre de points NOUVEAUX apportés par chaque contribution, et les fusions
+-- à relire (au-delà de la portée du sort, ou sur une zone de taille inconnue).
 function Ingest.Merge(LL, contribs)
     table.sort(contribs, function(a, b)
         if a.version ~= b.version then return a.version < b.version end
         return a.id < b.id
     end)
-    local data, version, brought = { L = {}, V = {} }, 0, {}
+    local data, version, brought, doubts = { L = {}, V = {} }, 0, {}, {}
     for _, c in ipairs(contribs) do
         version = math.max(version, c.version or 0)
         brought[c.id] = 0
         for _, p in ipairs(Ingest.FromCode(LL, c.code) or {}) do
             local maps = data[p.kind]
             maps[p.map] = maps[p.map] or {}
-            if not Near(maps[p.map], p.x, p.y) then
+            local same, d = Ingest.Near(maps[p.map], p.map, p.x, p.y)
+            if not same then
                 table.insert(maps[p.map], { x = p.x, y = p.y, v = c.version })
                 brought[c.id] = brought[c.id] + 1
+            elseif not d or d > REACH_YD then
+                doubts[#doubts + 1] = { id = c.id, map = p.map, x = p.x, y = p.y, into = same, yd = d }
             end
         end
     end
-    return data, version, brought
+    return data, version, brought, doubts
 end
 
 local HEADER = [[
@@ -342,9 +362,14 @@ function Ingest.Build(dir, files)
         c.id = path:match("([^/\\]+)%.ll$") or path
         if c.code and c.version then contribs[#contribs + 1] = c else print("  ignore (illisible) : " .. path) end
     end
-    local data, version, brought = Ingest.Merge(LL, contribs)
+    local data, version, brought, doubts = Ingest.Merge(LL, contribs)
     for _, c in ipairs(contribs) do
         print(string.format("  %-28s palier %d : %d point(s) nouveau(x)", c.id, c.version, brought[c.id]))
+    end
+    for _, f in ipairs(doubts) do
+        print(string.format("  A RELIRE : %s %.2f,%.2f (carte %d) fusionne avec %.2f,%.2f a %s -- meme objet ?",
+            f.id, f.x * 100, f.y * 100, f.map, f.into.x * 100, f.into.y * 100,
+            f.yd and string.format("%d yd", f.yd + 0.5) or "un ecart de taille inconnue"))
     end
     WriteFile(dir .. "/LeyLines_Data.lua", Ingest.Render(data, version))
     print(string.format("  -> LeyLines_Data.lua regenere, DATA_VERSION = %d", version))

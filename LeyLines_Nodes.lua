@@ -17,9 +17,10 @@ LL.Nodes = Nodes
 
 -- Précision de chaque source, du plus fiable au moins fiable :
 --   vignette = position de l'OBJET donnée par le client (exacte) ;
---   spell / manual = position du JOUEUR, qui est posé dessus (à un pas près) ;
+--   spell / manual = position du JOUEUR, à portée de l'objet (le buff long se donne jusqu'à ~25 yd) ;
 --   tooltip = position du joueur qui VISE l'objet à distance — ça peut être 30 yd à côté.
--- Un relevé plus précis DÉPLACE le point existant ; un moins précis ne fait que le confirmer.
+-- Un relevé plus précis DÉPLACE le point existant ; un relevé de même précision ou moins précis ne
+-- fait que le confirmer (le premier reste, voir Nodes:Confirm).
 -- `import` et `shipped` sont volontairement au plus bas : une position reçue d'un autre joueur ou
 -- livrée avec l'addon ne doit JAMAIS déplacer un relevé que CE joueur a fait sur place. Elle
 -- comble un trou, elle ne corrige pas une vérité locale.
@@ -327,9 +328,13 @@ function Nodes:Confirm(node, x, y, info)
     if info.name and not node.name then node.name = info.name end
     if not node.kind and KINDS[info.kind] then node.kind = info.kind end
 
+    -- Le point ne bouge que pour mieux : une source plus précise, ou le jeu qui tranche un point
+    -- qu'il n'avait pas tranché (un lancer sur un relevé manuel). À précision égale, le PREMIER
+    -- reste : un lancer du bord de la portée tirait sinon à 25 yd un point posé pile sur la
+    -- fissure, et un `/ley add` sur un point de sort le redescendait en `manual`.
     local incoming = PRECISION[info.src or "manual"] or 1
     local current  = PRECISION[node.src or "manual"] or 1
-    if incoming >= current then
+    if incoming > current or (VERIFIED[info.src] and not VERIFIED[node.src]) then
         node.x, node.y, node.src = x, y, info.src or node.src
     end
 end

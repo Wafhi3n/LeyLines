@@ -27,7 +27,7 @@ Trois défauts de l'existant empêchent de brancher un recueil tel quel :
 2. **Un point ne sait pas quel objet il est.** L'Alliance absorbe une **fissure au sol** (Ley Line,
    sort Skyborn), la Horde une **tornade** (Elemental Convergence, sort Skysight) : même mécanisme,
    objets différents, à des endroits différents. Or `Nodes:Label` tire le nom de la faction de CELUI
-   QUI REGARDE, l'anti-doublon fusionne deux points à moins de 20 yd quelle que soit leur nature, et
+   QUI REGARDE, l'anti-doublon fusionne deux points à moins de `mergeRange` quelle que soit leur nature, et
    `LL.DATA` part chez les deux factions. La base est au niveau du compte : un joueur qui a des
    personnages des deux côtés mélange déjà les deux.
 3. **Effacer ne laisse aucune trace.** `/ley del` retire le point, sans rien retenir. Impossible donc
@@ -70,11 +70,20 @@ désormais l'espèce de chaque point.
 
 ## Cas particuliers
 
-- **Relevé manuel à plus de 20 yd de la vraie faille** (au-delà de l'anti-doublon) → le lancer
+- **Relevé manuel à plus de `mergeRange` (50 yd) de la vraie faille** (au-delà de l'anti-doublon) → le lancer
   réussi ABSORBE le point « à confirmer » de même espèce le plus proche dans un rayon de 60 yd (le
   rayon de `/ley del`) : le point se déplace sur la position du lancer et passe en `spell`. Sans
   ça, le point gris resterait à côté, et `/ley del`, qui prend le plus proche, risquerait d'effacer
   le bon.
+- **Lancer du bord de la portée** → vu en jeu le 2026-09-29 (rapporté par le user) : le buff long
+  se donne jusqu'à ~25 yd de la fissure. Un lancer à 22 yd d'un point posé pile dessus créait un
+  DOUBLON avec l'anti-doublon de 20 yd, et le signal puis la liste commune l'auraient propagé.
+  Deux lancers réussis d'une même fissure peuvent être à 2 × 25 = 50 yd : `mergeRange` passe à
+  **50 yd** en v1.3.2 (migration `schemaVer` 4), et à précision égale **le premier point reste**
+  (un lancer confirme sans déplacer). Contrepartie acceptée : deux vraies fissures à moins de
+  100 yd, absorbées par leurs bords qui se font face, peuvent fusionner (une seule paire connue,
+  à 73,5 yd ; simulé : ~8 % des cas avec des lancers au hasard dans la portée). Un doublon, lui,
+  partait chez tout le monde sans moyen de le retirer.
 - **`/ley del` sur un point `manual` ou `tooltip`** → pas de retrait à contribuer : ce point
   n'était jamais parti vers la liste.
 - **Rien de neuf depuis la dernière contribution** → message « rien de neuf à partager », pas de
@@ -228,7 +237,7 @@ attendent un champ du formulaire où arriver. Encodage : tout octet hors `[A-Za-
 `%XX`, les `;` et `=` du code compris.
 
 `maps` existe parce que la CI ne peut pas appeler `C_Map` : sans la taille de la carte, elle ne
-peut pas fusionner deux points à 20 yd. C'est le client qui la connaît, c'est donc lui qui la
+peut pas fusionner deux points à 50 yd. C'est le client qui la connaît, c'est donc lui qui la
 transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du formulaire
 `.github/ISSUE_TEMPLATE/positions.yml`.
 
@@ -284,8 +293,12 @@ Trois entrées, parce que le premier contributeur est resté en v1.0.0, sans exp
   un plafond d'instructions. N'en sort que ce que le jeu a tranché (sort, vignette) ; une vieille
   base qui a capturé côté Horde exige `-Faction`.
 
-Le dédoublonnage de l'outil est approximatif (écart de carte < 0,003, sans taille de zone) : c'est
-le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
+Le dédoublonnage de l'outil suit la règle du client (50 yd, v1.3.2) : en yards pour les zones dont
+il connaît la taille (`MAP_YARDS` dans `tools/ll_ingest.lua`, relevée en jeu : Zephras Isle
+seulement), sinon ~0,01 d'écart de carte. Toute fusion au-delà de la portée du sort (25 yd), ou
+sur une zone de taille inconnue, sort en « A RELIRE » : c'est au relecteur de trancher entre la
+même fissure et deux voisines. Le client refusionne de toute façon à `mergeRange` en appliquant la
+liste.
 
 ## Renvois
 

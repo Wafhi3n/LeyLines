@@ -104,7 +104,7 @@ d'addons donne toujours le nombre de positions à partager.
   savoir si le ticket a été envoyé. Un clic droit « ignorer » ajouterait un geste pour le même effet.
 - **S2 — Le signal se coupe** (`/ley signal off`), et il est actif par défaut.
 - **S3 — Seule une position absente de la liste livrée allume le signal.** « Absente » = aucun point
-  livré de même espèce à moins de `mergeRange` (20 yd). Raison : voir « Ce qu'on NE fait PAS ».
+  livré de même espèce à moins de `mergeRange` (50 yd depuis la v1.3.2, 20 avant). Raison : voir « Ce qu'on NE fait PAS ».
 - **S4 — Emplacement : la barre d'icônes de la minicarte** (`MinimapCluster.IndicatorFrame`), avec la
   méthode A mesurée pour COC dans TaintLab le 2026-09-27 et vue en jeu le 2026-09-28 : icône enfant
   de la barre, `layoutIndex`, `Layout()` à chaque bascule. Image : l'icône de l'addon, 22 px.
