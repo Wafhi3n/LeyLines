@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.1
+
+Three more ley lines on Zephras Isle, sent in by fatalsmick and kmcdougall81 through /ley
+contribute. They're at 45.8, 80.7; 69.1, 61.9; and 64.0, 46.2. Both of them found the one at 69.1,
+61.9 on their own, and a few of their other spots landed within a few yards of ones already in the
+list, which is a good sign it holds up. You'll see them on your map the first time you log in after
+updating. Thanks, both of you!
+
 ## v1.3.0
 
 When the spell confirms a spot that isn't in the shared list yet, the addon's icon now shows up at
