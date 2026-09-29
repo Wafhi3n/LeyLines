@@ -8,7 +8,7 @@
 ## AddonCompartmentFuncOnEnter: LeyLines_OnCompartmentEnter
 ## AddonCompartmentFuncOnLeave: LeyLines_OnCompartmentLeave
 ## Author: Wafhien
-## Version: 1.3.1
+## Version: 1.3.2
 ## SavedVariables: LeyLinesDB
 ## X-Category: Map & Minimap
 

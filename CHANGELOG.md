@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.2
+
+The first Elemental Convergence in the shared list, in The Barrens at 54.8, 34.7, sent in by
+sionnabhan. Horde players will find it on their map the first time they log in after updating.
+Thanks, sionnabhan!
+
 ## v1.3.1
 
 Three more ley lines on Zephras Isle, sent in by fatalsmick and kmcdougall81 through /ley
