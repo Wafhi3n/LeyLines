@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.3
+
+Six more ley lines, and for the first time the list reaches past Zephras Isle. kkatee sent in three
+in Westfall (35.0, 73.2; 59.7, 31.5; 51.1, 67.5) and one in Redridge Mountains (12.8, 72.7).
+neumannrainer-dev found one in Elwynn Forest, at 75.5, 52.1, and DustyHands-hub added one more on
+Zephras Isle, at 33.8, 55.4. You'll see them on your map the first time you log in after updating.
+Thanks to all three of you!
+
 ## v1.3.2
 
 The first Elemental Convergence in the shared list, in The Barrens at 54.8, 34.7, sent in by
