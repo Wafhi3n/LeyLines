@@ -34,6 +34,7 @@ les SavedVariables.
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |
 | `/ley import` | colle un code reçu et fusionne les positions |
 | `/ley contribute [all]` | lien du ticket GitHub déjà rempli (titre + code) avec les captures confirmées par le jeu depuis ta dernière contribution (`all` : toutes) ; bouton « Code » = le code seul |
+| `/ley credits` | les contributeurs de la liste commune, du premier au dernier (`LL.THANKS`, généré par `ll_ingest`) ; ceux d'un palier sont remerciés dans le chat quand leurs positions arrivent |
 | `/ley signal [on\|off]` | le signal « position absente de la liste commune, à partager » (actif par défaut) ; donne le nombre en attente |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |

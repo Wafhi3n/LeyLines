@@ -244,6 +244,7 @@ function Ingest.Merge(LL, contribs)
     local data, version, brought = { L = {}, V = {} }, 0, {}
     for _, c in ipairs(contribs) do
         version = math.max(version, c.version or 0)
+        Ingest.Thank(data, c)
         brought[c.id] = 0
         for _, p in ipairs(Ingest.FromCode(LL, c.code) or {}) do
             local maps = data[p.kind]
@@ -269,6 +270,9 @@ local HEADER = [[
 -- pas encore reçus, pour qu'un point qu'il a effacé ne revienne pas. Espèce : L = fissure
 -- (Alliance), V = tornade (Horde). Un point par ligne, pour que la relecture d'une PR se fasse
 -- ligne à ligne.
+--
+-- LL.THANKS : [palier] = pseudos de ceux dont la contribution est arrivée à ce palier, remerciés en
+-- jeu (LeyLines_Thanks.lua). Un pseudo n'y entre que fait de lettres, chiffres, tiret et souligné.
 local _, LL = ...
 ]]
 
@@ -279,9 +283,40 @@ local function SortedMaps(maps)
     return ids
 end
 
--- Uniquement des nombres formatés : rien de ce que contenait une contribution n'y est recopié.
+-- Un pseudo vient d'un ticket et finit dans du Lua chargé par chaque client : lettres, chiffres,
+-- tiret, souligné, 39 caractères au plus (GitHub, plus le souligné des pseudos CurseForge). Tout
+-- autre pseudo est refusé tel quel, jamais « nettoyé » (docs/specs/remerciements.md, R2).
+function Ingest.SafeName(s)
+    if type(s) == "string" and #s <= 39 and s:find("^[%w_%-]+$") then return s end
+    return nil
+end
+
+-- Range l'auteur d'une contribution parmi ceux de son palier (une fois par palier). Une
+-- contribution sans auteur (la graine) ne remercie personne ; ses positions ne changent pas.
+function Ingest.Thank(data, c)
+    if c.from == nil or c.from == "" then return end
+    local name = Ingest.SafeName(c.from)
+    if not name then
+        print("  ATTENTION : pseudo refuse dans " .. tostring(c.id) .. " : absent des remerciements")
+        return
+    end
+    local tier = c.version or 0
+    data.thanks = data.thanks or {}
+    data.thanks[tier] = data.thanks[tier] or {}
+    for _, known in ipairs(data.thanks[tier]) do
+        if known == name then return end
+    end
+    table.insert(data.thanks[tier], name)
+end
+
+-- Des nombres formatés, et des pseudos passés par SafeName : rien d'autre de ce que contenait une
+-- contribution n'y est recopié.
 function Ingest.Render(data, version)
-    local out = { HEADER, string.format("LL.DATA_VERSION = %d\n\nLL.DATA = {", version) }
+    local out = { HEADER, string.format("LL.DATA_VERSION = %d\n\nLL.THANKS = {", version) }
+    for _, tier in ipairs(SortedMaps(data.thanks or {})) do
+        out[#out + 1] = string.format('    [%d] = { "%s" },', tier, table.concat(data.thanks[tier], '", "'))
+    end
+    out[#out + 1] = "}\n\nLL.DATA = {"
     for _, kind in ipairs({ "L", "V" }) do
         out[#out + 1] = string.format("    %s = {", kind)
         for _, map in ipairs(SortedMaps(data[kind])) do

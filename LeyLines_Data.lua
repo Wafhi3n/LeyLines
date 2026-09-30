@@ -9,9 +9,23 @@
 -- pas encore reçus, pour qu'un point qu'il a effacé ne revienne pas. Espèce : L = fissure
 -- (Alliance), V = tornade (Horde). Un point par ligne, pour que la relecture d'une PR se fasse
 -- ligne à ligne.
+--
+-- LL.THANKS : [palier] = pseudos de ceux dont la contribution est arrivée à ce palier, remerciés en
+-- jeu (LeyLines_Thanks.lua). Un pseudo n'y entre que fait de lettres, chiffres, tiret et souligné.
 local _, LL = ...
 
 LL.DATA_VERSION = 9
+
+LL.THANKS = {
+    [2] = { "Wafhien" },
+    [3] = { "wasdconnor" },
+    [4] = { "Wafhien" },
+    [5] = { "fatalsmick" },
+    [6] = { "fatalsmick" },
+    [7] = { "kmcdougall81" },
+    [8] = { "sionnabhan" },
+    [9] = { "DustyHands-hub", "neumannrainer-dev", "kkatee" },
+}
 
 LL.DATA = {
     L = {
