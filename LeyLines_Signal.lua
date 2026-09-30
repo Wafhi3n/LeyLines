@@ -33,7 +33,7 @@ end
 -- Les positions à partager : TROUVÉES par le jeu (sort, vignette) après la dernière contribution,
 -- et absentes de la liste livrée. `found` et pas `seen` : reconfirmer une position déjà partagée ne
 -- doit rien rallumer. La source est revérifiée par sécurité : un signal qui compterait un point que
--- la contribution n'envoie pas ne s'éteindrait jamais. (Jusqu'à la v1.3.2, un `/ley add` sur un
+-- la contribution n'envoie pas ne s'éteindrait jamais. (Avant `schemaVer` 4, un `/ley add` sur un
 -- point `spell` le redescendait en `manual` ; Nodes:Confirm ne le fait plus.)
 function Signal:Count()
     local since = LL.db.contrib and LL.db.contrib.at or 0

@@ -79,7 +79,7 @@ désormais l'espèce de chaque point.
   se donne jusqu'à ~25 yd de la fissure. Un lancer à 22 yd d'un point posé pile dessus créait un
   DOUBLON avec l'anti-doublon de 20 yd, et le signal puis la liste commune l'auraient propagé.
   Deux lancers réussis d'une même fissure peuvent être à 2 × 25 = 50 yd : `mergeRange` passe à
-  **50 yd** en v1.3.3 (migration `schemaVer` 4), et à précision égale **le premier point reste**
+  **50 yd** (migration `schemaVer` 4), et à précision égale **le premier point reste**
   (un lancer confirme sans déplacer). Contrepartie acceptée : deux vraies fissures à moins de
   100 yd, absorbées par leurs bords qui se font face, peuvent fusionner (une seule paire connue,
   à 73,5 yd ; simulé : ~8 % des cas avec des lancers au hasard dans la portée). Un doublon, lui,
@@ -293,7 +293,7 @@ Trois entrées, parce que le premier contributeur est resté en v1.0.0, sans exp
   un plafond d'instructions. N'en sort que ce que le jeu a tranché (sort, vignette) ; une vieille
   base qui a capturé côté Horde exige `-Faction`.
 
-Le dédoublonnage de l'outil suit la règle du client (50 yd, v1.3.3) : en yards pour les zones dont
+Le dédoublonnage de l'outil suit la règle du client (50 yd, `schemaVer` 4) : en yards pour les zones dont
 il connaît la taille (`MAP_YARDS` dans `tools/ll_ingest.lua`, relevée en jeu : Zephras Isle
 seulement), sinon ~0,01 d'écart de carte. Toute fusion au-delà de la portée du sort (25 yd), ou
 sur une zone de taille inconnue, sort en « A RELIRE » : c'est au relecteur de trancher entre la
