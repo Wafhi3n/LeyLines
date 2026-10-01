@@ -6,7 +6,7 @@
 > icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
 > `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
 > couleur « à confirmer ». GitHub Action (D6) : ACTIVE depuis le 2026-10-01 (une PR par ticket),
-> jamais encore vue verser un vrai ticket
+> essai de bout en bout vert sur un ticket de test (critère 11), pas encore sur un vrai ticket
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -383,8 +383,15 @@ quand une autre a été fusionnée depuis sa création.
   LeyLines et dans l'outillage pour `tests/test_ll_guard.lua`), essayée à sec en local sur des
   tickets inventés. ~~Mise sur `main`~~ le 2026-10-01 (LeyLines `77c4426`, outillage `1288e73`) ;
   essai sur GitHub vert (relance à sec sur un ticket fermé : Lua 5.1 installé, `gh` autorisé) ;
-  PR autorisées par le user le même jour. Reste : le premier vrai ticket versé par elle (critère
-  11). Aucun champ libre du ticket ne passe par `${{ }}`, seul son numéro.
+  PR autorisées par le user le même jour. Essai de bout en bout le même soir, ticket de test 17
+  (une fissure à 2 yd d'un point connu, une tornade inventée) : branche `feat/positions-gh-0017` et
+  PR 18 avec le rapport (confirmation, neuf, deux drapeaux justes), aucun lien vers le ticket ; PR
+  fermée sans fusion, branche supprimée. **Piège payé avant** : tant que le groupe de concurrence du
+  workflow lisait `inputs.issue`, AUCUN événement de ticket ne créait de run (ni run ignoré, ni
+  suite de vérification) alors que la relance manuelle marchait ; un workflow témoin minimal
+  recevait, lui, les événements. Au niveau du workflow, seulement le contexte `github` (corrigé en
+  `ca1cb43`). Reste : un vrai ticket. Aucun champ libre du ticket ne passe par `${{ }}`, seul son
+  numéro.
 - **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`
   + `scripts\ll_ingest.ps1`, lancé à la main ; critères 6 partiel, 7 → `tests/test_ll_ingest.lua`) ;
   ~~la PR unique ouverte par l'Action~~ remplacée par une branche par ticket (D6, voir T5).
