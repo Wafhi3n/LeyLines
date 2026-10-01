@@ -28,8 +28,12 @@ permissions:
   issues: read
 
 # Un groupe PAR ticket : un groupe commun annulerait les runs en attente d'une rafale de tickets.
+# Rien que le contexte `github` ici. Le 2026-10-01, avec `inputs.issue` dans ce groupe, aucun
+# événement de ticket n'a créé de run (pas même un run ignoré) alors que la relance manuelle
+# marchait : `inputs` lu sur un événement de ticket est le suspect. `run_id` en dernier recours,
+# pour qu'un groupe ne soit jamais vide.
 concurrency:
-  group: positions-${{ github.event.issue.number || inputs.issue }}
+  group: positions-${{ github.event.issue.number || github.event.inputs.issue || github.run_id }}
   cancel-in-progress: false
 
 jobs:
