@@ -25,6 +25,12 @@ LL.THANKS = {
     [7] = { "kmcdougall81" },
     [8] = { "sionnabhan" },
     [9] = { "DustyHands-hub", "neumannrainer-dev", "kkatee" },
+    [10] = { "sionnabhan" },
+    [11] = { "sionnabhan" },
+    [12] = { "sionnabhan" },
+    [13] = { "sionnabhan" },
+    [14] = { "sionnabhan" },
+    [15] = { "matias-norman" },
 }
 
 LL.DATA = {
