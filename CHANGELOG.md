@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.3.4
+
+Horde players, this one's mostly for you. sionnabhan sent in six new Elemental Convergences: two in
+Durotar (45.1, 15.7 and 53.2, 16.1), two in Westfall (42.0, 74.9 and 30.3, 85.5), one in
+Stranglethorn Vale (13.3, 15.1) and a second one in The Barrens, at 44.8, 55.0. They found the
+Westfall one at 30.3, 85.5 twice, a few yards apart, so it only shows up once. On the Alliance side,
+matias-norman added a ley line in Westfall at 51.1, 21.7. You'll see them on your map the first time
+you log in after updating. Thanks, both of you!
+
+## v1.3.3
+
+Six more ley lines, and for the first time the list reaches past Zephras Isle. kkatee sent in three
+in Westfall (35.0, 73.2; 59.7, 31.5; 51.1, 67.5) and one in Redridge Mountains (12.8, 72.7).
+neumannrainer-dev found one in Elwynn Forest, at 75.5, 52.1, and DustyHands-hub added one more on
+Zephras Isle, at 33.8, 55.4. You'll see them on your map the first time you log in after updating.
+Thanks to all three of you!
+
+## v1.3.2
+
+The first Elemental Convergence in the shared list, in The Barrens at 54.8, 34.7, sent in by
+sionnabhan. Horde players will find it on their map the first time they log in after updating.
+Thanks, sionnabhan!
+
 ## v1.3.1
 
 Three more ley lines on Zephras Isle, sent in by fatalsmick and kmcdougall81 through /ley
