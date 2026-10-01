@@ -11,7 +11,7 @@
 -- ligne à ligne.
 local _, LL = ...
 
-LL.DATA_VERSION = 15
+LL.DATA_VERSION = 16
 
 LL.DATA = {
     L = {
@@ -56,6 +56,7 @@ LL.DATA = {
         [1436] = {
             0.4200, 0.7490, 10,
             0.3031, 0.8551, 12,
+            0.6000, 0.6000, 16,
         },
     },
 }
