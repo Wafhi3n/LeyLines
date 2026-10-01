@@ -5,7 +5,7 @@
 > (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
 > icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
 > `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
-> couleur « à confirmer », GitHub Action
+> couleur « à confirmer ». GitHub Action : codée le 2026-10-01 (D6), pas encore sur `main`
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -41,9 +41,11 @@ et tombe sur le formulaire « Share positions » du dépôt GitHub, **déjà rem
 cliquer sur *Submit*. Le lien ne contient que ce que CE joueur a observé lui-même depuis sa dernière
 contribution : les failles et tornades confirmées par le jeu, et les points qu'il a effacés sur place.
 
-**Côté dépôt.** À l'ouverture du ticket, une GitHub Action le valide et y répond en commentaire
-(« 12 points reçus, 3 nouveaux, 1 retrait »). Toutes les contributions validées sont compilées en
-`LeyLines_Data.lua` dans **une seule PR**. Tu la relis et tu la merges, puis tu publies une release.
+**Côté dépôt.** À l'ouverture du ticket, une GitHub Action le passe au garde-fou, le verse, et
+pousse **une branche par ticket** (`feat/positions-gh-NNNN`, plus une PR si le dépôt le permet),
+avec son rapport : chaque point, le point connu le plus proche, son verdict, et les drapeaux à
+relire. Le mainteneur relit, passe les portes et les tests de l'outillage, fusionne, puis publie
+une release. L'Action ne commente pas le ticket (D6).
 
 **Pour tout le monde.** À la mise à jour, chaque joueur reçoit les nouveaux points de SA faction, et
 les points livrés déclarés disparus s'effacent de sa carte. Ses propres relevés ne sont jamais
@@ -62,7 +64,7 @@ désormais l'espèce de chaque point.
   même texte doit pouvoir se réimporter en jeu. Il faudrait sinon un lecteur JSON dans l'addon. La
   conversion en Lua se fait une fois, dans l'Action.
 - **Pas de merge automatique.** Ce que compile l'Action finit dans le client de chaque joueur :
-  un humain relit la PR, toujours.
+  un humain relit la branche, toujours. L'Action ne fusionne, ne tague, ne commente ni ne ferme rien.
 - **Pas de preuve automatique de disparition par le buff court.** Un lancer qui rend le buff de 15 s
   à côté d'un point connu est bien un verdict du jeu, mais un point livré peut être décalé de
   quelques yards : on ne peut pas conclure « disparu » de façon sûre. Piste pour plus tard.
@@ -94,18 +96,21 @@ désormais l'espèce de chaque point.
   effacerait l'objet chez tout le monde à la mise à jour suivante.
 - **Deux contributions contradictoires** (l'une ajoute, l'autre retire au même endroit) → la plus
   récente l'emporte, par date du ticket.
-- **Ticket édité** → l'Action revalide et met à jour son commentaire.
+- **Ticket édité** → ignoré : la branche fige le code qui a été relu. Pour retraiter un ticket, le
+  relancer à la main (Actions → « Positions ticket » → *Run workflow*, numéro du ticket).
 - **Ticket malveillant.** Le contenu du ticket est une entrée non fiable, et ce qui en sort finit en
   Lua exécuté par chaque client. Le décodeur n'accepte que la grammaire du contrat (chiffres,
   `L`/`V`, séparateurs). Tout le reste est jeté, et aucun caractère du ticket n'est recopié tel quel
-  dans le fichier généré.
+  dans le fichier généré. Côté Action (D6), le garde-fou `tools/ll_guard.lua` ne garde du ticket
+  que le jeton `LL2`, réécrit en code canonique : un fichier de sauvegarde (du Lua à évaluer) ou un
+  code `LL1` ne passent jamais par elle, ils sont versés à la main.
 - **Code sans espèce reçu** (`LL1` d'un build antérieur, ou segment `LL2` sans lettre) → refusé à
   l'import, avec un message qui demande un nouvel export. Le décodeur le lit encore, pour
   l'instantané interne d'une vieille base, restauré en fissures (A4).
 - **Client plus ancien qui reçoit un code `LL2`** → « code invalide ». Accepté : il doit mettre à
   jour.
 - **Carte dont la taille n'a jamais été transmise** → points gardés, mais le dédoublonnage en yards
-  est impossible : l'Action le signale dans son commentaire.
+  est impossible : le rapport de l'Action donne alors l'écart en unités de carte.
 
 ## Décisions
 
@@ -122,6 +127,27 @@ désormais l'espèce de chaque point.
   personnage, sans rien deviner ; seuls une infobulle ou une vignette se fient au nom lu. Et chaque
   message nomme l'objet de la faction du joueur (« Short buff: no elemental convergence here »).
 - **D5 — 2026-09-27, contrainte technique** : l'addon fabrique un lien, il ne poste pas.
+- **D6 — 2026-10-01, user** : l'Action prépare **une branche par ticket**, « que tu as juste à
+  check et à incorporer après », avec des vérifications contre les malins. Elle remplace la PR
+  unique et le commentaire prévus au départ. Précisé avec l'agent le même jour :
+  - **Refuse** seulement ce qu'une machine tranche sans se tromper : pas de jeton `LL2` (fichier
+    de sauvegarde, `LL1`, rien), pseudo hors `[A-Za-z0-9-]`, plus de 40 points, ticket de plus de
+    20 000 octets, numéro de carte impossible, code identique à une contribution déjà versée, plus
+    de 20 tickets du même auteur en 24 h.
+  - **Signale** le reste, sans refuser : compte GitHub de moins de 30 jours, plus de 5 tickets en
+    24 h, premier ticket de l'auteur, fissures et tornades mêlées, plus de 10 points, carte jamais
+    vue, point sur le bord de la carte, aucun point qui recoupe la liste. Raison : ces signaux
+    visent aussi de vrais joueurs. Un compte ouvert pour l'occasion est la norme, et sionnabhan a
+    envoyé cinq tickets légitimes en trois heures (#11 à #15).
+  - **Pas de commentaire** sur le ticket : le mainteneur répond lui-même. **Ticket édité** :
+    ignoré. Le rapport est public, comme tout le dépôt : il s'en tient aux faits, et ne cite
+    jamais le ticket par « #N » (GitHub accrocherait sinon le rapport et ses drapeaux à la page du
+    ticket, sous les yeux du joueur).
+  - **Rien ne prévient le mainteneur** : ni une branche poussée, ni un run refusé (déclenché par un
+    inconnu). Il faut une relecture : la veille de session, devenue « relire » (voir T5).
+  - **Ce que la CI ne vérifie pas** : l'outillage (portes, tests headless) vit dans un dépôt privé.
+    Une Action verte prouve seulement que le code lu est propre et que la liste générée se charge
+    (`luac -p` + chargement). Les portes et les tests se passent en local, avant la fusion.
 
 ## Arbitrages — proposés par l'agent, validés par le user le 2026-09-27
 
@@ -188,8 +214,11 @@ désormais l'espèce de chaque point.
 10b. [humain] Un `/ley add` pose un point dans la couleur « à confirmer », distincte d'un point
     capturé par sort sur la même minicarte ; après un lancer réussi dessus, il reprend la couleur
     normale. Témoin connu-bon : un point `spell` voisin. Observateur : le user, en jeu.
-11. [humain] Le ticket de test reçoit un commentaire de l'Action avec le décompte, puis une PR
-    modifiant `LeyLines_Data.lua` apparaît. Observateur : le user, sur GitHub.
+11. [humain] Pour un ticket de test, l'Action pousse une branche `feat/positions-gh-NNNN` qui ne
+    modifie que `LeyLines_Data.lua` et `data/contrib/gh-NNNN.ll`, avec le rapport du garde-fou
+    dans son commit (et une PR si le dépôt l'autorise). Le ticket ne reçoit aucun commentaire.
+    Un ticket refusé donne un run rouge et aucune branche. Observateur : le user, sur GitHub
+    (D6, 2026-10-01).
 
 ## Contrat
 
@@ -287,6 +316,31 @@ Trois entrées, parce que le premier contributeur est resté en v1.0.0, sans exp
 Le dédoublonnage de l'outil est approximatif (écart de carte < 0,003, sans taille de zone) : c'est
 le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
 
+### Pipeline v2 — l'Action prépare, le mainteneur relit (D6, 2026-10-01)
+
+```
+joueur   ticket « Share positions » (étiquette positions)
+           ↓ .github/workflows/positions.yml (issues: opened/reopened, ou relance à la main)
+Action   .github/scripts/positions.sh, depuis main :
+           déjà versé sur main, ou branche déjà poussée ? → rien
+           tools/ll_guard.lua : jeton LL2 seul → code canonique, refus ou drapeaux, rapport
+           tools/ll_ingest.lua add (le CODE CANONIQUE, jamais le corps du ticket) + build
+           luac -p + chargement de la liste ; seuls LeyLines_Data.lua et data/contrib/gh-NNNN.ll
+           ont bougé → branche feat/positions-gh-NNNN poussée (+ PR si le dépôt l'autorise)
+toi      relire le rapport, portes + tests en local, palier > DATA_VERSION de main, fusion, release
+```
+
+Un refus fait échouer le run (rouge dans l'onglet Actions) avec le rapport dans le journal : un
+ticket ouvert sans branche ni contribution sur `main` est soit refusé, soit en attente. Le relire en
+local, sans rien pousser : `ISSUE=<n> DRY_RUN=1 LUA=… LUAC=… bash .github/scripts/positions.sh`.
+
+**Le palier vieillit.** Une branche reçoit `DATA_VERSION de main + 1` à sa création. Si une
+release part sans elle, son palier est déjà distribué, et `ApplyShipped` sauterait ses points chez
+tous les joueurs à jour, sans erreur nulle part. À la fusion, un palier qui n'est pas strictement
+plus grand que le `DATA_VERSION` de `main` se reverse (`ll_ingest.ps1 -Issue <n>` sur `main`).
+Plusieurs branches fusionnées dans la même release : conflit sur `LeyLines_Data.lua`, réglé par
+`ll_ingest.ps1 -Build`.
+
 ## Renvois
 
 - Skill **leylines-addon** : capture par durée du buff, piège de l'infobulle qui se relisait.
@@ -319,12 +373,14 @@ le CLIENT qui fusionne exactement, à 20 yd, en appliquant la liste.
   retraits dans `ApplyShipped` (A3). Critère 5.
 - **T5** — ~~formulaire de ticket~~ (publié sur `main`, étiquette `positions` en place ; premier
   vrai ticket, #1 de wasdconnor, versé à la main le 2026-09-28 et vu en jeu : `gh-0001`, palier 3,
-  voir le registre) ; reste l'Action de validation et de
-  commentaire. Le corps du ticket passe par une variable d'environnement, jamais par `${{ }}` dans
-  un `run:`. Critère 11.
+  voir le registre) ; ~~l'Action~~ codée le 2026-10-01 selon D6 (branche `feat/ci-tickets` dans
+  LeyLines et dans l'outillage pour `tests/test_ll_guard.lua`), essayée à sec en local sur des
+  tickets inventés. Reste : la mettre sur `main` (une Action d'issue ne tourne que depuis la branche
+  par défaut), puis un essai réel. Aucun champ libre du ticket ne passe par `${{ }}`, seul son
+  numéro. Critère 11, à relire : plus de commentaire, une branche par ticket.
 - **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`
   + `scripts\ll_ingest.ps1`, lancé à la main ; critères 6 partiel, 7 → `tests/test_ll_ingest.lua`) ;
-  reste la PR unique ouverte par l'Action.
+  ~~la PR unique ouverte par l'Action~~ remplacée par une branche par ticket (D6, voir T5).
 - **T7** — ~~Releases~~ (v1.1.0, v1.1.1, v1.2.0 publiées le 2026-09-27 ; la v1.2.0 est le
   compartiment d'addons, pas la contribution complète). Reste : la réponse au commentaire CurseForge
   (texte prêt, à poster par le user), et la release qui portera T1/T3/T4/T5 restants.
