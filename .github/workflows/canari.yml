@@ -1,0 +1,15 @@
+# Témoin TEMPORAIRE (2026-10-01) : un événement de ticket crée-t-il un run dans ce dépôt ?
+# positions.yml n'en recevait aucun. À retirer dès le diagnostic posé.
+name: Canari tickets
+
+on:
+  issues:
+    types: [opened, reopened, labeled, unlabeled, edited]
+
+permissions: {}
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "evenement de ticket recu"
