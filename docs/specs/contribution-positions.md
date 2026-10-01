@@ -5,7 +5,8 @@
 > (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
 > icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
 > `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
-> couleur « à confirmer ». GitHub Action : codée le 2026-10-01 (D6), pas encore sur `main`
+> couleur « à confirmer ». GitHub Action (D6) : ACTIVE depuis le 2026-10-01 (une PR par ticket),
+> jamais encore vue verser un vrai ticket
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
 > Origine : premier commentaire sur la page CurseForge (2026-09-27) — un joueur demande où partager
@@ -338,8 +339,13 @@ local, sans rien pousser : `ISSUE=<n> DRY_RUN=1 LUA=… LUAC=… bash .github/sc
 release part sans elle, son palier est déjà distribué, et `ApplyShipped` sauterait ses points chez
 tous les joueurs à jour, sans erreur nulle part. À la fusion, un palier qui n'est pas strictement
 plus grand que le `DATA_VERSION` de `main` se reverse (`ll_ingest.ps1 -Issue <n>` sur `main`).
-Plusieurs branches fusionnées dans la même release : conflit sur `LeyLines_Data.lua`, réglé par
-`ll_ingest.ps1 -Build`.
+**Le fichier généré se régénère après TOUTE fusion qui le touche, conflit ou pas.** Plusieurs
+branches dans la même release donnent souvent un conflit sur `LeyLines_Data.lua` ; mais une fusion
+qui passe sans conflit n'est pas pour autant juste. Vu le 2026-10-01 en fusionnant `main` dans
+`feat/contributeurs` : git a gardé le `LL.THANKS` de la branche et perdu, sans rien dire, les
+remerciements des paliers 10 à 15. Donc : fusionner, `ll_ingest.ps1 -Build`, et le diff qui en sort
+se commite. Une PR du bot se fusionne de la même façon, en local, jamais par le bouton de GitHub
+quand une autre a été fusionnée depuis sa création.
 
 ## Renvois
 
@@ -375,9 +381,10 @@ Plusieurs branches fusionnées dans la même release : conflit sur `LeyLines_Dat
   vrai ticket, #1 de wasdconnor, versé à la main le 2026-09-28 et vu en jeu : `gh-0001`, palier 3,
   voir le registre) ; ~~l'Action~~ codée le 2026-10-01 selon D6 (branche `feat/ci-tickets` dans
   LeyLines et dans l'outillage pour `tests/test_ll_guard.lua`), essayée à sec en local sur des
-  tickets inventés. Reste : la mettre sur `main` (une Action d'issue ne tourne que depuis la branche
-  par défaut), puis un essai réel. Aucun champ libre du ticket ne passe par `${{ }}`, seul son
-  numéro. Critère 11, à relire : plus de commentaire, une branche par ticket.
+  tickets inventés. ~~Mise sur `main`~~ le 2026-10-01 (LeyLines `77c4426`, outillage `1288e73`) ;
+  essai sur GitHub vert (relance à sec sur un ticket fermé : Lua 5.1 installé, `gh` autorisé) ;
+  PR autorisées par le user le même jour. Reste : le premier vrai ticket versé par elle (critère
+  11). Aucun champ libre du ticket ne passe par `${{ }}`, seul son numéro.
 - **T6** — ~~Compilateur `data/contrib/*.ll` → `LeyLines_Data.lua`~~ (v1.1.0, `tools/ll_ingest.lua`
   + `scripts\ll_ingest.ps1`, lancé à la main ; critères 6 partiel, 7 → `tests/test_ll_ingest.lua`) ;
   ~~la PR unique ouverte par l'Action~~ remplacée par une branche par ticket (D6, voir T5).
