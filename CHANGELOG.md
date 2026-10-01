@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.3.4
+
+Horde players, this one's mostly for you. sionnabhan sent in six new Elemental Convergences: two in
+Durotar (45.1, 15.7 and 53.2, 16.1), two in Westfall (42.0, 74.9 and 30.3, 85.5), one in
+Stranglethorn Vale (13.3, 15.1) and a second one in The Barrens, at 44.8, 55.0. They found the
+Westfall one at 30.3, 85.5 twice, a few yards apart, so it only shows up once. On the Alliance side,
+matias-norman added a ley line in Westfall at 51.1, 21.7. You'll see them on your map the first time
+you log in after updating. Thanks, both of you!
+
 ## v1.3.3
 
 Six more ley lines, and for the first time the list reaches past Zephras Isle. kkatee sent in three
