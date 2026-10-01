@@ -1,0 +1,63 @@
+# Un ticket « positions » → une branche feat/positions-gh-NNNN prête à relire.
+#
+# Ne fusionne, ne tague, ne commente, ne ferme rien. Le travail est dans .github/scripts/positions.sh
+# (garde-fou : tools/ll_guard.lua). Spec : docs/specs/contribution-positions.md, T5 et D6.
+#
+# SÉCURITÉ. N'importe qui peut ouvrir un ticket, et ce job écrit dans le dépôt. Aucun champ libre du
+# ticket (titre, corps, pseudo) n'est interpolé par ${{ }} : seul le NUMÉRO l'est, et le script
+# relit le reste par l'API. Pas de pull_request_target, pas d'autre secret que le jeton du job.
+name: Positions ticket
+
+on:
+  issues:
+    types: [opened, reopened, labeled]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Numéro du ticket à (re)traiter
+        required: true
+        type: number
+      dry_run:
+        description: Tout vérifier, ne rien pousser
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+# Un groupe PAR ticket : un groupe commun annulerait les runs en attente d'une rafale de tickets.
+concurrency:
+  group: positions-${{ github.event.issue.number || inputs.issue }}
+  cancel-in-progress: false
+
+jobs:
+  branch:
+    # « labeled » seulement quand quelqu'un d'autre que l'auteur pose l'étiquette : le formulaire
+    # la pose déjà à l'ouverture, et ce run-là ferait doublon avec « opened ».
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (contains(github.event.issue.labels.*.name, 'positions') &&
+       (github.event.action != 'labeled' ||
+        (github.event.label.name == 'positions' && github.event.sender.login != github.event.issue.user.login)))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Lua 5.1
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.1
+          command -v lua5.1 && command -v luac5.1
+
+      - name: Ticket vers branche
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number || inputs.issue }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: bash .github/scripts/positions.sh

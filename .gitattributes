@@ -3,3 +3,6 @@
 # (cf. l'en-tete de docs/verif-registre.md). Une ligne modifiee des deux cotes ressortirait en
 # double, a relire apres la fusion.
 docs/verif-registre.md merge=union
+
+# Le script de l'Action tourne sous bash sur un runner Linux : un retour chariot le casserait.
+*.sh text eol=lf
