@@ -179,7 +179,7 @@ local function Row(r)
 end
 
 function Guard.Report(res, input)
-    local out = { string.format("## Ticket #%d : garde-fou", input.issue or 0), "" }
+    local out = { string.format("## Ticket %d : garde-fou", input.issue or 0), "" }
     out[#out + 1] = res.refused and ("**REFUSÉ** : " .. res.refused .. ". Rien n'est versé.") or "**À relire puis verser.**"
     out[#out + 1] = ""
     if Guard.SafeLogin(input.login) then

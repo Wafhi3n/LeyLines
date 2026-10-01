@@ -34,13 +34,14 @@ concurrency:
 
 jobs:
   branch:
-    # « labeled » seulement quand quelqu'un d'autre que l'auteur pose l'étiquette : le formulaire
-    # la pose déjà à l'ouverture, et ce run-là ferait doublon avec « opened ».
+    # Filtre LARGE à dessein : un ticket du formulaire déclenche « opened » ET « labeled », et le
+    # second run sort aussitôt (« branche déjà prête »). Un filtre trop serré qui se tromperait sur
+    # la forme de l'événement ne lancerait plus AUCUN run, sans erreur nulle part. Le script revérifie
+    # l'étiquette par l'API.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (contains(github.event.issue.labels.*.name, 'positions') &&
-       (github.event.action != 'labeled' ||
-        (github.event.label.name == 'positions' && github.event.sender.login != github.event.issue.user.login)))
+       (github.event.action != 'labeled' || github.event.label.name == 'positions'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

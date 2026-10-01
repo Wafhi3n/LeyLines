@@ -104,16 +104,18 @@ if [ "$DRY_RUN" = "1" ]; then
 fi
 
 # --- 6. La branche, et une PR si le dépôt le permet -------------------------------------------------
+# Jamais « #N » dans le commit ni dans la PR : GitHub y verrait un renvoi et accrocherait le rapport
+# (drapeaux compris) à la page du ticket, sous les yeux du joueur. Le relecteur sait lire « ticket N ».
 git switch -q -c "$BRANCH"
 git add LeyLines_Data.lua "$CONTRIB"
-{ echo "feat(donnees): ticket #$ISSUE de $LOGIN, verse par l'Action"; echo; cat "$WORK/report.md"; } > "$WORK/msg.txt"
+{ echo "feat(donnees): ticket $ISSUE de $LOGIN, verse par l'Action"; echo; cat "$WORK/report.md"; } > "$WORK/msg.txt"
 git -c user.name="github-actions[bot]" \
     -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -F "$WORK/msg.txt"
 git push -q origin "$BRANCH"
 say "Branche $BRANCH poussée."
 
-{ cat "$WORK/report.md"; echo; echo "Refs #$ISSUE"; } > "$WORK/pr.md"
-if gh pr create -R "$REPO" --base main --head "$BRANCH" --title "Positions : ticket #$ISSUE" --body-file "$WORK/pr.md"; then
+cp "$WORK/report.md" "$WORK/pr.md"
+if gh pr create -R "$REPO" --base main --head "$BRANCH" --title "Positions : ticket $ISSUE" --body-file "$WORK/pr.md"; then
     say "PR ouverte."
 else
     say "PR non ouverte (le dépôt n'autorise pas l'Action à en créer) : la branche suffit."

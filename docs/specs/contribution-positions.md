@@ -140,7 +140,11 @@ désormais l'espèce de chaque point.
     visent aussi de vrais joueurs. Un compte ouvert pour l'occasion est la norme, et sionnabhan a
     envoyé cinq tickets légitimes en trois heures (#11 à #15).
   - **Pas de commentaire** sur le ticket : le mainteneur répond lui-même. **Ticket édité** :
-    ignoré. Le rapport est public, comme tout le dépôt : il s'en tient aux faits.
+    ignoré. Le rapport est public, comme tout le dépôt : il s'en tient aux faits, et ne cite
+    jamais le ticket par « #N » (GitHub accrocherait sinon le rapport et ses drapeaux à la page du
+    ticket, sous les yeux du joueur).
+  - **Rien ne prévient le mainteneur** : ni une branche poussée, ni un run refusé (déclenché par un
+    inconnu). Il faut une relecture : la veille de session, devenue « relire » (voir T5).
   - **Ce que la CI ne vérifie pas** : l'outillage (portes, tests headless) vit dans un dépôt privé.
     Une Action verte prouve seulement que le code lu est propre et que la liste générée se charge
     (`luac -p` + chargement). Les portes et les tests se passent en local, avant la fusion.
