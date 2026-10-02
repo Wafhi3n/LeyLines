@@ -434,13 +434,16 @@ f:SetScript("OnEvent", function(_, event, arg1)
         -- trop tôt ferait passer chaque point livré pour un point nouveau, à côté du vôtre.
         C_Timer.After(3, function()
             local since = LL.db.dataVersion or 0   -- lu AVANT la fusion, qui l'avance
-            local shipped = LL.Nodes:ApplyShipped()
+            local shipped, gone = LL.Nodes:ApplyShipped()
+            if gone > 0 then
+                LL:Printf(L["%s position(s) retirée(s) de la liste commune."], gone)
+            end
             if shipped > 0 then
                 LL:Printf(L["%s position(s) ajoutée(s) depuis les données livrées."], shipped)
                 LL.Thanks:Announce(since)
-                LL:Refresh()
             end
-            LL.Nodes:Snapshot()
+            if shipped > 0 or gone > 0 then LL:Refresh() end
+            LL.Nodes:Snapshot(gone > 0)   -- un retrait livré est VOULU : le filet ne doit pas le rendre
             LL.Signal:Init()
         end)
     end

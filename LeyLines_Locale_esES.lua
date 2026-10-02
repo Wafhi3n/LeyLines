@@ -134,6 +134,8 @@ local es = {
         "%s posición(es) sin facción omitida(s): pide una nueva exportación.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s posición(es) añadida(s) desde los datos incluidos.",
+    ["%s position(s) retirée(s) de la liste commune."] =
+        "%s posición(es) retirada(s) de la lista común.",
 
     -- Colaboradores (docs/specs/remerciements.md)
     ["%s et %s autre(s)"] =

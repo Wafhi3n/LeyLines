@@ -7,7 +7,12 @@
 --         lit UNE contribution — un code LL2 (ou LL1 si la faction est déclarée), ou un fichier de
 --         SavedVariables LeyLines.lua — et l'écrit, normalisée en LL2, dans data/contrib/<id>.ll
 --   build <dossier LeyLines> <fichier.ll>...
---         régénère LeyLines_Data.lua à partir de TOUTES les contributions données
+--         régénère LeyLines_Data.lua à partir de TOUTES les contributions données, moins celles des
+--         auteurs exclus (data/exclus.txt, voir tools/ll_registre.lua)
+--   registre <dossier LeyLines> <pseudo|-> <fichier.ll>...
+--         qui a posé quoi, qui l'a relevé aussi, ce qu'une exclusion retirerait (rien n'est écrit)
+--   exclure <dossier LeyLines> <pseudo> <date>
+--         ajoute l'auteur à data/exclus.txt, au palier suivant ; `build` fait le reste
 --
 -- Le code est décodé par LeyLines_Share.lua lui-même : une seule grammaire, celle du client.
 --
@@ -250,32 +255,40 @@ function Ingest.Near(list, map, x, y)
     return best, bestD
 end
 
--- contribs : { {id=, version=, code=}, ... }. Rend la liste { L = { [map] = {pts} }, V = ... },
--- le palier maximal, le nombre de points NOUVEAUX apportés par chaque contribution, et les fusions
--- à relire (au-delà de la portée du sort, ou sur une zone de taille inconnue).
+-- contribs : { {id=, version=, code=, from=}, ... }. Rend la liste { L = { [map] = {pts} }, V = ... },
+-- le palier maximal, le nombre de points NOUVEAUX apportés par chaque contribution, les fusions
+-- à relire (au-delà de la portée du sort, ou sur une zone de taille inconnue), et la trace de
+-- chaque contribution pour le registre (tools/ll_registre.lua) : chaque point retient qui l'a posé
+-- (`from`, `id`) et qui l'a relevé ensuite (`by`).
 function Ingest.Merge(LL, contribs)
     table.sort(contribs, function(a, b)
         if a.version ~= b.version then return a.version < b.version end
         return a.id < b.id
     end)
-    local data, version, brought, doubts = { L = {}, V = {} }, 0, {}, {}
+    local data, version, brought, doubts, trail = { L = {}, V = {} }, 0, {}, {}, {}
     for _, c in ipairs(contribs) do
         version = math.max(version, c.version or 0)
         Ingest.Thank(data, c)
-        brought[c.id] = 0
+        brought[c.id], trail[c.id] = 0, {}
         for _, p in ipairs(Ingest.FromCode(LL, c.code) or {}) do
             local maps = data[p.kind]
             maps[p.map] = maps[p.map] or {}
             local same, d = Ingest.Near(maps[p.map], p.map, p.x, p.y)
+            local t = { kind = p.kind, map = p.map, p = p, new = not same, point = same }
             if not same then
-                table.insert(maps[p.map], { x = p.x, y = p.y, v = c.version })
+                t.point = { x = p.x, y = p.y, v = c.version, from = c.from, id = c.id, by = {} }
+                table.insert(maps[p.map], t.point)
                 brought[c.id] = brought[c.id] + 1
-            elseif not d or d > REACH_YD then
-                doubts[#doubts + 1] = { id = c.id, map = p.map, x = p.x, y = p.y, into = same, yd = d }
+            else
+                table.insert(same.by, { from = c.from, id = c.id })
+                if not d or d > REACH_YD then
+                    doubts[#doubts + 1] = { id = c.id, map = p.map, x = p.x, y = p.y, into = same, yd = d }
+                end
             end
+            table.insert(trail[c.id], t)
         end
     end
-    return data, version, brought, doubts
+    return data, version, brought, doubts, trail
 end
 
 local HEADER = [[
@@ -331,17 +344,12 @@ end
 
 -- Des nombres formatés, et des pseudos passés par SafeName : rien d'autre de ce que contenait une
 -- contribution n'y est recopié.
-function Ingest.Render(data, version)
-    local out = { HEADER, string.format("LL.DATA_VERSION = %d\n\nLL.THANKS = {", version) }
-    for _, tier in ipairs(SortedMaps(data.thanks or {})) do
-        out[#out + 1] = string.format('    [%d] = { "%s" },', tier, table.concat(data.thanks[tier], '", "'))
-    end
-    out[#out + 1] = "}\n\nLL.DATA = {"
+local function RenderPoints(out, set)
     for _, kind in ipairs({ "L", "V" }) do
         out[#out + 1] = string.format("    %s = {", kind)
-        for _, map in ipairs(SortedMaps(data[kind])) do
+        for _, map in ipairs(SortedMaps(set[kind])) do
             out[#out + 1] = string.format("        [%d] = {", map)
-            for _, p in ipairs(data[kind][map]) do
+            for _, p in ipairs(set[kind][map]) do
                 out[#out + 1] = string.format("            %.4f, %.4f, %d,", p.x, p.y, p.v)
             end
             out[#out + 1] = "        },"
@@ -349,6 +357,33 @@ function Ingest.Render(data, version)
         out[#out + 1] = "    },"
     end
     out[#out + 1] = "}\n"
+end
+
+local GONE_HEADER = [[
+-- LL.GONE : retraits, même format. Un point dont le seul témoin est un auteur exclu de la liste
+-- (data/exclus.txt), au palier de l'exclusion ; Nodes:ApplyGone l'efface chez le joueur s'il
+-- vient de la liste ou d'un import, jamais s'il l'a relevé lui-même.
+LL.GONE = {]]
+
+local function HasPoints(set)
+    for _, kind in ipairs({ "L", "V" }) do
+        if next(set and set[kind] or {}) then return true end
+    end
+    return false
+end
+
+-- LL.GONE n'est écrit que s'il a des points : sans exclusion, le fichier reste celui d'avant.
+function Ingest.Render(data, version)
+    local out = { HEADER, string.format("LL.DATA_VERSION = %d\n\nLL.THANKS = {", version) }
+    for _, tier in ipairs(SortedMaps(data.thanks or {})) do
+        out[#out + 1] = string.format('    [%d] = { "%s" },', tier, table.concat(data.thanks[tier], '", "'))
+    end
+    out[#out + 1] = "}\n\nLL.DATA = {"
+    RenderPoints(out, data)
+    if HasPoints(data.gone) then
+        out[#out + 1] = GONE_HEADER
+        RenderPoints(out, data.gone)
+    end
     return table.concat(out, "\n")
 end
 
@@ -389,25 +424,53 @@ function Ingest.Add(dir, id, from, date, declared, path)
     return true
 end
 
-function Ingest.Build(dir, files)
-    local LL = Ingest.Setup(dir)
+-- Le registre et les exclusions (tools/ll_registre.lua), chargés à la demande.
+function Ingest.Registre(dir)
+    Ingest.registre = Ingest.registre or assert(loadfile(dir .. "/tools/ll_registre.lua"))(Ingest)
+    return Ingest.registre
+end
+
+local function ReadContribs(files)
     local contribs = {}
     for _, path in ipairs(files) do
         local c = Ingest.ParseContrib(ReadFile(path))
         c.id = path:match("([^/\\]+)%.ll$") or path
         if c.code and c.version then contribs[#contribs + 1] = c else print("  ignore (illisible) : " .. path) end
     end
-    local data, version, brought, doubts = Ingest.Merge(LL, contribs)
-    for _, c in ipairs(contribs) do
-        print(string.format("  %-28s palier %d : %d point(s) nouveau(x)", c.id, c.version, brought[c.id]))
-    end
+    return contribs
+end
+
+local function Doubts(doubts)
     for _, f in ipairs(doubts) do
         print(string.format("  A RELIRE : %s %.2f,%.2f (carte %d) fusionne avec %.2f,%.2f a %s -- meme objet ?",
             f.id, f.x * 100, f.y * 100, f.map, f.into.x * 100, f.into.y * 100,
             f.yd and string.format("%d yd", f.yd + 0.5) or "un ecart de taille inconnue"))
     end
+end
+
+-- Les exclusions (data/exclus.txt) sont lues ICI, pas par le script PowerShell : l'Action appelle
+-- `build` directement, et elle doit les appliquer aussi.
+function Ingest.Build(dir, files)
+    local LL, R = Ingest.Setup(dir), Ingest.Registre(dir)
+    local exclus, err = R.LoadExclus(dir)
+    if not exclus then return false, err end
+    local contribs = ReadContribs(files)
+    local data, version, brought, doubts = R.Compile(LL, contribs, exclus)
+    for _, c in ipairs(contribs) do
+        print(brought[c.id] and string.format("  %-28s palier %d : %d point(s) nouveau(x)", c.id, c.version, brought[c.id])
+            or string.format("  %-28s palier %d : EXCLU (%s)", c.id, c.version, tostring(c.from)))
+    end
+    Doubts(doubts)
+    R.Summary(exclus, data.gone)
     WriteFile(dir .. "/LeyLines_Data.lua", Ingest.Render(data, version))
     print(string.format("  -> LeyLines_Data.lua regenere, DATA_VERSION = %d", version))
+    return true
+end
+
+function Ingest.Report(dir, only, files)
+    local exclus, err = Ingest.Registre(dir).LoadExclus(dir)
+    if not exclus then return false, err end
+    io.write(Ingest.Registre(dir).Text(Ingest.Setup(dir), ReadContribs(files), exclus, only ~= "-" and only or nil))
     return true
 end
 
@@ -418,8 +481,14 @@ function Ingest.Main(args)
         ok, err = Ingest.Add(dir, args[3], args[4], args[5], args[6], args[7])
     elseif cmd == "build" then
         ok, err = Ingest.Build(dir, { select(3, unpack(args)) })
+    elseif cmd == "registre" then
+        ok, err = Ingest.Report(dir, args[3], { select(4, unpack(args)) })
+    elseif cmd == "exclure" then
+        local palier, why = Ingest.Registre(dir).Exclude(dir, args[3], args[4])
+        if palier then print(string.format("  %s exclu au palier %d (data/exclus.txt)", args[3], palier)) end
+        ok, err = palier ~= nil, why
     else
-        ok, err = false, "usage : ll_ingest.lua add|build <dossier LeyLines> ..."
+        ok, err = false, "usage : ll_ingest.lua add|build|registre|exclure <dossier LeyLines> ..."
     end
     if not ok then io.stderr:write("ERREUR : " .. tostring(err) .. "\n"); os.exit(1) end
 end

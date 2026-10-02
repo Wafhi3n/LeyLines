@@ -75,8 +75,10 @@ end
 -- ---------------------------------------------------------------------------
 
 -- contribs : { {id=, from=, code=}, ... } (data/contrib/*.ll lus par Ingest.ParseContrib).
-function Guard.Known(Ingest, LL, contribs)
-    local known = { points = {}, maps = {}, authors = {}, codes = {} }
+-- exclus : data/exclus.txt lu par tools/ll_registre.lua (facultatif).
+function Guard.Known(Ingest, LL, contribs, exclus)
+    local known = { points = {}, maps = {}, authors = {}, codes = {}, excluded = {} }
+    for _, e in ipairs(exclus or {}) do known.excluded[e.key] = e end
     for _, c in ipairs(contribs) do
         if c.from then known.authors[c.from] = true end
         if c.code then
@@ -150,6 +152,9 @@ function Guard.Check(Ingest, LL, known, input)
     local res = { flags = {}, rows = {} }
     local function Refuse(fmt, ...) res.refused = string.format(fmt, ...); return res end
     if not Guard.SafeLogin(input.login) then return Refuse("pseudo GitHub inattendu") end
+    -- Un auteur exclu (D8) : sa contribution serait ignorée à la construction, autant ne pas ouvrir
+    -- une PR qui ne fait rien. Les pseudos GitHub ne distinguent pas la casse.
+    if (known.excluded or {})[input.login:lower()] then return Refuse("auteur exclu de la liste commune") end
     if (input.recent or 0) > FLOOD then
         return Refuse("%d tickets « positions » de cet auteur en 24 h (plus de %d)", input.recent, FLOOD)
     end
@@ -237,9 +242,11 @@ function Guard.Main(args)
         c.id = args[i]:match("([^/\\]+)%.ll$") or args[i]
         contribs[#contribs + 1] = c
     end
+    local exclus, err = Ingest.Registre(dir).LoadExclus(dir)
+    if not exclus then io.stderr:write("ERREUR : " .. err .. "\n"); os.exit(1) end
     local input = { issue = tonumber(issue), body = ReadFile(bodyPath), login = login,
         ageDays = tonumber(age), recent = tonumber(recent), nextVersion = Ingest.NextVersion(dir) }
-    local res = Guard.Check(Ingest, LL, Guard.Known(Ingest, LL, contribs), input)
+    local res = Guard.Check(Ingest, LL, Guard.Known(Ingest, LL, contribs, exclus), input)
     WriteFile(outReport, Guard.Report(res, input))
     if res.refused then
         print("REFUSE : " .. res.refused)

@@ -234,11 +234,13 @@ end
 -- son palier (triplets x, y, palier) : sans ça, chaque nouvelle livraison recopiait la liste
 -- ENTIÈRE, et un point que le joueur avait effacé exprès revenait à chaque mise à jour des données.
 -- La base lui appartient dès la première fusion.
+-- Rend le nombre de points ajoutés, puis le nombre de points retirés (Nodes:ApplyGone).
 function Nodes:ApplyShipped()
     local version = LL.DATA_VERSION or 0
     local since   = LL.db.dataVersion or 0
-    if since >= version then return 0 end
+    if since >= version then return 0, 0 end
 
+    local removed = self:ApplyGone(since)
     local added = 0
     for kind, maps in pairs(LL.DATA or {}) do
         for map, list in pairs(maps) do
@@ -251,7 +253,35 @@ function Nodes:ApplyShipped()
         end
     end
     LL.db.dataVersion = version
-    return added
+    return added, removed
+end
+
+-- Retraits livrés (LL.GONE, mêmes triplets x, y, palier) : les points dont le seul témoin était un
+-- auteur exclu de la liste commune (docs/specs/contribution-positions.md, D8). Pour chacun, le
+-- point livré LUI-MÊME s'en va, s'il vient de la liste ou d'un import ; un relevé du joueur reste,
+-- même un point livré qu'il a confirmé en lançant le sort (il est passé en `spell`) : A3. Passe
+-- AVANT les ajouts, pour qu'un point re-livré par la même mise à jour revienne.
+-- GONE_MATCH et pas `mergeRange` : un point `shipped`/`import` est posé aux coordonnées exactes de
+-- la liste (quatre décimales, < 1 yd) et ne bouge plus tant qu'il garde cette source. Le rayon de
+-- fusion, lui, attraperait un VRAI point voisin dans lequel le faux s'était fondu à la livraison :
+-- l'outil, sur une zone de taille inconnue, compare à ±0,01 de carte, moins de 50 yd sur une zone
+-- étroite, et peut donc retirer un point que ce client avait fusionné avec un autre.
+local GIVEN = { shipped = true, import = true }
+local GONE_MATCH = 5   -- yards
+
+function Nodes:ApplyGone(since)
+    local removed = 0
+    for kind, maps in pairs(LL.GONE or {}) do
+        for map, list in pairs(maps) do
+            for i = 1, #list - 2, 3 do
+                if (list[i + 2] or 0) > since then
+                    local node = self:Find(map, list[i], list[i + 1], GONE_MATCH, kind)
+                    if node and GIVEN[node.src] and self:Remove(node) then removed = removed + 1 end
+                end
+            end
+        end
+    end
+    return removed
 end
 
 function Nodes:All(map)
