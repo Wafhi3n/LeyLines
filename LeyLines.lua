@@ -159,7 +159,12 @@ CMD.del = function()
         LL:Printf(L["Aucune %s à moins de 60 yd — place-toi dessus pour l'effacer."], LL.Nodes:Word("one"))
         return
     end
-    LL.Nodes:Remove(node)
+    LL:DeleteNode(node)
+end
+
+-- Le geste commun de `/ley del` et du clic droit sur la grande carte (après confirmation).
+function LL:DeleteNode(node)
+    if not LL.Nodes:Remove(node) then return end   -- déjà parti (popup restée ouverte)
     LL.Nodes:Snapshot(true)   -- effacement VOULU : il doit tenir au prochain chargement
     LL:Printf(L["%s effacée."], LL.Nodes:Label(node))
     LL:Refresh()
@@ -347,6 +352,24 @@ StaticPopupDialogs["LEYLINES_CLEAR_ZONE"] = {
     whileDead    = true,
     hideOnEscape = true,
 }
+
+-- Clic droit sur un point de la grande carte : demandé par un joueur le 2026-10-02 (effacer un faux
+-- point sans aller dessus, ce qu'exige `/ley del`), avec confirmation à la demande du user.
+StaticPopupDialogs["LEYLINES_DELETE_NODE"] = {
+    text         = L["Effacer %s (%s) ?"],
+    button1      = YES,
+    button2      = NO,
+    OnAccept     = function(_, node) LL:DeleteNode(node) end,
+    timeout      = 0,
+    whileDead    = true,
+    hideOnEscape = true,
+}
+
+function LL:ConfirmDelete(node)
+    if not node then return end
+    StaticPopup_Show("LEYLINES_DELETE_NODE", LL.Nodes:Label(node),
+        string.format("%.1f / %.1f", node.x * 100, node.y * 100), node)
+end
 
 -- ---------------------------------------------------------------------------
 -- Démarrage
