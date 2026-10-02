@@ -188,8 +188,9 @@ désormais l'espèce de chaque point.
     pas de motif : le dépôt est public ;
   - **exclure** = ignorer toutes ses contributions (le `.ll` reste, pièce du dossier). Un point
     qu'il a posé et qu'un AUTRE auteur a relevé reste, au palier de cet autre. Un point dont il
-    était le seul témoin part dans `LL.GONE`, au palier de l'exclusion, et le client l'efface chez
-    ceux qui l'avaient reçu (`Nodes:ApplyGone`, A3 : jamais un relevé du joueur). Il quitte
+    était le seul témoin part dans `LL.GONE`, au palier de l'exclusion, et le client efface ce
+    point livré lui-même chez ceux qui l'avaient reçu (`Nodes:ApplyGone`, 5 yd, A3 : jamais un
+    relevé du joueur, voir § Données livrées). Il quitte
     `LL.THANKS`. Le garde-fou de l'Action REFUSE ensuite ses tickets ;
   - **une confirmation n'est pas une preuve** : deux comptes neufs peuvent se confirmer l'un
     l'autre. Le registre montre qui a confirmé, le mainteneur juge ;
@@ -348,7 +349,16 @@ des points : sans exclusion, le fichier généré ne change pas d'un octet. Aujo
 exclusion d'auteur (`data/exclus.txt`) y met des points ; les retraits signalés par les joueurs (D7)
 y viendront aussi. Côté client, `Nodes:ApplyGone` passe AVANT les ajouts dans `ApplyShipped` (un
 point re-livré par la même mise à jour revient) : pour chaque retrait d'un palier pas encore reçu,
-le point le plus proche de même espèce dans `mergeRange` s'en va s'il est `shipped` ou `import`.
+le point livré LUI-MÊME (même espèce, à 5 yd au plus) s'en va s'il est `shipped` ou `import`.
+Pas `mergeRange` : un point livré est posé aux coordonnées exactes de la liste et ne bouge plus
+tant qu'il garde sa source, alors que le rayon de fusion attraperait un VRAI point voisin dans
+lequel le faux s'était fondu chez ce joueur. Le cas se produit parce que l'outil, sur une zone dont
+il ne connaît pas la taille, compare à ±0,01 de carte, soit moins de 50 yd sur une zone étroite.
+Limite connue, dans l'autre sens : sur une zone large (0,01 de carte > 50 yd), un faux point posé
+AVANT un vrai, à plus de 50 yd mais dans la marge, a fait du vrai une simple confirmation. Une
+fois le fraudeur exclu, le vrai revient à son palier d'origine, déjà distribué, et le faux reste
+chez ceux qui l'avaient reçu. Ce point raté est à moins d'un écart de carte du vrai : rien n'est
+effacé à tort.
 
 **Livré en v1.1.0 : `LL.DATA` en triplets.** Le palier est le `DATA_VERSION` qui a introduit le
 point ; `Nodes:ApplyShipped` ne fusionne que les points plus récents que la dernière fusion du

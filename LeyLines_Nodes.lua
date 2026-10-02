@@ -258,11 +258,16 @@ end
 
 -- Retraits livrés (LL.GONE, mêmes triplets x, y, palier) : les points dont le seul témoin était un
 -- auteur exclu de la liste commune (docs/specs/contribution-positions.md, D8). Pour chacun, le
--- point le plus proche de même espèce dans le rayon de fusion s'en va, s'il vient de la liste ou
--- d'un import ; un relevé du joueur reste, même un point livré qu'il a confirmé en lançant le sort
--- (il est passé en `spell`) : A3. Passe AVANT les ajouts, pour qu'un point re-livré par la même
--- mise à jour revienne.
+-- point livré LUI-MÊME s'en va, s'il vient de la liste ou d'un import ; un relevé du joueur reste,
+-- même un point livré qu'il a confirmé en lançant le sort (il est passé en `spell`) : A3. Passe
+-- AVANT les ajouts, pour qu'un point re-livré par la même mise à jour revienne.
+-- GONE_MATCH et pas `mergeRange` : un point `shipped`/`import` est posé aux coordonnées exactes de
+-- la liste (quatre décimales, < 1 yd) et ne bouge plus tant qu'il garde cette source. Le rayon de
+-- fusion, lui, attraperait un VRAI point voisin dans lequel le faux s'était fondu à la livraison :
+-- l'outil, sur une zone de taille inconnue, compare à ±0,01 de carte, moins de 50 yd sur une zone
+-- étroite, et peut donc retirer un point que ce client avait fusionné avec un autre.
 local GIVEN = { shipped = true, import = true }
+local GONE_MATCH = 5   -- yards
 
 function Nodes:ApplyGone(since)
     local removed = 0
@@ -270,7 +275,7 @@ function Nodes:ApplyGone(since)
         for map, list in pairs(maps) do
             for i = 1, #list - 2, 3 do
                 if (list[i + 2] or 0) > since then
-                    local node = self:Find(map, list[i], list[i + 1], LL.db.mergeRange, kind)
+                    local node = self:Find(map, list[i], list[i + 1], GONE_MATCH, kind)
                     if node and GIVEN[node.src] and self:Remove(node) then removed = removed + 1 end
                 end
             end
