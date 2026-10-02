@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.4.0
+
+Five more ley lines, and a few fixes that came out of your reports. neumannrainer-dev found the
+first one in Loch Modan, at 28.3, 42.1, and another in Redridge Mountains, at 30.4, 55.2.
+FooBarWow sent in twelve spots: three are new (Westfall at 46.6, 59.0, and Zephras Isle at 50.5,
+33.4 and 48.3, 58.5), and the other nine match ones already in the list, which is good news for
+how well it holds up.
+
+Casting the spell at the very edge of its range used to drop a second marker a few yards from the
+first one. Two casts on the same ley line or convergence can land up to 50 yards apart, so
+anything closer than that now counts as the same spot, and the first marker stays where it was.
+Doubles you already have don't go away on their own: stand on the extra one and type /ley del.
+
+Lighting the Night Watchman's Torch no longer fools the addon. With the torch lit, a Skysight
+cast that missed used to drop a marker anyway, and the torch's 5-minute glow set off the warning
+meant for the convergence buff. Thanks to the player who spotted it!
+
+The addon also says thanks now. When an update brings in new spots, a line in chat names the
+players who found them, and /ley credits lists everyone who has shared positions so far. Sending
+yours with /ley contribute puts you on that list.
+
 ## v1.3.4
 
 Horde players, this one's mostly for you. sionnabhan sent in six new Elemental Convergences: two in

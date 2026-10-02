@@ -29,6 +29,22 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-02 08:55 - jusqu'a 7be39f9 - main-dev@65ea7cc 2026-10-02 08:50 - Forever, build 70170
+  (jour de patch) - **GO non-regression, rapporte par le user : « c'est good l'addon est ok »** -
+  branche `fix/buff-torche`, deployee avec `fix/rayon-fusion` et `feat/contributeurs` (releves
+  suivants), apres une liste de controle donnee en session (connexion sans erreur, ligne de
+  remerciement, `/ley credits`, `/ley probe` ne citant que Energized et Elemental Blessing, lancer
+  sur une ligne, au bord de la portee, loin de toute ligne). Le user a repondu globalement, pas
+  point par point. PAS observe : la torche elle-meme (aucun personnage ne l'a) ; le faux point et
+  l'alerte « 5 min » ne sont prouves corriges que par `tests/test_leylines_torche.lua`
+  (contre-epreuve : 4 echecs sur l'ancien code).
+- 2026-10-02 08:55 - jusqu'a d93e961 - main-dev@65ea7cc 2026-10-02 08:50 - Forever, build 70170 -
+  **GO non-regression, meme seance** - branche `fix/rayon-fusion` (rayon de fusion 50 yd, le
+  premier point reste). Le lancer au bord de la portee faisait partie de la liste de controle,
+  sans retour detaille.
+- 2026-10-02 08:55 - jusqu'a f54265b - main-dev@65ea7cc 2026-10-02 08:50 - Forever, build 70170 -
+  **GO non-regression, meme seance** - branche `feat/contributeurs` (`/ley credits`, ligne de
+  remerciement a la connexion). Contenu exact de la ligne et de la liste non rapporte.
 - 2026-09-28 19:35 - jusqu'a 580c4d5 - main-dev@7a783a3 2026-09-28 18:36 - Forever, comptes #4 et
   #1 - **GO sur `/ley signal off` / `on` icone allumee, et sur « une position livree n'allume
   pas »** - rapporte par le user : l'icone allumee, `/ley signal off` la retire, `/ley signal on`
