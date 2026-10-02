@@ -40,8 +40,8 @@ local es = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimapa %s — mapa %s — seguimiento %s — captura automática %s.",
     ["%s %s dans %s :"]                     = "%s %s en %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Comandos: /ley (estado), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texto>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Comandos: /ley (estado), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texto>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "Cómo se usa: colócate SOBRE la %s y escribe /ley add (o usa el atajo de teclado).",
 
@@ -133,6 +133,21 @@ local es = {
         "%s posición(es) sin facción omitida(s): pide una nueva exportación.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s posición(es) añadida(s) desde los datos incluidos.",
+
+    -- Colaboradores (docs/specs/remerciements.md)
+    ["%s et %s autre(s)"] =
+        "%s y %s más",
+    ["Merci à %s pour ces positions. /ley credits : tous les contributeurs."] =
+        "Gracias a %s por estas posiciones. /ley credits muestra a todos los que han compartido.",
+    ["Aucun contributeur pour l'instant : /ley contribute pour être le premier."] =
+        "Todavía no hay colaboradores. /ley contribute para ser el primero.",
+    ["%s contributeur(s) ont partagé leurs positions :"] =
+        "%s colaborador(es) han compartido sus posiciones:",
+    ["Toi aussi : /ley contribute."] =
+        "Tú también: /ley contribute.",
+    ["Une fois versée, ta contribution t'inscrit parmi les contributeurs (/ley credits)."] =
+        "Cuando se añada, tu nombre aparecerá entre los colaboradores (/ley credits).",
+
     ["restauré"] = "restaurada",
     ["%s position(s) restaurée(s) depuis la sauvegarde interne."] =
         "%s posición(es) restaurada(s) desde la copia interna.",

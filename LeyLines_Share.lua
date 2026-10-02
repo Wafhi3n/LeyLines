@@ -308,6 +308,7 @@ function Share:ShowContribute(all)
         self:Open(self:ContributeURL(blob, false),
             L["Trop long pour un seul lien : ouvre celui-ci, puis colle le code (bouton Code)."], blob)
     end
+    LL:Print(L["Une fois versée, ta contribution t'inscrit parmi les contributeurs (/ley credits)."])
 end
 
 function Share:ShowImport()

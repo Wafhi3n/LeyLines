@@ -285,6 +285,10 @@ CMD.contribute = function(rest)
 end
 CMD.contribuer = CMD.contribute
 
+-- Les contributeurs de la liste livrée (docs/specs/remerciements.md).
+CMD.credits = function() LL.Thanks:Show() end
+CMD.merci = CMD.credits
+
 -- `/ley signal on|off` ; sans argument, bascule, comme hud / pins / map. Coupé, le signal se tait
 -- mais le nombre reste calculé : il est redonné ici.
 CMD.signal = function(rest)
@@ -304,7 +308,7 @@ CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end
@@ -404,9 +408,11 @@ f:SetScript("OnEvent", function(_, event, arg1)
         -- (C_Map.GetMapWorldSize), que le client ne donne pas toujours dès PLAYER_LOGIN. Fusionner
         -- trop tôt ferait passer chaque point livré pour un point nouveau, à côté du vôtre.
         C_Timer.After(3, function()
+            local since = LL.db.dataVersion or 0   -- lu AVANT la fusion, qui l'avance
             local shipped = LL.Nodes:ApplyShipped()
             if shipped > 0 then
                 LL:Printf(L["%s position(s) ajoutée(s) depuis les données livrées."], shipped)
+                LL.Thanks:Announce(since)
                 LL:Refresh()
             end
             LL.Nodes:Snapshot()

@@ -41,8 +41,8 @@ local en = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "How it works: stand ON the %s, then type /ley add (or use the keybind).",
 
@@ -133,6 +133,21 @@ local en = {
         "%s position(s) with no faction skipped: ask for a new export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s position(s) added from the shipped data.",
+
+    -- Contributors (docs/specs/remerciements.md)
+    ["%s et %s autre(s)"] =
+        "%s and %s more",
+    ["Merci à %s pour ces positions. /ley credits : tous les contributeurs."] =
+        "Thanks to %s for these spots. /ley credits lists everyone who shared.",
+    ["Aucun contributeur pour l'instant : /ley contribute pour être le premier."] =
+        "No contributors yet. /ley contribute to be the first.",
+    ["%s contributeur(s) ont partagé leurs positions :"] =
+        "%s contributor(s) shared their spots:",
+    ["Toi aussi : /ley contribute."] =
+        "You too: /ley contribute.",
+    ["Une fois versée, ta contribution t'inscrit parmi les contributeurs (/ley credits)."] =
+        "Once it's in, your name joins the contributors (/ley credits).",
+
     ["restauré"] = "restored",
     ["%s position(s) restaurée(s) depuis la sauvegarde interne."] =
         "%s position(s) restored from the internal backup.",

@@ -40,8 +40,8 @@ local de = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minikarte %s — Karte %s — Verfolgung %s — Auto-Erfassung %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, signal, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "So geht's: Stell dich AUF die %s und tippe /ley add (oder nutze die Tastenbelegung).",
 
@@ -133,6 +133,21 @@ local de = {
         "%s Position(en) ohne Fraktion übersprungen: bitte um einen neuen Export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s Position(en) aus den mitgelieferten Daten hinzugefügt.",
+
+    -- Mitwirkende (docs/specs/remerciements.md)
+    ["%s et %s autre(s)"] =
+        "%s und %s weitere",
+    ["Merci à %s pour ces positions. /ley credits : tous les contributeurs."] =
+        "Danke an %s für diese Positionen. /ley credits zeigt alle, die geteilt haben.",
+    ["Aucun contributeur pour l'instant : /ley contribute pour être le premier."] =
+        "Noch keine Mitwirkenden. /ley contribute, um der Erste zu sein.",
+    ["%s contributeur(s) ont partagé leurs positions :"] =
+        "%s Mitwirkende haben ihre Positionen geteilt:",
+    ["Toi aussi : /ley contribute."] =
+        "Du auch: /ley contribute.",
+    ["Une fois versée, ta contribution t'inscrit parmi les contributeurs (/ley credits)."] =
+        "Sobald sie aufgenommen ist, steht dein Name bei den Mitwirkenden (/ley credits).",
+
     ["restauré"] = "wiederhergestellt",
     ["%s position(s) restaurée(s) depuis la sauvegarde interne."] =
         "%s Position(en) aus der internen Sicherung wiederhergestellt.",

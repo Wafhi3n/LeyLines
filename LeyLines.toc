@@ -42,6 +42,9 @@ LeyLines_HUD.lua
 # Echange de positions entre joueurs : un texte a copier-coller, aucun reseau.
 LeyLines_Share.lua
 
+# Remerciements : les contributeurs de la liste livree (docs/specs/remerciements.md).
+LeyLines_Thanks.lua
+
 # Signal des positions a partager (docs/specs/signal-contribution.md), et son icone dans la barre
 # de la minicarte.
 LeyLines_Signal.lua
