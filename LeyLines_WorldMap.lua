@@ -94,14 +94,27 @@ function WM:HideFrom(index)
     end
 end
 
--- Quoi afficher : TOUS les points connus, ramenés sur la carte actuellement ouverte. Un point
--- d'une autre zone n'est gardé que si la conversion le place bien dans ce cadre (voir Geo:Translate).
+-- Les points ne se montrent que sur une carte de ZONE ou plus fine (donjon, micro-zone), jamais sur
+-- la vue du continent ni du monde. Vu le 2026-10-02 (capture du user) : sur la carte des Royaumes de
+-- l'Est, chaque point de zone ramené à l'échelle du continent faisait un tas d'icônes illisible.
+-- Enum.UIMapType (MapConstantsDocumentation.lua, Forever) : 0 cosmos, 1 monde, 2 continent, 3 zone,
+-- 4 donjon, 5 micro-zone, 6 orpheline.
+local ZONE_TYPE = (Enum and Enum.UIMapType and Enum.UIMapType.Zone) or 3
+
+function WM:ShowsOn(map)
+    local info = map and C_Map.GetMapInfo and C_Map.GetMapInfo(map)
+    local mapType = info and info.mapType
+    return type(mapType) == "number" and mapType >= ZONE_TYPE
+end
+
+-- Quoi afficher : les points connus, ramenés sur la carte de zone ouverte. Un point d'une autre
+-- zone n'est gardé que si la conversion le place bien dans ce cadre (voir Geo:Translate).
 function WM:Plot()
     if not self.plot then return end
     wipe(self.plot)
 
     local map = WorldMapFrame.GetMapID and WorldMapFrame:GetMapID()
-    if not LL.db.worldmap.show or not map or not WorldMapFrame:IsShown() then
+    if not LL.db.worldmap.show or not map or not WorldMapFrame:IsShown() or not self:ShowsOn(map) then
         return self:HideFrom(1)
     end
 
