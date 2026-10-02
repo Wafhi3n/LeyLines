@@ -29,6 +29,15 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-02 09:25 - jusqu'a b46421a - main-dev@2de61e8 2026-10-02 09:12 - Forever, build 70170 -
+  **GO, rapporte par le user** - branche `feat/effacer-clic` : un point de la Marche de l'Ouest
+  efface par clic droit sur la carte du monde, apres la popup de confirmation. « Sinon tout
+  fonctionne » : reponse globale a la liste de controle donnee en session (infobulle des deux
+  clics, « Non » qui ne fait rien, point absent apres `/reload`, clic gauche intact), pas point par
+  point. L'effacement reste local : aucun retrait n'existe encore dans le code.
+- 2026-10-02 09:25 - jusqu'a b837568 - main-dev@2de61e8 2026-10-02 09:12 - Forever, build 70170 -
+  **GO, rapporte par le user, meme seance** - branche `fix/carte-zone` : comprise dans le « tout
+  fonctionne » (vue continent et vue monde sans point, carte de zone avec), sans retour detaille.
 - 2026-10-02 08:55 - jusqu'a 7be39f9 - main-dev@65ea7cc 2026-10-02 08:50 - Forever, build 70170
   (jour de patch) - **GO non-regression, rapporte par le user : « c'est good l'addon est ok »** -
   branche `fix/buff-torche`, deployee avec `fix/rayon-fusion` et `feat/contributeurs` (releves

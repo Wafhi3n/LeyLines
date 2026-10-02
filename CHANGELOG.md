@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.1
+
+Two map fixes. The world map no longer piles every marker onto the continent view: you'll only
+see them once you open a zone, where they mean something. And you can now erase a marker without
+walking to it. Right-click it on the world map, confirm, and it's gone. /ley del still works when
+you're standing on one.
+
 ## v1.4.0
 
 Five more ley lines, and a few fixes that came out of your reports. neumannrainer-dev found the
