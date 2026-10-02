@@ -101,9 +101,9 @@ désormais l'espèce de chaque point.
 - **Objet absent à un passage, revenu ensuite** → une absence vue une fois n'est PAS un retrait.
   Vu en jeu le 2026-09-28 (registre, relevé de 19:25) : une tornade des Tarides absente, revenue
   au même endroit dans la soirée ; cause inconnue (serveur de la bêta, réapparition après
-  absorption, couche). **À trancher avant de coder T4** : un retrait n'entre dans `LL.GONE` que
-  confirmé (deux passages espacés, ou deux joueurs), sinon un simple décalage de réapparition
-  effacerait l'objet chez tout le monde à la mise à jour suivante.
+  absorption, couche). **Tranché le 2026-10-02 (D7)** : un retrait n'entre dans `LL.GONE` que
+  signalé par deux joueurs différents, ou par celui qui a posé le point. Sinon un simple décalage
+  de réapparition effacerait l'objet chez tout le monde à la mise à jour suivante.
 - **Deux contributions contradictoires** (l'une ajoute, l'autre retire au même endroit) → la plus
   récente l'emporte, par date du ticket.
 - **Ticket édité** → ignoré : la branche fige le code qui a été relu. Pour retraiter un ticket, le
@@ -158,6 +158,20 @@ désormais l'espèce de chaque point.
   - **Ce que la CI ne vérifie pas** : l'outillage (portes, tests headless) vit dans un dépôt privé.
     Une Action verte prouve seulement que le code lu est propre et que la liste générée se charge
     (`luac -p` + chargement). Les portes et les tests se passent en local, avant la fusion.
+- **D7 — 2026-10-02, user** : un retrait n'entre dans `LL.GONE` que **signalé par deux joueurs
+  différents**, **sauf si c'est la personne qui a posé le point** : son retrait seul suffit.
+  Proposé par l'agent (deux joueurs), précisé par le user. Raison : une absence vue une fois n'est
+  pas une preuve (tornade des Tarides absente puis revenue le 2026-09-28), mais celui qui a mis un
+  faux point dans la liste doit pouvoir le retirer sans attendre un second témoin. Précisions de
+  l'agent, à relire :
+  - « celui qui a posé le point » = l'auteur (`from=`) de la contribution qui l'a INTRODUIT dans la
+    liste (son premier palier), pas celui d'une simple confirmation ;
+  - « deux joueurs différents » = deux `from=` distincts parmi les retraits qui tombent sur le même
+    objet (même rayon que la fusion des ajouts : 50 yd, 0,01 de carte sans taille connue) ;
+  - un ajout plus récent au même endroit le fait revenir (cas « deux contributions
+    contradictoires ») ;
+  - le clic droit sur la grande carte (`feat/effacer-clic`) et `/ley del` passent par le même
+    `LL:DeleteNode` : c'est là que `db.gone` s'inscrira.
 
 ## Arbitrages — proposés par l'agent, validés par le user le 2026-09-27
 
@@ -389,7 +403,13 @@ quand une autre a été fusionnée depuis sa création.
   du même jour : le formulaire publié n'a que `code`, `faction` et `notes`, donc les paramètres `maps`
   et `version` du § Lien de contribution n'ont pas encore de champ.
 - **T4** — ~~`LL.DATA` par espèce, en triplets avec palier~~ (v1.1.0) ; reste `LL.GONE` et les
-  retraits dans `ApplyShipped` (A3). Critère 5.
+  retraits dans `ApplyShipped` (A3). Critère 5. Règle de confirmation tranchée (D7, 2026-10-02).
+  Découpage proposé, dans cet ordre : (1) client, `LL:DeleteNode` inscrit `db.gone` pour un point
+  partageable, `/ley contribute` y ajoute les segments `-` postérieurs à la dernière contribution ;
+  (2) `ll_ingest.lua` lit les retraits (aujourd'hui jetés par `FromCode`), applique D7 et écrit
+  `LL.GONE` en triplets avec palier ; le garde-fou les montre dans son rapport ; (3) client,
+  `ApplyShipped` efface les points `shipped`/`import` voisins d'un retrait livré, jamais un
+  relevé du joueur (A3). Chaque étape a ses tests ; (3) se voit au banc.
 - **T5** — ~~formulaire de ticket~~ (publié sur `main`, étiquette `positions` en place ; premier
   vrai ticket, #1 de wasdconnor, versé à la main le 2026-09-28 et vu en jeu : `gh-0001`, palier 3,
   voir le registre) ; ~~l'Action~~ codée le 2026-10-01 selon D6 (branche `feat/ci-tickets` dans
