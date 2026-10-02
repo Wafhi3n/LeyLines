@@ -8,7 +8,7 @@
 local ADDON, LL = ...
 local L = LL.L
 
-LL.VERSION = "1.4.1"
+LL.VERSION = "1.5.0"
 LL.ADDON   = ADDON
 _G.LeyLines = LL
 

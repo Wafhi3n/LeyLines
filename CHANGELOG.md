@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.5.0
+
+Eleven new spots, and a way to take a bad one back out.
+
+chris-rowley83 found a ley line in Duskwood, at 72.5, 30.6. evellior sent in two more, one in
+Elwynn Forest (84.6, 76.6) and one in Stranglethorn Vale (13.4, 15.1), and matched two that were
+already on the list. Noblesun13 mapped eight Elemental Convergences on Zephras Isle, the first ones
+there for Horde players. Thanks, all three of you!
+
+If a shared spot ever turns out to be wrong, a later update can now remove it from your map. It
+only touches spots that came from the shared list or from a code someone gave you. A spot you
+recorded yourself by casting the spell on it always stays.
+
 ## v1.4.1
 
 Two map fixes. The world map no longer piles every marker onto the continent view: you'll only

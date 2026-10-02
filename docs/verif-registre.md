@@ -29,6 +29,21 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-02 17:12 - jusqu'a 5e06b5c - main-dev@30f819e 2026-10-02 17:02 - Forever -
+  **GO partiel, capture du chat envoyee par le user** - branche `feat/registre-contributeurs`,
+  critere 13 de `contribution-positions.md`, cas « point livre » : pres d'une fissure de Zephras
+  Isle, les deux `/run` de la fiche (retrait pose a la main sur `LeyLines.GONE`, puis
+  `Nodes:ApplyShipped`) ont affiche `shipped 0.458 0.8071` puis `0 1` (0 ajout, 1 retrait), et la
+  commande de restitution `rendu shipped`. Aucune erreur rapportee. PAS observe : la disparition
+  du point sur la minicarte et la grande carte (non rapportee), le cas « releve au sort qui
+  reste » (test headless seulement), la ligne de chat « retiree(s) de la liste commune », qui ne
+  sort qu'a une vraie mise a jour.
+- 2026-10-02 17:12 - jusqu'a 63af11e - main-dev@30f819e 2026-10-02 17:02 - Forever -
+  **GO indirect, meme seance** - branche `feat/positions-gh-0025-0029` (tickets 25, 27, 29,
+  palier 17) : le `/run` ci-dessus a rendu 0 ajout, donc `dataVersion` de ce compte etait deja a
+  17 : la fusion de la liste au palier 17 s'est faite a la connexion. PAS observe : les lignes de
+  chat (« 11 position(s) ajoutee(s) », « Merci a chris-rowley83, evellior, Noblesun13 »), ni les
+  points neufs sur place.
 - 2026-10-02 09:25 - jusqu'a b46421a - main-dev@2de61e8 2026-10-02 09:12 - Forever, build 70170 -
   **GO, rapporte par le user** - branche `feat/effacer-clic` : un point de la Marche de l'Ouest
   efface par clic droit sur la carte du monde, apres la popup de confirmation. « Sinon tout
