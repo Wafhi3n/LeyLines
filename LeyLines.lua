@@ -373,6 +373,8 @@ f:SetScript("OnEvent", function(_, event, arg1)
         LeyLinesDB = LeyLinesDB or {}
         CopyDefaults(LeyLinesDB, LL.DEFAULTS)
         Migrate(LeyLinesDB)
+        -- Hors de l'échelle : le buff d'une torche appris par erreur se retire à chaque chargement.
+        LL.Capture:KeepShippedAuras(LeyLinesDB)
         LL.db = LeyLinesDB
     elseif event == "PLAYER_LOGOUT" then
         LL.Nodes:Snapshot()

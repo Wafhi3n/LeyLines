@@ -216,6 +216,17 @@ local function IsFreshLong(aura, now)
     return dur >= LONG_BUFF_MIN and (exp - now) > (dur - FRESH_MARGIN)
 end
 
+-- Un buff INCONNU n'est pris pour celui de la faille que s'il en a la durée (15 min, d'où la
+-- fenêtre). Signalé par un joueur le 2026-10-02 : la Night Watchman's Torch, jouet de Duskwood,
+-- pose une aura de zone de 5 min reposée en continu, donc toujours « toute fraîche ». Chaque
+-- lancer RATÉ torche allumée marquait une faille, et le buff de la torche s'inscrivait comme buff
+-- de faille. Les ids livrés (LL.DEFAULTS.auras) n'ont pas besoin de ce filet.
+local LEY_BUFF_MIN, LEY_BUFF_MAX = 600, 1200   -- s
+local function IsFreshLeyLike(aura, now)
+    local dur = aura.duration
+    return IsFreshLong(aura, now) and dur >= LEY_BUFF_MIN and dur <= LEY_BUFF_MAX
+end
+
 -- Piège Forever payé en jeu le 2026-09-20, EN COMBAT : lire une aura depuis du code d'addon ne
 -- rend pas nil quand elle est secrète, ça LÈVE une erreur — « Auras cannot be accessed when secret
 -- while tainted by 'LeyLines' ». Protéger la comparaison des champs ne servait à rien : c'est
@@ -260,14 +271,32 @@ function Capture:FreshLongBuff()
         end
     end
 
-    -- Aucun buff connu : on cherche un buff long inconnu, au cas où la bêta changerait l'id.
+    -- Aucun buff connu : on cherche un buff inconnu qui a la durée de celui de la faille, au cas où
+    -- la bêta changerait l'id. Un autre buff long tout frais (la torche) ne suffit pas.
     for i = 1, MAX_BUFFS do
         local aura, blocked = self:AuraByIndex(i)
         if blocked or not aura then break end
-        local ok, fresh = pcall(IsFreshLong, aura, now)
+        local ok, fresh = pcall(IsFreshLeyLike, aura, now)
         if ok and fresh then return aura end
     end
     return nil
+end
+
+-- Le buff de faille est LIVRÉ en dur (LL.DEFAULTS.auras) : la liste n'en garde pas d'autre.
+-- Jusqu'à la v1.3.4, un lancer y inscrivait le buff qui l'avait confirmé, quel qu'il soit : la
+-- torche s'y retrouvait, et le rappel d'expiration la surveillait (« plus que 5 min » sur un buff
+-- de torche). Appelée à chaque chargement : idempotente, sans palier de migration. Rend le nombre
+-- d'ids retirés.
+function Capture:KeepShippedAuras(db)
+    local shipped = LL.DEFAULTS and LL.DEFAULTS.auras or {}
+    local removed = 0
+    for id in pairs(type(db.auras) == "table" and db.auras or {}) do
+        if not shipped[id] then
+            db.auras[id] = nil   -- effacer un champ pendant pairs() est permis en Lua
+            removed = removed + 1
+        end
+    end
+    return removed
 end
 
 -- Temps restant du buff de faille, ou nil si cette aura n'est pas la nôtre. Isolée dans sa propre
@@ -301,7 +330,8 @@ function Capture:ResolveCast(map, x, y)
         LL:Printf(L["Buff court : pas de %s ici, rien n'a été enregistré."], LL.Nodes:Word("one"))
         return
     end
-    if aura.spellId then LL.db.auras[aura.spellId] = aura.name or true end
+    -- Plus d'inscription du buff dans LL.db.auras (voir KeepShippedAuras) : un id inconnu trouvé
+    -- par le filet confirme CE lancer, il ne devient pas le buff surveillé par le rappel.
     -- Le sort n'absorbe que l'objet de SA faction (dit par le joueur le 2026-09-27) : l'espèce d'une
     -- capture au sort est donc celle du joueur, sans rien deviner.
     local kind = LL.Nodes:PlayerKind()
