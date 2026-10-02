@@ -4,8 +4,9 @@
 > tranchés par le user le 2026-09-27 (un amendement de A4 essayé puis retiré) · **Publié** : v1.1.0
 > (espèce, `LL2`, `/ley contribute`, pipeline v1 à la main, liste générée en triplets), v1.1.1 (nom,
 > icône), v1.2.0 (compartiment d'addons : clic gauche = contribute). **Codé, pas publié** (branche
-> `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits (`gone`/`LL.GONE`),
-> couleur « à confirmer ». GitHub Action (D6) : ACTIVE depuis le 2026-10-01 (une PR par ticket),
+> `feat/signal-contribution`) : `seen`, lien pré-rempli. Reste : retraits signalés par les joueurs
+> (`gone`, D7), couleur « à confirmer ». Registre des contributeurs et exclusion d'un auteur (D8,
+> `LL.GONE` côté client) : codés le 2026-10-02, pas publiés. GitHub Action (D6) : ACTIVE depuis le 2026-10-01 (une PR par ticket),
 > essai de bout en bout vert sur un ticket de test (critère 11), pas encore sur un vrai ticket
 > Cible : WoW: Forever / Camelot (16001) uniquement · Addon : Ley Line / Elemental Convergence Tracker (dossier `LeyLines`)
 >
@@ -172,6 +173,35 @@ désormais l'espèce de chaque point.
     contradictoires ») ;
   - le clic droit sur la grande carte (`feat/effacer-clic`) et `/ley del` passent par le même
     `LL:DeleteNode` : c'est là que `db.gone` s'inscrira.
+- **D8 — 2026-10-02, user** : « un registre au moins local des gens et de leur contribution : si
+  un jour on remarque un fraudeur, il faut pouvoir retirer et contrôler ses points ». Venu du
+  ticket 29 (8 tornades d'un compte ouvert le jour même, aucun recoupement). Mis en œuvre par
+  l'agent le même jour (branche `feat/registre-contributeurs`, LeyLines et outillage) :
+  - **le registre se déduit**, il n'est pas stocké : chaque `data/contrib/<id>.ll` porte son
+    auteur (`from=`). `ll_ingest.ps1 -Registre [-Auteur x]` dit, par auteur, chaque point posé,
+    qui l'a relevé aussi, chaque confirmation, et ce que son exclusion retirerait. Un fichier
+    généré et commité aurait été réécrit par chaque branche de ticket (le piège de
+    `LeyLines_Data.lua`) ;
+  - **l'exclusion est commitée** : `data/exclus.txt`, `<pseudo> <palier> <date>`, lu par
+    `ll_ingest.lua build` lui-même, parce que l'Action reconstruit la liste à chaque ticket. Une
+    exclusion qui ne vivrait que sur un poste serait défaite par la PR suivante. Faits seulement,
+    pas de motif : le dépôt est public ;
+  - **exclure** = ignorer toutes ses contributions (le `.ll` reste, pièce du dossier). Un point
+    qu'il a posé et qu'un AUTRE auteur a relevé reste, au palier de cet autre. Un point dont il
+    était le seul témoin part dans `LL.GONE`, au palier de l'exclusion, et le client l'efface chez
+    ceux qui l'avaient reçu (`Nodes:ApplyGone`, A3 : jamais un relevé du joueur). Il quitte
+    `LL.THANKS`. Le garde-fou de l'Action REFUSE ensuite ses tickets ;
+  - **une confirmation n'est pas une preuve** : deux comptes neufs peuvent se confirmer l'un
+    l'autre. Le registre montre qui a confirmé, le mainteneur juge ;
+  - **le palier de l'exclusion** est au-dessus de la liste du moment (`-Exclure` le prend) : sans
+    lui, `DATA_VERSION` ne bougerait pas et un client à jour ne relirait jamais les retraits. Même
+    règle qu'une branche de ticket : s'il est déjà distribué au moment de la fusion, reprendre ;
+  - **limite connue** : lever une exclusion (effacer sa ligne) remet ses points dans la liste à
+    leurs paliers d'origine, donc seulement chez les nouveaux joueurs ; pour les rendre à tous,
+    reverser ses contributions sous un palier neuf. Et un client d'avant cette version ignore
+    `LL.GONE` : un retrait ne touche que les joueurs à jour.
+  Ce n'est PAS le retrait signalé par un joueur (D7, T4 étape 1) : celui-là reste à faire, et
+  réutilisera `LL.GONE` et `Nodes:ApplyGone`.
 
 ## Arbitrages — proposés par l'agent, validés par le user le 2026-09-27
 
@@ -220,7 +250,7 @@ désormais l'espèce de chaque point.
 4. [test] Un point confirmé par une fusion de données livrées n'est PAS considéré comme revu : il ne
    repart pas dans la contribution suivante. → `tests/test_leylines_contribute.lua` § 3
 5. [test] Un retrait livré efface un point `shipped` ou `import` voisin, et laisse un point `spell`
-   (A3).
+   (A3). → `tests/test_leylines_gone.lua` (2026-10-02, D8).
 6. [test] Compilation : ajout (#12) puis retrait (#15) au même endroit → absent ; retrait puis ajout
    → présent.
 7. [test] Compilation : un ticket contenant autre chose que la grammaire (`]] os.exit() --`,
@@ -243,6 +273,15 @@ désormais l'espèce de chaque point.
     dans son commit (et une PR si le dépôt l'autorise). Le ticket ne reçoit aucun commentaire.
     Un ticket refusé donne un run rouge et aucune branche. Observateur : le user, sur GitHub
     (D6, 2026-10-01).
+12. [test] Exclure un auteur (D8) retire de la liste ses points sans autre témoin et les inscrit
+    dans `LL.GONE` au palier de l'exclusion, garde ceux qu'un autre auteur a relevés, l'ôte des
+    remerciements ; sans exclusion, la liste générée ne change pas d'un octet ; le garde-fou
+    refuse son ticket. → `tests/test_ll_registre.lua`.
+13. [humain] Sur un compte qui a reçu un point livré, un retrait qui le vise l'efface de la
+    minicarte et de la grande carte ; un point relevé au sort par ce compte, visé de la même façon,
+    reste. Témoin connu-bon : un autre point livré de la même zone, qui reste. Observateur : le
+    user, au banc (le retrait se pose par `/run` sur `LeyLines.GONE`, la fiche de test dit comment
+    et comment remettre `dataVersion` ; aucune exclusion d'essai ne se commite).
 
 ## Contrat
 
@@ -301,8 +340,15 @@ transmet. Les identifiants `code`, `maps` et `version` sont ceux des champs du f
 ```lua
 LL.DATA_VERSION = <n>
 LL.DATA = { L = { [uiMapID] = { x, y, palier, ... } }, V = { ... } }   -- ajouts
-LL.GONE = { L = { [uiMapID] = { x, y, palier, ... } }, V = { ... } }   -- retraits (A3), v1.2.0
+LL.GONE = { L = { [uiMapID] = { x, y, palier, ... } }, V = { ... } }   -- retraits (A3)
 ```
+
+**`LL.GONE` écrit depuis D8** (2026-10-02, branche `feat/registre-contributeurs`), seulement s'il a
+des points : sans exclusion, le fichier généré ne change pas d'un octet. Aujourd'hui, seule une
+exclusion d'auteur (`data/exclus.txt`) y met des points ; les retraits signalés par les joueurs (D7)
+y viendront aussi. Côté client, `Nodes:ApplyGone` passe AVANT les ajouts dans `ApplyShipped` (un
+point re-livré par la même mise à jour revient) : pour chaque retrait d'un palier pas encore reçu,
+le point le plus proche de même espèce dans `mergeRange` s'en va s'il est `shipped` ou `import`.
 
 **Livré en v1.1.0 : `LL.DATA` en triplets.** Le palier est le `DATA_VERSION` qui a introduit le
 point ; `Nodes:ApplyShipped` ne fusionne que les points plus récents que la dernière fusion du
@@ -311,8 +357,9 @@ chaque release de données.
 
 Le fichier n'est plus écrit à la main : `tools/ll_ingest.lua` le produit à partir de
 `data/contrib/<id>.ll` (une contribution par fichier : `from`, `date`, `source`, `version`, `code`
-en LL2), qui sont la source de vérité. Retirer une contribution = supprimer son fichier et
-régénérer. Les deux points de Zephras Isle sont la contribution `seed-zephras` (palier 2).
+en LL2), qui sont la source de vérité (et le registre des contributeurs, D8). Retirer UN ticket
+qui n'est jamais parti = supprimer son fichier et régénérer ; retirer un AUTEUR, ou un point déjà
+livré = l'exclure (`-Exclure`, D8). Les deux points de Zephras Isle sont la contribution `seed-zephras` (palier 2).
 `.pkgmeta` ignore `data`, `tools` et `.github`.
 
 ### Pipeline v1 — outillé mais à la main (v1.1.0)
@@ -410,6 +457,11 @@ quand une autre a été fusionnée depuis sa création.
   `LL.GONE` en triplets avec palier ; le garde-fou les montre dans son rapport ; (3) client,
   `ApplyShipped` efface les points `shipped`/`import` voisins d'un retrait livré, jamais un
   relevé du joueur (A3). Chaque étape a ses tests ; (3) se voit au banc.
+  **2026-10-02, par D8** : l'étape (3) est CODÉE (`Nodes:ApplyGone`, `tests/test_leylines_gone.lua`)
+  et `LL.GONE` s'écrit, nourri pour l'instant par les seules exclusions d'auteur
+  (`tools/ll_registre.lua`, `tests/test_ll_registre.lua`) ; branche `feat/registre-contributeurs`
+  dans LeyLines et l'outillage, pas au banc. Restent (1) et la lecture des retraits de joueurs
+  selon D7 dans (2).
 - **T5** — ~~formulaire de ticket~~ (publié sur `main`, étiquette `positions` en place ; premier
   vrai ticket, #1 de wasdconnor, versé à la main le 2026-09-28 et vu en jeu : `gh-0001`, palier 3,
   voir le registre) ; ~~l'Action~~ codée le 2026-10-01 selon D6 (branche `feat/ci-tickets` dans

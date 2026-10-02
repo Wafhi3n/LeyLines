@@ -134,6 +134,8 @@ local de = {
         "%s Position(en) ohne Fraktion übersprungen: bitte um einen neuen Export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s Position(en) aus den mitgelieferten Daten hinzugefügt.",
+    ["%s position(s) retirée(s) de la liste commune."] =
+        "%s Position(en) aus der gemeinsamen Liste entfernt.",
 
     -- Mitwirkende (docs/specs/remerciements.md)
     ["%s et %s autre(s)"] =

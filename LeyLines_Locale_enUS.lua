@@ -134,6 +134,8 @@ local en = {
         "%s position(s) with no faction skipped: ask for a new export.",
     ["%s position(s) ajoutée(s) depuis les données livrées."] =
         "%s position(s) added from the shipped data.",
+    ["%s position(s) retirée(s) de la liste commune."] =
+        "%s position(s) removed from the shared list.",
 
     -- Contributors (docs/specs/remerciements.md)
     ["%s et %s autre(s)"] =
