@@ -17,7 +17,7 @@ LL.Signal = Signal
 local VERIFIED = LL.Nodes.VERIFIED
 
 -- Le point est-il dans la liste livrée ? « Dedans » = un point livré de même espèce à moins de
--- mergeRange (S3) : confirmer une fissure livrée n'allume rien, sinon tous ceux qui suivent la
+-- mergeRange (S3, 50 yd : deux lancers d'une même fissure peuvent être à 2 × 25 yd) : confirmer une fissure livrée n'allume rien, sinon tous ceux qui suivent la
 -- liste auraient le signal allumé en permanence. Taille de zone inconnue (Geo:Distance rend nil) :
 -- on répond OUI, mieux vaut taire le signal une fois que l'allumer pour un point que la liste a.
 function Signal:Shipped(node)
@@ -32,9 +32,9 @@ end
 
 -- Les positions à partager : TROUVÉES par le jeu (sort, vignette) après la dernière contribution,
 -- et absentes de la liste livrée. `found` et pas `seen` : reconfirmer une position déjà partagée ne
--- doit rien rallumer. La source est revérifiée parce qu'un `/ley add` sur un point `spell` le
--- redescend en `manual` : il sort alors de la contribution, et un signal qui compterait encore un
--- point que la contribution n'envoie pas ne s'éteindrait jamais.
+-- doit rien rallumer. La source est revérifiée par sécurité : un signal qui compterait un point que
+-- la contribution n'envoie pas ne s'éteindrait jamais. (Avant `schemaVer` 4, un `/ley add` sur un
+-- point `spell` le redescendait en `manual` ; Nodes:Confirm ne le fait plus.)
 function Signal:Count()
     local since = LL.db.contrib and LL.db.contrib.at or 0
     local n = 0

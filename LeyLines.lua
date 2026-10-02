@@ -26,7 +26,7 @@ _G.LeyLines = LL
 -- Line » avec Skyborn, la Horde une « Elemental Vergence » avec « Skysight ». Même geste, même
 -- verdict attendu (la durée du buff) — d'où une seule base et une seule capture pour les deux.
 LL.DEFAULTS = {
-    schemaVer  = 3,
+    schemaVer  = 4,
     -- capture.tooltip est à FAUX depuis le 2026-09-20 : le simple survol relève la position du
     -- JOUEUR, pas celle de l'objet — mesuré à 40 yd d'écart en jeu — et notre propre infobulle de
     -- point se faisait relire. Source utile mais approximative, donc sur demande (`/ley tooltip`).
@@ -34,7 +34,12 @@ LL.DEFAULTS = {
     minimap    = { show = true, size = 16, edge = true, scale = 1.0 },
     worldmap   = { show = true, size = 18 },
     hud        = { show = true, point = "CENTER", x = 280, y = -150 },
-    mergeRange = 20,
+    -- Le buff long se donne jusqu'à ~25 yd de l'objet (mesuré en jeu le 2026-09-29) : deux lancers
+    -- réussis sur la MÊME fissure peuvent donc être à 50 yd l'un de l'autre, depuis deux bords
+    -- opposés. À 20 yd, un lancer du bord créait un doublon, que le signal puis la liste commune
+    -- propageaient à tout le monde. Contrepartie acceptée : deux vraies fissures à moins de 100 yd
+    -- (une seule paire connue, à 73,5 yd) peuvent fusionner si on les absorbe par leurs bords.
+    mergeRange = 50,
     -- Minutes restantes du buff de faille à partir desquelles on prévient et on pose le point de
     -- route sur la plus proche. 0 = jamais. Le buff dure 15 min, d'où 5 par défaut.
     warnMinutes = 5,
@@ -100,6 +105,12 @@ local function Migrate(db)
         for _, n in ipairs(db.names) do if n == "vergence" then has = true end end
         if not has then table.insert(db.names, "vergence") end
         db.schemaVer = 3
+    end
+    if db.schemaVer < 4 then
+        -- v4 : anti-doublon de 20 à 50 yd (voir DEFAULTS). Aucune commande ne le règle : 20 est
+        -- l'ancien défaut, toute autre valeur a été posée à la main et reste.
+        if db.mergeRange == 20 then db.mergeRange = LL.DEFAULTS.mergeRange end
+        db.schemaVer = 4
     end
 end
 
