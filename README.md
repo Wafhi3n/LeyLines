@@ -28,7 +28,7 @@ les SavedVariables.
 |---|---|
 | `/ley` | état : combien de lignes ici, la plus proche, ce qui est allumé |
 | `/ley add` | enregistre une ligne **à ta position** (fais-le en étant posé dessus) |
-| `/ley del` | efface la ligne la plus proche (≤ 60 yd) |
+| `/ley del` | efface la ligne la plus proche (≤ 60 yd) ; à distance : **clic droit** sur le point de la carte du monde, avec confirmation |
 | `/ley list` | liste les lignes de la zone avec leurs coordonnées |
 | `/ley clean` | efface tous les relevés faits **par infobulle** (les approximatifs) |
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |

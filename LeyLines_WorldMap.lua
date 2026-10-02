@@ -63,10 +63,10 @@ function WM:Acquire(index)
     if pin.icon.SetMask then pcall(pin.icon.SetMask, pin.icon, PIN_MASK) end
     pin.icon:SetVertexColor(0.75, 0.55, 1)
 
-    pin:RegisterForClicks("LeftButtonUp")
+    pin:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     pin:SetScript("OnEnter", function(frame) WM:ShowTooltip(frame) end)
     pin:SetScript("OnLeave", function() GameTooltip:Hide() end)
-    pin:SetScript("OnClick", function(frame) LL.HUD:Track(frame.node) end)
+    pin:SetScript("OnClick", function(frame, button) WM:OnPinClick(frame, button) end)
 
     self.pins[index] = pin
     return pin
@@ -81,9 +81,22 @@ function WM:ShowTooltip(pin)
     GameTooltip:AddLine(string.format("%.1f / %.1f", pin.node.x * 100, pin.node.y * 100), 1, 1, 1)
     GameTooltip:AddLine(string.format(L["Source : %s — %s relevé(s)"],
         LL.Nodes:SourceLabel(pin.node), pin.node.hits or 1), 0.7, 0.7, 0.7)
-    GameTooltip:AddLine(L["Clic : poser un point de route."], 0.4, 0.8, 0.4)
+    GameTooltip:AddLine(L["Clic gauche : poser un point de route."], 0.4, 0.8, 0.4)
+    GameTooltip:AddLine(L["Clic droit : effacer ce point."], 0.9, 0.5, 0.5)
     GameTooltip:Show()
     LL.Capture:Unmute()
+end
+
+-- Gauche : point de route. Droit : effacer, après confirmation (LeyLines.lua, LEYLINES_DELETE_NODE).
+-- La minicarte, elle, laisse passer les clics (elle se pilote au clic) : pas d'effacement là.
+function WM:OnPinClick(pin, button)
+    if not pin.node then return end
+    if button == "RightButton" then
+        GameTooltip:Hide()
+        LL:ConfirmDelete(pin.node)
+    else
+        LL.HUD:Track(pin.node)
+    end
 end
 
 function WM:HideFrom(index)
