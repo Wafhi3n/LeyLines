@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.1
+
+Three more ley lines, all from chris-rowley83. One is in Duskwood, at 18.6, 57.3, and the other
+two are the first ones in the Wetlands, at 46.3, 25.2 and 56.2, 64.0. chris-rowley83 also matched
+two spots that were already on the list, including the Westfall one at 35.0, 73.1, which three
+different players have now found on their own. Thanks again!
+
 ## v1.5.0
 
 Eleven new spots, and a way to take a bad one back out.
