@@ -65,6 +65,9 @@ LL.DEFAULTS = {
     contrib    = {},
     -- Le signal des positions à partager (LeyLines_Signal.lua) : `/ley signal off` le coupe.
     signal     = true,
+    -- `/ley skyborne` : points affichés sur un personnage Skyborne seulement (voir LL:PinsHidden).
+    -- Jeton de race lu en jeu le 2026-10-04 : « Skyborne » pour les deux races (ids 95 et 96).
+    skyborneOnly = false,
 }
 
 function LL:Print(msg)
@@ -125,6 +128,19 @@ function LL:NoneHere()
     LL:Printf(L["Aucune %s connue dans cette zone."], LL.Nodes:Word("one"))
 end
 
+-- Les points (minicarte, carte, bandeau) masqués sur ce personnage : option `/ley skyborne` et pas
+-- Skyborne. Le rappel de buff n'y regarde pas : sans le sort, il n'y a pas de buff à rappeler.
+function LL:PinsHidden()
+    return (LL.db.skyborneOnly and not LL.Capture:IsAbsorber()) and true or false
+end
+
+-- Sans cette ligne, « Suivi : activé » suivi de rien à l'écran ressemblerait à un bug.
+function LL:WarnHidden()
+    if LL:PinsHidden() then
+        LL:Print(L["Points masqués sur ce personnage (pas Skyborne) : /ley skyborne pour les afficher partout."])
+    end
+end
+
 -- ---------------------------------------------------------------------------
 -- Commandes
 -- ---------------------------------------------------------------------------
@@ -145,6 +161,7 @@ CMD.status = function()
     LL:Printf(L["Minicarte %s — carte %s — suivi %s — capture auto %s."],
         LL:OnOff(LL.db.minimap.show), LL:OnOff(LL.db.worldmap.show),
         LL:OnOff(LL.db.hud.show), LL:OnOff(LL.Capture:AutoEnabled()))
+    LL:WarnHidden()
 end
 
 CMD.add = function(rest)
@@ -199,6 +216,7 @@ function LL:ToggleHUD()
     LL.db.hud.show = not LL.db.hud.show
     LL.HUD:Apply()
     LL:Printf(L["Suivi à l'écran : %s."], LL:OnOff(LL.db.hud.show))
+    LL:WarnHidden()
 end
 
 CMD.hud = function() LL:ToggleHUD() end
@@ -207,6 +225,7 @@ CMD.pins = function()
     LL.db.minimap.show = not LL.db.minimap.show
     LL:Refresh()
     LL:Printf(L["Affichage sur la minicarte : %s."], LL:OnOff(LL.db.minimap.show))
+    LL:WarnHidden()
 end
 CMD.minimap = CMD.pins
 
@@ -214,8 +233,19 @@ CMD.map = function()
     LL.db.worldmap.show = not LL.db.worldmap.show
     LL:Refresh()
     LL:Printf(L["Affichage sur la carte du monde : %s."], LL:OnOff(LL.db.worldmap.show))
+    LL:WarnHidden()
 end
 CMD.carte = CMD.map
+
+-- Demandé sur CurseForge le 2026-10-04 (« only show ley lines when playing a skyborn ») : la base
+-- est au compte, donc un personnage d'une autre race voyait des points qu'il ne peut pas absorber.
+CMD.skyborne = function()
+    LL.db.skyborneOnly = not LL.db.skyborneOnly
+    LL:Refresh()
+    LL:Printf(L["Points seulement sur un personnage Skyborne : %s."], LL:OnOff(LL.db.skyborneOnly))
+    LL:WarnHidden()
+end
+CMD.skyborn = CMD.skyborne
 
 CMD.track = function() LL:TrackNearest() end
 CMD.suivre = CMD.track
@@ -313,7 +343,7 @@ CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end

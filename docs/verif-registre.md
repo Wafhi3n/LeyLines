@@ -29,6 +29,25 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-04 20:50 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
+  **GO, capture du chat + « c'est tout bon » du user** - branche `feat/skyborne-seulement`, l'option
+  elle-meme : `/ley skyborne` activee, sur un personnage d'une autre race que Skyborne, la ligne
+  « Spots hidden on this character (not Skyborne): /ley skyborne to show them everywhere. » s'est
+  affichee (LL:WarnHidden), et le user rapporte que l'option « fonctionne pour une race autre que
+  skyborn ». PAS observe en detail : le detail par surface (minicarte, carte, bandeau), le
+  Skyborne qui garde ses points avec l'option active, la commande qui a affiche la ligne, et le
+  recalcul a `SPELLS_CHANGED`.
+- 2026-10-04 20:40 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
+  **GO, captures du chat envoyees par le user** - branche `feat/skyborne-seulement`, le fait que
+  le code supposait sans l'avoir lu : `/ley probe` sur deux personnages Skyborne, un par camp
+  d'apres le user, a affiche `race : High Order Skyborne / Skyborne / 95 — absorbe oui (temoin :
+  race), option skyborne non` (zone Zephras Isle, uiMapID 2521) et `race : Windshaper Skyborne /
+  Skyborne / 96 — absorbe oui (temoin : race), option skyborne non` (carte Durotar, uiMapID
+  1411). Donc deux races (ids 95 et 96), un seul jeton `Skyborne` : le temoin de race suffit des
+  deux cotes, la crainte « cote Horde, aucun temoin » tombe. PAS observe : l'option elle-meme
+  (`/ley skyborne` activee : points masques sur un personnage d'une autre race, gardes sur le
+  Skyborne, ligne « Spots hidden » de `/ley`), le recalcul a `SPELLS_CHANGED`. Camp de chaque
+  capture non verifie par moi.
 - 2026-10-02 17:12 - jusqu'a 5e06b5c - main-dev@30f819e 2026-10-02 17:02 - Forever -
   **GO partiel, capture du chat envoyee par le user** - branche `feat/registre-contributeurs`,
   critere 13 de `contribution-positions.md`, cas « point livre » : pres d'une fissure de Zephras

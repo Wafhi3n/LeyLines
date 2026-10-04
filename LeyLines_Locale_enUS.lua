@@ -41,8 +41,8 @@ local en = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
+        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, name <text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "How it works: stand ON the %s, then type /ley add (or use the keybind).",
 
@@ -76,6 +76,9 @@ local en = {
     ["Affichage sur la minicarte : %s."]      = "Minimap display: %s.",
     ["Affichage sur la carte du monde : %s."] = "World map display: %s.",
     ["Suivi à l'écran : %s."]                 = "On-screen tracker: %s.",
+    ["Points seulement sur un personnage Skyborne : %s."] = "Spots on Skyborne characters only: %s.",
+    ["Points masqués sur ce personnage (pas Skyborne) : /ley skyborne pour les afficher partout."] =
+        "Spots hidden on this character (not Skyborne): /ley skyborne to show them everywhere.",
     ["Échelle de la minicarte : %s (rayon lu : %s yd)."] =
         "Minimap scale: %s (radius read: %s yd).",
     ["%s yd"]                  = "%s yd",

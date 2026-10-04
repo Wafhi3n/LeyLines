@@ -127,7 +127,8 @@ function WM:Plot()
     wipe(self.plot)
 
     local map = WorldMapFrame.GetMapID and WorldMapFrame:GetMapID()
-    if not LL.db.worldmap.show or not map or not WorldMapFrame:IsShown() or not self:ShowsOn(map) then
+    if not LL.db.worldmap.show or LL:PinsHidden() or not map or not WorldMapFrame:IsShown()
+        or not self:ShowsOn(map) then
         return self:HideFrom(1)
     end
 
