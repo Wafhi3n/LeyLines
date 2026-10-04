@@ -66,8 +66,7 @@ LL.DEFAULTS = {
     -- Le signal des positions à partager (LeyLines_Signal.lua) : `/ley signal off` le coupe.
     signal     = true,
     -- `/ley skyborne` : points affichés sur un personnage Skyborne seulement (voir LL:PinsHidden).
-    -- FAUX par défaut tant que le jeton de race n'a pas été lu en jeu : un défaut vrai qui se
-    -- tromperait de jeton masquerait tout à tous les Skyborne.
+    -- Jeton de race lu en jeu le 2026-10-04 : « Skyborne » pour les deux races (ids 95 et 96).
     skyborneOnly = false,
 }
 

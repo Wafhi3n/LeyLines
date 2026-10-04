@@ -101,8 +101,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Qui absorbe : un personnage Skyborne. Demandé sur CurseForge le 2026-10-04 par un joueur qui a
 -- d'autres races (`/ley skyborne` : points masqués ailleurs). DEUX témoins, l'un suffit : le jeton
--- de race (« SKYBORNE » dans l'écran de connexion de Camelot, JAMAIS lu par UnitRace en jeu) et un
--- sort d'absorption LIVRÉ connu du personnage. Un oui de trop ne fait qu'afficher, un non de trop
+-- de race (« Skyborne » pour les deux races, High Order id 95 et Windshaper id 96, lu par UnitRace
+-- en jeu le 2026-10-04) et un sort d'absorption LIVRÉ connu du personnage. Un oui de trop ne fait qu'afficher, un non de trop
 -- masquerait tout : d'où le OU. Les sorts de `/ley learn` n'y entrent pas (n'importe quel sort).
 -- ---------------------------------------------------------------------------
 local RACE_TOKENS = { skyborne = true, skyborn = true }

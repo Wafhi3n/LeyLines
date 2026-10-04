@@ -39,8 +39,8 @@ function Probe:DumpLoad()
     end
 end
 
--- `/ley skyborne` repose sur un jeton de race jamais lu en jeu (pris dans l'écran de connexion) :
--- ces trois valeurs le tranchent, avec le témoin qui a donné le verdict.
+-- `/ley skyborne` repose sur le jeton de race (lu en jeu le 2026-10-04 : « Skyborne », ids 95 et
+-- 96) : ces trois valeurs le redisent, avec le témoin qui a donné le verdict.
 function Probe:DumpRace()
     local ok, name, token, id = false, "UnitRace absent"
     if UnitRace then ok, name, token, id = pcall(UnitRace, "player") end
