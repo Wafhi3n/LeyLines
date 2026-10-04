@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.2
+
+Five more ley lines. chris-rowley83 is back with one in Duskwood (34.1, 70.7) and a third in the
+Wetlands (14.7, 37.2). ohnoezlennydied sent their first tickets, with two new spots in Redridge
+Mountains (54.9, 64.8 and 31.0, 46.1) and one in Elwynn Forest at 37.3, 56.1. asylumlouie found
+that same Elwynn spot on their own a few hours later. ohnoezlennydied also matched the Redridge
+one at 12.8, 72.7, which three players have now found. Thanks, all three of you!
+
 ## v1.5.1
 
 Three more ley lines, all from chris-rowley83. One is in Duskwood, at 18.6, 57.3, and the other
