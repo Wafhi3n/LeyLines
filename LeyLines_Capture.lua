@@ -40,12 +40,33 @@ local function MouseOnWorld()
     return false
 end
 
+-- Piège Forever : une chaîne rendue par le client peut être une valeur SECRÈTE. `type()` dit
+-- "string", mais la comparer (même à "") ou la formater explose, bien loin de son origine. Vu en
+-- donjon le 2026-10-04 sur la 1re ligne d'une infobulle d'aura. Un secret vaut une absence, et le
+-- test passe AVANT toute comparaison.
+local function PlainText(text)
+    if type(text) ~= "string" then return nil end
+    if issecretvalue and issecretvalue(text) then return nil end
+    return text
+end
+
 local function SafeLower(text)
-    if type(text) ~= "string" or text == "" then return nil end
-    -- Piège Forever : une chaîne rendue par le client peut être une valeur SECRÈTE, qui explose
-    -- à la comparaison bien loin de son origine. On garde l'appel risqué, pas le bloc.
+    text = PlainText(text)
+    if not text or text == "" then return nil end
     local ok, lowered = pcall(string.lower, text)
     return ok and lowered or nil
+end
+
+-- Le propriétaire de l'infobulle, et s'il est INTERDIT. Piège payé en donjon le 2026-10-04 : les
+-- plaques amies y sont interdites, leurs auras aussi, et survoler une aura ouvre GameTooltip avec ce
+-- cadre pour propriétaire. Lire un de ses champs passe ; APPELER une de ses méthodes (GetName) lève
+-- « Attempt to access forbidden object », à chaque survol. Un IsForbidden qui lève vaut interdit.
+local function TooltipOwner()
+    local owner = GameTooltip.GetOwner and GameTooltip:GetOwner()
+    if not owner then return nil, false end
+    local ok, forbidden = pcall(owner.IsForbidden, owner)
+    if not ok or forbidden then return nil, true end
+    return owner, false
 end
 
 local function SpellName(spellID)
@@ -150,8 +171,7 @@ end
 function Capture:Mute()   self.silent = true  end
 function Capture:Unmute() self.silent = false end
 
-function Capture:OwnerName()
-    local owner = GameTooltip.GetOwner and GameTooltip:GetOwner()
+function Capture:OwnerName(owner)
     if not owner then return "nil" end
     if owner.isLeyLinePin then return "<point LeyLines>" end
     return (owner.GetName and owner:GetName()) or "<sans nom>"
@@ -159,22 +179,28 @@ end
 
 function Capture:OnTooltip()
     if self.silent then return end
+    if GameTooltip.IsForbidden and GameTooltip:IsForbidden() then return end
     local now = GetTime()
     if now - (self.lastTooltip or 0) < 0.3 then return end
     self.lastTooltip = now
 
-    local line = _G["GameTooltipTextLeft1"]
-    local text = line and line:GetText()
     -- Mémorisés même capture éteinte : `/ley probe` s'en sert pour révéler le nom exact de l'objet
-    -- et pour prouver quelle garde a laissé passer quoi.
-    self.lastText  = (type(text) == "string") and text or nil
-    self.lastOwner = self:OwnerName()
+    -- et pour prouver quelle garde a laissé passer quoi. Un propriétaire interdit (aura d'une plaque
+    -- en donjon) n'est jamais l'objet d'une faille : on note qu'on l'a vu, on n'y touche pas.
+    local owner, forbidden = TooltipOwner()
+    if forbidden then
+        self.lastText, self.lastOwner, self.lastWorld = nil, "<interdit>", false
+        return
+    end
+    local line = _G["GameTooltipTextLeft1"]
+    local text = PlainText(line and line:GetText())
+    self.lastText  = text
+    self.lastOwner = self:OwnerName(owner)
     self.lastWorld = MouseOnWorld()
 
     if not LL.db.capture.tooltip then return end
     -- Trois verrous indépendants, parce qu'un seul a déjà cédé.
     if not self.lastWorld then return end
-    local owner = GameTooltip.GetOwner and GameTooltip:GetOwner()
     if owner and owner.isLeyLinePin then return end
     if not self:Matches(text) then return end
 
