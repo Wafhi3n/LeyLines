@@ -42,8 +42,9 @@ end
 -- `/ley skyborne` repose sur un jeton de race jamais lu en jeu (pris dans l'écran de connexion) :
 -- ces trois valeurs le tranchent, avec le témoin qui a donné le verdict.
 function Probe:DumpRace()
-    local name, token, id
-    if UnitRace then name, token, id = UnitRace("player") end
+    local ok, name, token, id = false, "UnitRace absent"
+    if UnitRace then ok, name, token, id = pcall(UnitRace, "player") end
+    if not ok and UnitRace then name = "UnitRace a leve : " .. tostring(name) end
     local absorber = LL.Capture:IsAbsorber()
     LL:Printf("race : %s / %s / %s — absorbe %s (temoin : %s), option skyborne %s",
         tostring(name), tostring(token), tostring(id), YesNo(absorber),
