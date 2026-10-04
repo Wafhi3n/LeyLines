@@ -29,6 +29,14 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-04 20:50 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
+  **GO, capture du chat + « c'est tout bon » du user** - branche `feat/skyborne-seulement`, l'option
+  elle-meme : `/ley skyborne` activee, sur un personnage d'une autre race que Skyborne, la ligne
+  « Spots hidden on this character (not Skyborne): /ley skyborne to show them everywhere. » s'est
+  affichee (LL:WarnHidden), et le user rapporte que l'option « fonctionne pour une race autre que
+  skyborn ». PAS observe en detail : le detail par surface (minicarte, carte, bandeau), le
+  Skyborne qui garde ses points avec l'option active, la commande qui a affiche la ligne, et le
+  recalcul a `SPELLS_CHANGED`.
 - 2026-10-04 20:40 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
   **GO, captures du chat envoyees par le user** - branche `feat/skyborne-seulement`, le fait que
   le code supposait sans l'avoir lu : `/ley probe` sur deux personnages Skyborne, un par camp
