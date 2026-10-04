@@ -24,7 +24,8 @@ spot you've found. Five minutes before your buff ends, the addon tells you how f
 is and drops the game's own map pin on it, so you don't need TomTom.
 
 Each spot knows its faction. Your Alliance characters see ley lines, your Horde characters see
-convergences, and all of them share one list.
+convergences, and all of them share one list. If you'd rather not see them on characters that
+aren't Skyborne, type /ley skyborne.
 
 Found a spot the addon doesn't ship with? As soon as the spell confirms it, the addon's icon shows
 up at the top of the minimap, next to the mail letter. Click it (or type /ley contribute) and copy

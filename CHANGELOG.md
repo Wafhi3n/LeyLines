@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.0
+
+If your account has characters of other races too, you can now keep the spots for your Skyborne
+characters only. Type /ley skyborne and the others stop showing them on the minimap, the world map
+and the on-screen tracker. Type it again to bring them back. It's one setting for the whole
+account, so you only need to type it once, and it stays off until you turn it on. Thanks to
+Evo_G4ming for asking on CurseForge!
+
 ## v1.5.2
 
 Five more ley lines. chris-rowley83 is back with one in Duskwood (34.1, 70.7) and a third in the
