@@ -113,12 +113,18 @@ function HUD:Apply()
     local db = LL.db.hud
     self.frame:ClearAllPoints()
     self.frame:SetPoint(db.point or "CENTER", UIParent, db.point or "CENTER", db.x or 0, db.y or 0)
-    if db.show then self:Update() else self.frame:Hide() end
+    if db.show and not LL:PinsHidden() then self:Update() else self.frame:Hide() end
 end
 
 function HUD:Update()
     local f = self.frame
     if not f or not LL.db.hud.show then return end
+    -- Le pilote appelle Update 10 fois par seconde : sans ce garde, il rallumerait le bandeau que
+    -- Apply vient de masquer (`/ley skyborne`).
+    if LL:PinsHidden() then
+        if f:IsShown() then f:Hide() end
+        return
+    end
 
     local node, dist = LL.Nodes:NearestToPlayer()
     if not node then

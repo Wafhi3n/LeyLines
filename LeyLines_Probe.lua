@@ -17,6 +17,7 @@ local function YesNo(v) return v and "oui" or "non" end
 function Probe:Dump()
     LL:Print("---- diagnostic ----")
     self:DumpLoad()
+    self:DumpRace()
     self:DumpPosition()
     self:DumpMinimap()
     self:DumpWorldMap()
@@ -36,6 +37,17 @@ function Probe:DumpLoad()
     elseif not st.restored then
         LL:Print("  >>> le client n'a RIEN rendu : soit 1re utilisation, soit SavedVariables non restaurees")
     end
+end
+
+-- `/ley skyborne` repose sur un jeton de race jamais lu en jeu (pris dans l'écran de connexion) :
+-- ces trois valeurs le tranchent, avec le témoin qui a donné le verdict.
+function Probe:DumpRace()
+    local name, token, id
+    if UnitRace then name, token, id = UnitRace("player") end
+    local absorber = LL.Capture:IsAbsorber()
+    LL:Printf("race : %s / %s / %s — absorbe %s (temoin : %s), option skyborne %s",
+        tostring(name), tostring(token), tostring(id), YesNo(absorber),
+        tostring(LL.Capture.absorberWhy or "aucun"), YesNo(LL.db.skyborneOnly))
 end
 
 function Probe:DumpPosition()

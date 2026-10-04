@@ -38,6 +38,7 @@ les SavedVariables.
 | `/ley signal [on\|off]` | le signal « position absente de la liste commune, à partager » (actif par défaut) ; donne le nombre en attente |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
+| `/ley skyborne` | points (minicarte, carte, bandeau) sur un personnage **Skyborne** seulement, masqués sur les autres races (désactivé par défaut) ; Skyborne = jeton de race `UnitRace` **ou** sort d'absorption livré connu, lus par `/ley probe` |
 | `/ley track` | pose un point de route natif sur la plus proche |
 | `/ley warn <min>` | rappel quand il reste N min de buff (défaut 5, `0` = jamais) |
 | `/ley learn` | apprend ton sort de ligne tellurique (voir ci-dessous) |

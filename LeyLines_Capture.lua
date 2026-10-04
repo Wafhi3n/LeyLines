@@ -82,6 +82,7 @@ function Capture:Init()
     self:Register("VIGNETTE_MINIMAP_UPDATED")
     self:Register("ZONE_CHANGED_NEW_AREA")
     self:Register("UNIT_SPELLCAST_SUCCEEDED", "player")
+    self:Register("SPELLS_CHANGED")
     self:HookTooltip()
     self:ScanVignettes()
 end
@@ -90,9 +91,55 @@ function Capture:OnEvent(event, ...)
     if event == "UNIT_SPELLCAST_SUCCEEDED" then
         local _, _, spellID = ...
         self:OnSpellCast(spellID)
+    elseif event == "SPELLS_CHANGED" then
+        self:RecheckAbsorber()
     else
         self:ScanVignettes()
     end
+end
+
+-- ---------------------------------------------------------------------------
+-- Qui absorbe : un personnage Skyborne. Demandé sur CurseForge le 2026-10-04 par un joueur qui a
+-- d'autres races (`/ley skyborne` : points masqués ailleurs). DEUX témoins, l'un suffit : le jeton
+-- de race (« SKYBORNE » dans l'écran de connexion de Camelot, JAMAIS lu par UnitRace en jeu) et un
+-- sort d'absorption LIVRÉ connu du personnage. Un oui de trop ne fait qu'afficher, un non de trop
+-- masquerait tout : d'où le OU. Les sorts de `/ley learn` n'y entrent pas (n'importe quel sort).
+-- ---------------------------------------------------------------------------
+local RACE_TOKENS = { skyborne = true, skyborn = true }
+
+local function KnowsSpell(id)
+    if not (C_SpellBook and C_SpellBook.IsSpellKnown) then return false end
+    local ok, known = pcall(C_SpellBook.IsSpellKnown, id)
+    return ok and known == true
+end
+
+function Capture:RaceToken()
+    if not UnitRace then return nil end
+    local ok, _, token = pcall(UnitRace, "player")
+    return ok and SafeLower(token) or nil
+end
+
+-- Rend le verdict et le témoin qui l'a donné (« race », « sort »), lu par `/ley probe`.
+function Capture:ComputeAbsorber()
+    local token = self:RaceToken()
+    if token and RACE_TOKENS[token] then return true, "race" end
+    for id in pairs(LL.DEFAULTS.spells) do
+        if KnowsSpell(id) then return true, "sort" end
+    end
+    return false, nil
+end
+
+-- Le bandeau le demande 10 fois par seconde : verdict gardé, recalculé quand le grimoire change
+-- (un sort racial peut venir avec un niveau).
+function Capture:IsAbsorber()
+    if self.absorber == nil then self.absorber, self.absorberWhy = self:ComputeAbsorber() end
+    return self.absorber
+end
+
+function Capture:RecheckAbsorber()
+    local before = self.absorber
+    self.absorber, self.absorberWhy = self:ComputeAbsorber()
+    if before ~= nil and before ~= self.absorber and LL.db.skyborneOnly then LL:Refresh() end
 end
 
 -- « Auto » ne parle que des sources EXACTES (vignette, sort). L'infobulle a son propre

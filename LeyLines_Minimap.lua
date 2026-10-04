@@ -88,7 +88,8 @@ end
 
 function MM:Update()
     local map, px, py = LL.Geo:PlayerPos()
-    local list = (LL.db.minimap.show and map and Minimap:IsVisible()) and LL.Nodes:All(map) or nil
+    local list = (LL.db.minimap.show and not LL:PinsHidden() and map and Minimap:IsVisible())
+        and LL.Nodes:All(map) or nil
     if not list or #list == 0 then return self:HideFrom(1) end
 
     local radius = LL.Geo:MinimapRadius()
