@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.2
+
+One more ley line, the fourth in the Wetlands, at 40.3, 38.6. cainicide-bot sent it in with the
+others last night, and it should have been in v1.6.1. Sorry for the wait, and thanks!
+
 ## v1.6.1
 
 Seven more spots from five players, four of them sending their first ticket. agilliam7 found a
