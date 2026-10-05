@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.6.1
+
+Seven more spots from five players, four of them sending their first ticket. agilliam7 found a
+ley line in The Barrens at 54.2, 12.1. asylumlouie is back with the first one in Hillsbrad
+Foothills, at 63.4, 46.4. cardphan1-ai sent the first one in Dun Morogh, at 56.6, 45.6, and
+matched four spots already on the list: Duskwood at 18.6, 57.3, Redridge Mountains at 12.8, 72.7
+and 31.0, 46.1, and Westfall at 51.1, 67.5.
+
+Horde players get four new Elemental Convergences. axlmcc found the first one in Stonetalon
+Mountains, at 74.9, 94.5, right at the southern edge of the map. alcaras mapped three more on
+Zephras Isle (48.4, 20.4, then 48.5, 55.6 and 47.8, 69.4) and matched four that were already on
+the list, in Stranglethorn Vale, Westfall and on Zephras Isle. Thanks, all five of you!
+
 ## v1.6.0
 
 If your account has characters of other races too, you can now keep the spots for your Skyborne
