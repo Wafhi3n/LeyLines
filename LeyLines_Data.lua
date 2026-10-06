@@ -37,13 +37,14 @@ LL.THANKS = {
     [19] = { "chris-rowley83", "ohnoezlennydied", "asylumlouie" },
     [20] = { "agilliam7", "axlmcc", "asylumlouie", "cardphan1-ai", "alcaras" },
     [21] = { "cainicide-bot" },
-    [22] = { "isaacoolbeans", "ohnoezlennydied", "asylumlouie" },
+    [22] = { "isaacoolbeans", "ohnoezlennydied", "asylumlouie", "kehtemine" },
 }
 
 LL.DATA = {
     L = {
         [1413] = {
             0.5421, 0.1208, 20,
+            0.4886, 0.3633, 22,
         },
         [1424] = {
             0.6342, 0.4639, 20,
