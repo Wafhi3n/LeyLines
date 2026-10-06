@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.6.3
+
+Five more spots from four players. kehtemine sent their first tickets: a ley line in The Barrens
+at 48.9, 36.3, the first one in Silverpine Forest at 61.2, 79.3, and three matches for spots
+already on the list (Duskwood at 18.6, 57.3, Redridge Mountains at 54.9, 64.8, and the Wetlands at
+40.3, 38.6). ohnoezlennydied found the first ley line in Stonetalon Mountains, at 36.4, 12.5, and
+matched two more in Redridge and the Wetlands. asylumlouie is back with the first one in
+Ashenvale, at 20.3, 42.7.
+
+Horde players get one new Elemental Convergence, from isaacoolbeans's first ticket: The Barrens,
+at 45.7, 69.7. Thanks, all four of you!
+
 ## v1.6.2
 
 One more ley line, the fourth in the Wetlands, at 40.3, 38.6. cainicide-bot sent it in with the
