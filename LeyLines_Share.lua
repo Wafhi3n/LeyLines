@@ -189,6 +189,7 @@ local function MakeButton(parent, label, onClick)
     b:SetScript("OnClick", onClick)
     return b
 end
+Share.MakeButton = MakeButton   -- la fenêtre « Signaler » (LeyLines_Report.lua) a les mêmes boutons
 
 function Share:Build()
     -- Nom GLOBAL obligatoire pour UISpecialFrames (Échap ferme). Sans danger ici : la fenêtre est

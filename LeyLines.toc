@@ -41,6 +41,8 @@ LeyLines_HUD.lua
 
 # Echange de positions entre joueurs : un texte a copier-coller, aucun reseau.
 LeyLines_Share.lua
+# Signaler un bug ou une idee : un lien vers un ticket GitHub (docs/specs/signaler.md, outillage).
+LeyLines_Report.lua
 
 # Remerciements : les contributeurs de la liste livree (docs/specs/remerciements.md).
 LeyLines_Thanks.lua
