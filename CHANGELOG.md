@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.4
+
+Seven new ley lines from four players, and two zones that had none on the list until now.
+zetakirby found the first ones in Tirisfal Glades, at 54.3, 62.6 and 76.6, 71.6, plus another in
+Silverpine Forest at 52.6, 70.6. FlooferStabbington did the same for Darkshore, with two at
+57.1, 26.1 and 36.0, 86.2. ThirdIrony's first ticket adds one in The Barrens at 55.8, 34.3, and
+asylumlouie is back with one more in the Wetlands, at 55.0, 29.8. Thanks, all four of you!
+
 ## v1.6.3
 
 Five more spots from four players. kehtemine sent their first tickets: a ley line in The Barrens
