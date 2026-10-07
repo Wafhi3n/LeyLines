@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for taking the time! Write in any language you like.
 
-        **Fastest way:** in game, type `/ley bug` (or Shift-click Ley Lines in the minimap addon menu), pick **Bug**, copy the link (Ctrl+C) and open it in your browser. The Version box below comes back filled in.
+        **Fastest way, in versions after 1.6.3:** in game, type `/ley bug` (or Shift-click Ley Lines in the minimap addon menu), pick **Bug**, copy the link (Ctrl+C) and open it in your browser. The Version box below comes back filled in. On an older version, just fill in the form.
   - type: textarea
     id: what
     attributes:
