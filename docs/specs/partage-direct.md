@@ -286,3 +286,8 @@ Des points que les décisions laissaient ouverts, tranchés en codant, à revoir
   `DEFAULTS` : nil vaut vrai. Commande `/ley announce popup|off` (alias `annonce`) ; dans le
   panneau, deux cases qui s'excluent, section Partage (jamais un menu déroulant, C17).
 - **L'âge** s'affiche sur une 3e ligne du bandeau, qui grandit seulement quand il y en a un.
+- **Tout part de la capture au sort** (`Capture:ResolveCast`) : un joueur qui a coupé la capture
+  automatique n'a ni la question, ni la fenêtre, ni l'âge de ses propres absorptions. Il lit
+  toujours les annonces des autres.
+- **La question fermée par Échap** ne revient pas avant la session suivante : « une fois par
+  session au plus » est lu comme « au plus une question par session ».
