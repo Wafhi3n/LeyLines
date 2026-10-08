@@ -1,7 +1,7 @@
 # Partage en direct des failles actives
 
 > État : **brouillon**, rien de codé · Ouverte le 2026-10-08 par le user (« ouvrir une spec »), sur
-> une demande de joueur ; arbitrages D2 à D12 **proposés par l'agent, pas encore tranchés**
+> une demande de joueur ; arbitrages D2 à D10 **proposés par l'agent, pas encore tranchés**
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Revient sur la décision « base locale
 > au compte, aucun réseau » (D1)
 
@@ -50,7 +50,10 @@ signalements de la dernière heure que les autres connaissent (palier 2).
   position d'un point capturé au sort est incertaine de ~25 yd. Seul le positif circule.
 - **Nourrir la liste commune.** Un signalement reçu ne touche ni `src`, ni `seen`, ni `found` :
   `/ley contribute` et le signal de contribution restent exactement ce qu'ils sont.
-- **Nommer qui a signalé.** Ce serait dire à tout porteur de l'addon où se trouve tel joueur.
+- **Nommer qui a signalé dans l'interface.** Ça ne cache rien pour autant : `CHAT_MSG_ADDON` donne
+  le nom complet de l'expéditeur à tout addon qui écoute le canal. N'importe quelle copie modifiée,
+  ou un autre addon branché sur `LeyLinesNet`, peut noter « tel joueur a absorbé ici, à telle
+  heure ». Envoyer un signalement, c'est donner son nom et sa position à tout le canal du royaume.
 - **Prévenir à l'arrivée d'un signalement.** Pas de ligne de chat, pas de son, pas d'icône : l'âge
   s'affiche quand on regarde un point.
 - **Partager un `/ley add`, une infobulle, un point importé.** Seul le jeu confirme (sort).
@@ -74,6 +77,10 @@ signalements de la dernière heure que les autres connaissent (palier 2).
 - **Canal impossible à rejoindre** (le joueur a déjà tous ses numéros de canaux) : le partage est
   inactif, `/ley` le dit, rien d'autre ne casse.
 - **Personnage neuf** : le canal ne doit pas prendre le `/1` de General (voir le Contrat).
+- **COC installé aussi** : deux canaux custom cachés (`CraftLinkNet` et le nôtre) et deux
+  réparations du `/1` indépendantes, chacune avec `SwapChatChannelsByChannelIndex`. Elles ne
+  doivent pas se battre : aucune ne déplace un canal custom de l'autre, et le `/1` finit à un canal
+  du jeu. Mécanisme à trancher au palier 1 (Q4).
 - **Calques** (layers) : on ignore si l'état d'une faille dépend du calque. Si oui, « vue active il
   y a 4 min » peut être vrai sur le calque d'un autre et faux sur le tien. À mesurer au banc (Q1).
 - **Signalement très vieux** : au-delà de 24 h, l'âge ne s'affiche plus (D5).
@@ -98,8 +105,11 @@ signalements de la dernière heure que les autres connaissent (palier 2).
 - **D7 (proposé)** : débit. Envoi : un par point toutes les 5 min au plus, rien si ce point a été
   signalé par un autre il y a moins de 2 min. Réception : au-delà de 10 messages par minute d'un
   même expéditeur, on l'ignore pour la session.
-- **D8 (proposé)** : actif par défaut. Une seule ligne de chat, la première fois, dit ce qui est
-  partagé et comment couper (`/ley live off`).
+- **D8 (proposé, le point le plus délicat)** : actif par défaut. Une seule ligne de chat, la
+  première fois, dit ce qui est partagé et comment couper (`/ley live off`). À peser : actif par
+  défaut, chaque absorption annonce le nom du joueur et sa position à tous les porteurs de
+  l'addon de son royaume, sans qu'il l'ait choisi (voir « Nommer qui a signalé »). Coupé par
+  défaut, presque personne ne l'allumera et il n'y aura rien à recevoir.
 - **D9 (proposé)** : rattrapage au palier 2. À l'arrivée sur le canal, une demande ; ceux qui ont
   des signalements de moins d'une heure répondent sur le canal après un délai tiré au hasard
   (1 à 6 s), et se taisent s'ils ont entendu une réponse qui couvre déjà les leurs.
@@ -113,6 +123,8 @@ signalements de la dernière heure que les autres connaissent (palier 2).
 - **Q2** : combien de canaux custom un joueur peut-il rejoindre sur Forever, et que se passe-t-il au
   dernier ? (Ceux qui ont COC ont déjà `CraftLinkNet`.)
 - **Q3** : `GetServerTime` est-il fiable sur Forever ? Seulement si D10 est rejetée.
+- **Q4** : COC et LeyLines ensemble, sur un personnage neuf : où finissent `/1`, `/2` et les deux
+  canaux cachés après deux connexions ?
 
 ## Critères d'acceptation
 
