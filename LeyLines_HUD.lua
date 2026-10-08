@@ -182,8 +182,9 @@ function HUD:WarnExpiring(left)
     end
     LL:Printf(L["%s : buff à %s min de la fin — la plus proche à %s yd."],
         title, mins, math.floor(dist + 0.5))
-    -- Le point de route du client est UNIQUE : le poser sans qu'on le demande effaçait celui du
-    -- joueur. Sur demande seulement ; le clic du bandeau, `/ley track` et le raccourci restent.
+    -- Sur demande seulement (`/ley waypoint`) : un pin posé sans qu'on le demande gênait un joueur,
+    -- et l'API n'a qu'UN point de route du joueur, donc le nôtre doit remplacer le sien (déduit,
+    -- jamais vu en jeu). Le clic du bandeau, `/ley track` et le raccourci en posent toujours un.
     if LL.db.autoWaypoint then self:Track(node) end
 end
 

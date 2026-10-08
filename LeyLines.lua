@@ -44,8 +44,9 @@ LL.DEFAULTS = {
     -- 15 min, d'où 5 par défaut.
     warnMinutes = 5,
     -- Le rappel pose-t-il AUSSI un point de route sur la plus proche (`/ley waypoint`) ? Faux par
-    -- défaut depuis le 2026-10-08 : ce point remplace celui que le joueur avait posé lui-même, et
-    -- un joueur sur CurseForge ne voulait voir « que les failles ». Clé neuve, donc CopyDefaults la
+    -- défaut depuis le 2026-10-08 : un joueur sur CurseForge ne voulait voir « que les failles », et
+    -- l'API n'a qu'UN point de route du joueur (au singulier), donc le nôtre doit remplacer le sien
+    -- (déduit, jamais vu en jeu). Clé neuve, donc CopyDefaults la
     -- pose à faux sur les bases existantes aussi : pas de palier de migration.
     autoWaypoint = false,
     -- « vergence » attrape « Elemental Vergence » et, sans le connaître, un nom français du même
