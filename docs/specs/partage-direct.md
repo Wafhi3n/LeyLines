@@ -141,7 +141,7 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 - **M2** : General suit-il le calque ? Même essai sur deux calques différents (le calque se lit dans
   le GUID d'un même PNJ ciblé des deux côtés).
 - **M3** : une ligne mise en attente par l'addon part-elle au clic suivant dans le monde ? Sinon,
-  D4 se limite à (a).
+  le mode automatique de D4 n'est pas proposé (restent popup et désactivé).
 - **M4** : le serveur laisse-t-il passer, dans General, un lien de point de route écrit par un
   addon, et l'autre côté peut-il cliquer dessus ? Format exact relevé une fois sur le client
   (`C_Map.GetUserWaypointHyperlink` après un ctrl-clic sur la carte), jamais écrit de mémoire.
