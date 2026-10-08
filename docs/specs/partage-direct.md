@@ -2,8 +2,9 @@
 
 > État : **brouillon, suspendu aux mesures M1 à M4**, rien de codé · Ouverte le 2026-10-08 par le
 > user sur une demande de joueur · Transport révisé le même jour par le user : **General en clair,
-> avec étiquette, comme les annonces de COC** (D2) · D3 à D9 proposés par l'agent, pas tranchés ;
-> **D4 (automatique ou au clic) est au user**
+> avec étiquette, comme les annonces de COC** (D2) · D4 tranchée par le user le même jour : le
+> joueur choisit entre automatique, popup et désactivé · D3 et D5 à D10 proposés par l'agent, pas
+> tranchés
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Revient sur « base locale au compte,
 > aucun réseau » (D1)
 
@@ -96,18 +97,24 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
   texte clair avec une étiquette**, sur le modèle des annonces `#CO` de COC. Sous réserve des
   mesures M1 à M4. Première version, remplacée : un canal custom caché en AddonMessage.
 - **D3 (proposé)** : seul un lancer confirmé par le buff long donne une annonce.
-- **D4 (au user, le point clé)** : automatique ou au clic ? Le modèle de COC pour le Trade, validé
-  par le user le 2026-09-29, est **case décochée au départ, un clic par ligne, jamais
-  automatique**. Et la règle de l'écosystème dit « jamais à tous sur un événement local ». Une
-  annonce automatique à chaque absorption déroge aux deux. Trois options :
-  - (a) **au clic** : après l'absorption, une ligne locale « Annoncer dans General » cliquable ;
-    un clic poste la ligne. Prouvé sur Forever (un clic ou une commande tapée écrit dans le Trade,
-    constat C15). Proposé pour le palier 1.
-  - (b) **au geste suivant, sur option** (`/ley announce auto`) : la ligne attend la prochaine
-    touche ou le prochain clic du joueur, puis part. Seulement si M3 passe : la file vidée par
-    l'input n'est prouvée que sur Era.
-  - (c) **(b) actif par défaut** : c'est ce que demande le joueur (« automatically »), et c'est la
-    seule option où le joueur parle dans General sans l'avoir choisi.
+- **D4 (user, 2026-10-08)** : **le joueur choisit**, dans une option de l'addon, entre trois modes,
+  et l'addon lui **demande** lequel. Le joueur ne parle donc jamais dans General sans l'avoir
+  choisi : c'est ce qui concilie la demande (« automatically ») avec le modèle de COC (rien
+  d'automatique sans accord) et la règle « jamais à tous sur un événement local ».
+  - **automatique** : la ligne attend le prochain clic ou la prochaine touche du joueur, puis part
+    (écrire dans un canal du jeu exige un geste). Seulement si M3 passe : la file vidée par l'input
+    n'est prouvée que sur Era. Si M3 échoue, ce mode n'est pas proposé.
+  - **popup** : après l'absorption, une fenêtre « Annoncer cette Ley Line dans General ? Oui /
+    Non ». Le clic sur Oui est le geste qui poste. Prouvé sur Forever (un clic ou une commande
+    tapée écrit dans le Trade, constat C15).
+  - **désactivé** : rien ne part. La lecture des annonces des autres continue (voir D10).
+  - **La question** : à la première absorption confirmée après la mise à jour, une fenêtre propose
+    les trois modes. Tant que le joueur n'a pas répondu, rien ne part. Fermée sans choix (Échap),
+    elle revient à l'absorption suivante, une fois par session au plus.
+  - **Où se règle le mode** : une commande `/ley announce auto|popup|off`, et une option dans le
+    panneau d'options de l'addon (Options → AddOns), comme les autres réglages (D10).
+  - **Débit** : D5 vaut pour les modes automatique et popup ; en popup, une faille déjà annoncée
+    (D5) n'ouvre même pas la fenêtre.
 - **D5 (proposé)** : pas d'annonce si la même faille (même espèce, `mergeRange`) a été annoncée
   dans General depuis moins de 15 min (la durée du buff), par n'importe qui ; au plus une annonce
   par joueur toutes les 5 min.
@@ -119,6 +126,12 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
   heures au-delà. Il vit dans la base du compte (`node.live`, une date) et survit à un `/reload`.
 - **D9 (proposé)** : texte en anglais fixe, quelle que soit la langue du client, comme les jetons
   de COC. La lecture ne s'appuie que sur l'étiquette et sur le lien, jamais sur la phrase.
+- **D10 (proposé, à préciser avec le user)** : un panneau d'options de l'addon (Options → AddOns →
+  LeyLines), qui n'existe pas aujourd'hui (tout passe par `/ley`). Il porte le mode d'annonce, la
+  lecture des annonces (oui / non) et, « comme pour le rappel », les réglages existants : minutes
+  du rappel (`/ley warn`), point de route du rappel (`/ley waypoint`). Le reste des commandes
+  reste en slash. Piège à vérifier avant de le coder : un menu déroulant a déjà tainté sur Forever
+  (choisir des boutons radio ou des cases).
 
 ## Mesures avant tout code (fiche `mesure--general-leylines` de l'appli du banc)
 
@@ -146,15 +159,23 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 3. [test] D5 : une faille annoncée par un autre il y a 2 min ne se réannonce pas ; deux absorptions
    du même joueur à 1 min d'écart ne donnent qu'une annonce.
 4. [test] Une ligne de chat aux arguments secrets est ignorée sans erreur.
-5. [human] Le compte A absorbe une faille et l'annonce (selon D4). Chez B, même zone : la ligne
+5. [test] D4 : sans mode choisi, une absorption ouvre la question et ne poste rien ; en
+   « désactivé », rien ne s'ouvre ni ne part ; en « popup », la fenêtre s'ouvre et rien ne part
+   avant Oui ; une faille déjà annoncée (D5) n'ouvre pas la fenêtre.
+6. [human] Première absorption après la mise à jour : la question des trois modes s'affiche ; le
+   choix « popup » survit à un `/reload`. Témoin : un second personnage du même compte ne reçoit
+   plus la question (le réglage est au compte).
+7. [human] Le compte A absorbe une faille et l'annonce (mode popup, Oui). Chez B, même zone : la ligne
    apparaît dans General, le lien pose le point de route sur la faille, et l'infobulle du point dit
    « vue active il y a 0 min ». Témoin : la même infobulle chez B AVANT l'annonce, sans âge.
    Observateur : le user, au banc.
-6. [human] Chez B, addon LeyLines désactivé : la ligne se lit et le lien se clique pareil.
-7. [human] (si M1 dit que General traverse les royaumes) Même essai que 5, avec A et B sur deux
+8. [human] Chez B, addon LeyLines désactivé : la ligne se lit et le lien se clique pareil.
+9. [human] (si M1 dit que General traverse les royaumes) Même essai que 7, avec A et B sur deux
    royaumes différents.
-8. [agent] Aucune écriture hors d'un geste du joueur, débit tenu, gardes de valeurs secrètes en
-   place. → `api-gotcha-reviewer`
+10. [human] (palier 2, si M3 passe) Mode automatique : A absorbe, puis clique par terre ; la ligne
+    part à ce clic, pas avant.
+11. [agent] Aucune écriture hors d'un geste du joueur, débit tenu, gardes de valeurs secrètes en
+    place, pas de taint par le panneau d'options. → `api-gotcha-reviewer`
 
 ## Contrat
 
@@ -175,8 +196,10 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 - L'étiquette `#LL` est la seule marque d'une annonce ; le reste de la phrase peut changer sans
   casser les lecteurs.
 
-**Données** : `LeyLinesDB.announce` (réglage de D4) ; `node.live` (date de la dernière annonce
-connue de ce point, la sienne comprise). Rien d'autre n'est ajouté à un point.
+**Données** (au compte) : `LeyLinesDB.announce` = `nil` (jamais demandé), `"auto"`, `"popup"` ou
+`"off"` (D4) ; `LeyLinesDB.readAnnounces` (D10, vrai par défaut) ; `node.live` (date de la
+dernière annonce connue de ce point, la sienne comprise). Rien d'autre n'est ajouté à un point.
+`announce` est une clé neuve sans défaut : `nil` est un état, celui où l'on doit encore demander.
 
 ## Liens
 
@@ -193,6 +216,7 @@ connue de ce point, la sienne comprise). Rien d'autre n'est ajouté à un point.
 ## Plan (2026-10-08, à revoir après les mesures)
 
 0. Mesures M1 à M4 au banc, fiche `mesure--general-leylines`.
-1. Palier 1 : annonce au clic (D4 a), lecture des lignes `#LL`, âge dans les infobulles et le
-   bandeau. Critères 1 à 6 et 8.
-2. Palier 2, si M3 passe et si le user le veut : annonce au geste suivant (D4 b ou c).
+1. Palier 1 : la question et les modes popup et désactivé (`/ley announce`), lecture des lignes
+   `#LL`, âge dans les infobulles et le bandeau. Critères 1 à 9 et 11.
+2. Palier 2 : le panneau d'options (D10).
+3. Palier 3, si M3 passe : le mode automatique, proposé dans la question. Critère 10.
