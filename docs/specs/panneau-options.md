@@ -1,6 +1,7 @@
 # Panneau d'options
 
-> État : **brouillon**, rien de codé · Demandé par le user le 2026-10-08 (« il faut un panneau
+> État : **brouillon, mesures faites** (M7, M8, C17 le 2026-10-08), rien de codé · Demandé par le
+> user le 2026-10-08 (« il faut un panneau
 > d'options, les joueurs ne vont pas faire que des commandes ; essaie de prévoir les options
 > possibles de l'addon ») · Arbitrages O1 à O6 proposés par l'agent, pas tranchés
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine : `partage-direct.md`
@@ -110,17 +111,20 @@ raccourcis clavier (Options → Raccourcis) et à `/ley help`.
 - **O6** : le panneau peut sortir AVANT le partage en direct, avec les réglages d'aujourd'hui ; les
   lignes de l'annonce s'y ajoutent avec lui.
 
-## Mesures avant le code
+## Mesures
 
-Aucun de nos addons n'a encore de page d'options sur Forever : pas de précédent.
+Fiche `mesure--options-leylines` de l'appli du banc, cochée par le user le 2026-10-08 à 14:09-14:10,
+build 70245, un compte, par `/run` (aucun de nos addons n'avait de page d'options sur Forever).
 
-- **M7** : enregistrer une page canevas, l'ouvrir, puis passer en mode Édition et entrer en combat,
-  avec `/console taintLog 1` : aucune erreur, aucun `ADDON_ACTION_BLOCKED` au nom de LeyLines.
-  Témoin : les mêmes gestes, addon désactivé.
-- **M8** : `Settings.OpenToCategory` appelé depuis une commande tapée, puis depuis un clic sur le
-  compartiment, ouvre bien notre page.
-
-Les deux se font par `/run`, sans rien coder, sur une fiche de l'appli du banc.
+- **M7, tient (à l'œil)** : une page canevas (`RegisterCanvasLayoutCategory` +
+  `RegisterAddOnCategory`) apparaît dans Options → AddOns et s'ouvre. Mode Édition puis combat
+  après : aucune erreur, aucun message de blocage, comme au témoin fait avant la page. Limite :
+  `taint.log` n'a pas été écrit (la séance a fini sur le crash de C17), donc « rien de visible »,
+  pas « aucun taint ». À relire au banc quand le panneau sera codé (critère 6).
+- **M8, tient** : `Settings.OpenToCategory(id)` depuis une commande tapée ouvre les options sur la
+  page. Depuis un clic sur le compartiment : pas essayé (même appel, critère 7).
+- **C17, tient** (constat du banc, revérifié le même jour) : un menu déroulant créé par du code fait
+  toujours planter le client. Le choix à trois valeurs reste en boutons radio (O1).
 
 ## Critères d'acceptation
 
@@ -158,7 +162,6 @@ définis par `partage-direct.md`.
 
 ## Plan (2026-10-08)
 
-0. Mesures M7 et M8 au banc.
 1. La liste déclarative (O2) et le panneau avec les réglages d'aujourd'hui, `/ley options`, le
    compartiment. Critères 1 à 8.
 2. Les lignes de l'annonce, avec le palier 1 du partage en direct.
