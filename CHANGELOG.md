@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.7.1
+
+Two new spots from three players. vananyask1 and larsas-cmyk each sent their first ticket, and both
+found the same new ley line in Dun Morogh, at 76.8, 51.8: two witnesses for one spot. vananyask1
+also confirmed two ley lines on Zephras Isle. alcaras is back with a new Elemental Convergence in
+The Barrens, at 49.8, 28.6, and confirmed another one there. Thanks, all three of you!
+
 ## v1.7.0
 
 The addon has its own page in the game's options now. Press Esc, then Options, AddOns, and pick
