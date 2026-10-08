@@ -182,6 +182,8 @@ local en = {
     ["Pas de canal Général ici : rien n'est parti."] = "No General channel here: nothing was sent.",
     ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
         "This zone doesn't take map pins: nothing was sent.",
+    ["Ta ligne n'est pas revenue dans Général : le jeu ne l'a sans doute pas envoyée."] =
+        "Your line didn't come back in General: the game probably didn't send it.",
     ["Vue active il y a %s min"]              = "Seen active %s min ago",
     ["Vue active il y a %s h"]                = "Seen active %s h ago",
 

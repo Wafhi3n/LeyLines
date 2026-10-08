@@ -291,3 +291,18 @@ Des points que les décisions laissaient ouverts, tranchés en codant, à revoir
   toujours les annonces des autres.
 - **La question fermée par Échap** ne revient pas avant la session suivante : « une fois par
   session au plus » est lu comme « au plus une question par session ».
+
+Après la revue `api-gotcha-reviewer` du 2026-10-08 (critère 11) :
+
+- **Seul l'écho prouve l'envoi.** Un envoi refusé par le jeu (`ADDON_ACTION_BLOCKED`) n'est pas une
+  erreur Lua : l'appel « réussit » sans rien envoyer. Le débit (D5) s'arme donc quand notre ligne
+  revient dans General (reconnue au GUID), pas à l'appel ; sans écho en 10 s, le chat le dit au
+  joueur. L'appel d'envoi n'est plus sous `pcall`, qui ne cachait que les vraies erreurs.
+- **Pas de fenêtre en combat ni sous verrou de messagerie.** Une fenêtre du jeu (`StaticPopup`)
+  ouverte par un addon entache le cadre de dialogue partagé jusqu'à sa réutilisation
+  (`StaticPopup.lua` le dit). Ouverte par un minuteur après l'absorption, elle tomberait à un moment
+  que le joueur n'a pas choisi. Le point est daté quand même ; l'absorption suivante proposera.
+  Si le banc montre une taint (`/console taintLog 2`), la parade est une petite fenêtre à nous.
+- **Le suivi du point du joueur** (la flèche du jeu) est rallumé après l'emprunt s'il était allumé.
+- **Noms de General** : ajoutés, sans mesure, ceux des clients portugais, italien, russe, coréen et
+  chinois.

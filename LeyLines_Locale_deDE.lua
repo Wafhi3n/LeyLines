@@ -182,6 +182,8 @@ local de = {
     ["Pas de canal Général ici : rien n'est parti."] = "Kein Allgemein-Kanal hier: nichts gesendet.",
     ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
         "Diese Zone erlaubt keinen Wegpunkt: nichts gesendet.",
+    ["Ta ligne n'est pas revenue dans Général : le jeu ne l'a sans doute pas envoyée."] =
+        "Deine Zeile ist nicht in Allgemein erschienen: Das Spiel hat sie wohl nicht gesendet.",
     ["Vue active il y a %s min"]              = "Vor %s Min. aktiv gesehen",
     ["Vue active il y a %s h"]                = "Vor %s Std. aktiv gesehen",
 

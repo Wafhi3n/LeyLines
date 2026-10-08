@@ -26,7 +26,8 @@ local SPECIES = { L = "Ley Line", V = "Elemental Convergence" }
 
 -- Mémoire de SESSION, hors de la base (contrat : un point ne reçoit que `live`). Après un /reload,
 -- une faille annoncée il y a 5 min peut donc l'être une fois de plus. `heard` : dernière annonce
--- de ce point, lue ou envoyée ; `offered` : dernière fenêtre ouverte pour lui.
+-- de ce point lue dans General (la nôtre comprise, par son écho) ; `offered` : dernière fenêtre
+-- ouverte pour lui ; `pending` : notre ligne envoyée, pas encore revenue en écho.
 Live.heard   = setmetatable({}, { __mode = "k" })
 Live.offered = setmetatable({}, { __mode = "k" })
 
@@ -41,8 +42,10 @@ end
 -- Son nom est localisé et porte la zone : « 1. General - Elwynn Forest », « Général - … »,
 -- « Allgemein - … ». On retire le numéro devant et la zone derrière avant de comparer. Son
 -- `zoneChannelID` le dirait sans texte, mais sa valeur n'est pas mesurée sur Forever (M6) :
--- `/ley probe` la relève.
-local GENERAL = { general = true, ["général"] = true, allgemein = true }
+-- `/ley probe` la relève. Seul le nom anglais est mesuré ; les autres sont ceux des clients du jeu
+-- (portugais, italien, russe, coréen, chinois), que `lower` laisse tels quels hors de l'ASCII.
+local GENERAL = { general = true, ["général"] = true, allgemein = true, geral = true, generale = true,
+                  ["общий"] = true, ["Общий"] = true, ["일반"] = true, ["综合"] = true, ["綜合"] = true }
 
 function Live.IsGeneral(name)
     if type(name) ~= "string" or Secret(name) then return false end
@@ -88,18 +91,21 @@ end
 
 -- Le lien s'EMPRUNTE au jeu : un lien écrit à la main arrive en texte brut (M4). Dans le même geste,
 -- le point de route du joueur est mis de côté, le nôtre posé le temps de lire le lien, puis le sien
--- rendu, ou effacé s'il n'en avait pas (vu en jeu le 2026-10-08 : il revient à sa place).
+-- rendu, ou effacé s'il n'en avait pas (vu en jeu le 2026-10-08 : il revient à sa place). Son
+-- suivi aussi (la flèche du jeu) : le rendre ne le rallume pas forcément, pas mesuré.
 function Live:BorrowLink(map, x, y)
-    local M = C_Map
+    local M, ST = C_Map, C_SuperTrack
     if not (M and M.SetUserWaypoint and M.GetUserWaypointHyperlink and UiMapPoint) then return nil end
     if M.CanSetUserWaypointOnMap and not M.CanSetUserWaypointOnMap(map) then return nil end
     local saved = M.GetUserWaypoint and M.GetUserWaypoint()
+    local tracked = saved and ST and ST.IsSuperTrackingUserWaypoint and ST.IsSuperTrackingUserWaypoint()
     local ok, link = pcall(function()
         M.SetUserWaypoint(UiMapPoint.CreateFromCoordinates(map, x, y))
         return M.GetUserWaypointHyperlink()
     end)
     if saved then
         pcall(M.SetUserWaypoint, saved)
+        if tracked == true and ST.SetSuperTrackedUserWaypoint then pcall(ST.SetSuperTrackedUserWaypoint, true) end
     elseif M.ClearUserWaypoint then
         pcall(M.ClearUserWaypoint)
     end
@@ -114,11 +120,23 @@ function Live:Recent(node, now)
     return at ~= nil and now - at < FRESH
 end
 
+local function ChatLocked()
+    local C = C_ChatInfo
+    return (C and C.InChatMessagingLockdown and C.InChatMessagingLockdown()) == true
+end
+
+local function InCombat()
+    return (InCombatLockdown and InCombatLockdown()) == true
+end
+
 -- La fenêtre à ouvrir après une absorption, ou nil (D4, D5). Rien n'est ouvert pour une faille déjà
 -- annoncée, ni deux fois pour la même en 15 min, ni à moins de 5 min de notre dernière annonce.
+-- Ni en combat : une fenêtre du jeu ouverte par un addon entache le cadre de dialogue partagé
+-- jusqu'à sa réutilisation (StaticPopup.lua le dit), et une fenêtre de Blizzard peut en avoir besoin
+-- là. Ni sous verrou de messagerie (combat de boss) : rien ne pourrait partir.
 function Live:Offer(node, now)
     local mode = LL.db.announce
-    if mode == "off" or self:Recent(node, now) then return nil end
+    if mode == "off" or self:Recent(node, now) or InCombat() or ChatLocked() then return nil end
     if self.lastSent and now - self.lastSent < PLAYER_GAP then return nil end
     if self.offered[node] and now - self.offered[node] < FRESH then return nil end
     if not self:GeneralIndex() then return nil end
@@ -142,14 +160,27 @@ function Live:OnAbsorb(node)
     StaticPopup_Show(which, LL.Nodes:Word("one", node.kind), nil, node)
 end
 
-local function ChatLocked()
-    local C = C_ChatInfo
-    return (C and C.InChatMessagingLockdown and C.InChatMessagingLockdown()) == true
-end
-
+-- Sans pcall : un refus du jeu (ADDON_ACTION_BLOCKED, faute de geste du joueur) n'est pas une erreur
+-- Lua, un pcall rendrait vrai quand même ; il ne cacherait que les vraies erreurs.
 local function Send(line, index)
     local send = (C_ChatInfo and C_ChatInfo.SendChatMessage) or _G.SendChatMessage
-    return send ~= nil and pcall(send, line, "CHANNEL", nil, index)
+    if not send then return false end
+    send(line, "CHANNEL", nil, index)
+    return true
+end
+
+-- Le jeu ne dit pas si la ligne est partie : seul son ÉCHO dans General le prouve (OnChannel), et
+-- c'est lui qui arme le débit. Sans écho dans ce délai, le joueur l'apprend.
+local ECHO_WAIT = 10   -- s
+function Live:AwaitEcho()
+    local pending = {}
+    self.pending = pending
+    if not (C_Timer and C_Timer.After) then return end
+    C_Timer.After(ECHO_WAIT, function()
+        if Live.pending ~= pending then return end
+        Live.pending = nil
+        LL:Print(L["Ta ligne n'est pas revenue dans Général : le jeu ne l'a sans doute pas envoyée."])
+    end)
 end
 
 -- Le clic sur Oui : le geste qui permet d'écrire. Tout se revérifie ici, la fenêtre a pu rester
@@ -161,9 +192,7 @@ function Live:Announce(node)
     if not index or ChatLocked() then return LL:Print(L["Pas de canal Général ici : rien n'est parti."]) end
     local line = Live.Line(node, self:BorrowLink(node.map, node.x, node.y))
     if not line then return LL:Print(L["Cette zone n'accepte pas de point de route : rien n'est parti."]) end
-    if Send(line, index) then
-        self.lastSent, self.heard[node] = now, now
-    end
+    if Send(line, index) then self:AwaitEcho() end
 end
 
 -- ---------------------------------------------------------------------------
@@ -183,12 +212,14 @@ end
 
 function Live:OnChannel(msg, channelName, guid, zoneID)
     if not LL.db or Secret(msg) or Secret(guid) or not Live.IsGeneral(channelName) then return end
-    self.generalZoneID = zoneID   -- M6, relevé par `/ley probe`
+    if not Secret(zoneID) then self.generalZoneID = zoneID end   -- M6, relevé par `/ley probe`
     local map, x, y = Live.Parse(msg)
     if not map then return end
-    -- Notre propre ligne revient en écho : déjà datée à l'envoi. Par le GUID, jamais par le nom.
-    if guid and UnitGUID and guid == UnitGUID("player") then return end
-    self:Heard(map, x, y, time())
+    local now = time()
+    -- Notre propre ligne revenue en écho (reconnue au GUID, jamais au nom) : la preuve qu'elle est
+    -- partie, et ce qui arme les 5 min par joueur (D5).
+    if guid and UnitGUID and guid == UnitGUID("player") then self.lastSent, self.pending = now, nil end
+    self:Heard(map, x, y, now)
 end
 
 -- « Vue active il y a 4 min » (D8) : minutes sous 1 h, heures jusqu'à 24 h, rien au-delà.

@@ -182,6 +182,8 @@ local es = {
     ["Pas de canal Général ici : rien n'est parti."] = "No hay canal General aquí: no se envió nada.",
     ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
         "Esta zona no admite puntos de ruta: no se envió nada.",
+    ["Ta ligne n'est pas revenue dans Général : le jeu ne l'a sans doute pas envoyée."] =
+        "Tu línea no volvió a aparecer en General: probablemente el juego no la envió.",
     ["Vue active il y a %s min"]              = "Vista activa hace %s min",
     ["Vue active il y a %s h"]                = "Vista activa hace %s h",
 
