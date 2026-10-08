@@ -30,7 +30,8 @@ base est au compte).
 Les commandes `/ley` restent toutes. Une commande et le contrôle du panneau changent le même
 réglage par le même chemin : ce qu'on règle d'un côté se voit de l'autre.
 
-`/ley options` ouvre la page. Le compartiment d'addons peut l'ouvrir aussi (O3).
+`/ley options` ouvre la page. `/ley` et `/ley help` le rappellent sur une ligne à part. Le
+compartiment d'addons l'ouvrira aussi, plus tard (O3).
 
 ### Les réglages (inventaire du code au 2026-10-08)
 
@@ -95,9 +96,9 @@ raccourcis clavier (Options → Raccourcis) et à `/ley help`.
 
 ## Arbitrages
 
-O3, O4 et O6 : tranchés par le user le 2026-10-08. Pour O3, il rappelle que le menu de Blizzard
-(Options → AddOns) mène déjà aux options et laisse l'agent juger d'un accès de plus : Maj + clic,
-qui ne coûte rien et que l'infobulle annonce. O1, O2, O5 : proposés par l'agent, pris pour le code.
+O4 et O6 : tranchés par le user le 2026-10-08. O3 : le user rappelle que le menu de Blizzard
+(Options → AddOns) mène déjà aux options et laisse l'agent juger d'un accès de plus. O1, O2, O5 :
+proposés par l'agent, pris pour le code.
 
 - **O1** : une page « canevas » (`Settings.RegisterCanvasLayoutCategory` puis
   `Settings.RegisterAddOnCategory`), avec nos propres contrôles faits des modèles du jeu (case,
@@ -108,8 +109,12 @@ qui ne coûte rien et que l'infobulle annonce. O1, O2, O5 : proposés par l'agen
   du jeu ne trouvera pas nos réglages.
 - **O2** : une seule liste déclarative des réglages (clé, genre, bornes, texte, commande) nourrit
   à la fois le panneau et les commandes, pour qu'ils ne divergent jamais.
-- **O3** : le compartiment d'addons garde clic gauche = contribuer, clic droit = bandeau, et gagne
-  **Maj + clic = options** ; son infobulle le dit.
+- **O3, remis à plus tard (2026-10-08, agent)** : un accès par le compartiment d'addons (clic
+  gauche = contribuer, clic droit = bandeau). Maj + clic est déjà pris par « signaler un bug » de
+  `feat/bouton-ticket`, pas encore fusionnée, qui change la même fonction, la même infobulle et le
+  même test (`test_leylines.lua` compte les lignes de l'infobulle). Ctrl + clic y croiserait les
+  trois à chaque fusion. À ajouter une fois `feat/bouton-ticket` dans `main` : Ctrl + clic =
+  options, une ligne de plus dans l'infobulle.
 - **O4** : un bouton « Rétablir les réglages par défaut », avec confirmation.
 - **O5** : `/ley options` (alias `/ley config`) ouvre la page ; `/ley` sans argument rappelle en
   fin de ligne que la page existe.
@@ -127,15 +132,16 @@ build 70245, un compte, par `/run` (aucun de nos addons n'avait de page d'option
   `taint.log` n'a pas été écrit (la séance a fini sur le crash de C17), donc « rien de visible »,
   pas « aucun taint ». À relire au banc quand le panneau sera codé (critère 6).
 - **M8, tient** : `Settings.OpenToCategory(id)` depuis une commande tapée ouvre les options sur la
-  page. Depuis un clic sur le compartiment : pas essayé (même appel, critère 7).
+  page. Depuis un clic sur le compartiment : pas essayé (O3, remis à plus tard).
 - **C17, tient** (constat du banc, revérifié le même jour) : un menu déroulant créé par du code fait
   toujours planter le client. Le choix à trois valeurs reste en boutons radio (O1).
 
 ## Critères d'acceptation
 
 1. [test] Chaque entrée de la liste déclarative (O2) vise un réglage qui existe dans
-   `LL.DEFAULTS`, et la commande et le contrôle passent par le même setter.
-   → `tests/test_leylines_options.lua`
+   `LL.DEFAULTS`, et la commande et le contrôle passent par le même setter ; chaque commande de
+   réglage garde son effet, son message et ses alias d'avant le panneau.
+   → `tests/test_leylines_options.lua` ; la page (faux cadres) : `tests/test_leylines_options_panel.lua`
 2. [test] « Rétablir les défauts » remet les réglages du tableau et ne touche ni `nodes`, ni
    `contrib`, ni `dataVersion`, ni `backup`, ni `legacy`.
 3. [check] Chaque libellé et chaque infobulle existe dans les quatre langues. → `check_locale.ps1`
@@ -144,15 +150,16 @@ build 70245, un compte, par `/run` (aucun de nos addons n'avait de page d'option
 5. [human] Le curseur du rappel sur 10, puis `/ley warn` sans argument : « à 10 min restantes ».
 6. [human] Après avoir ouvert la page, mode Édition puis combat : pas d'erreur Lua, pas de blocage
    au nom de LeyLines dans `taint.log`. Témoin : mêmes gestes, addon désactivé (M7).
-7. [human] `/ley options` et Maj + clic sur le compartiment ouvrent la page de l'addon.
+7. [human] `/ley options` ouvre la page de l'addon (le compartiment : O3, plus tard).
 8. [agent] Aucun menu déroulant, aucune écriture dans le panneau des options de Blizzard ni dans
    ses tables. → `api-gotcha-reviewer`
 
 ## Contrat
 
 Aucun réglage existant ne change de nom, de forme ou de défaut. Ajouts : `/ley options` (alias
-`config`), Maj + clic sur le compartiment. Les réglages neufs (`announce`, `readAnnounces`) sont
-définis par `partage-direct.md`.
+`config`) ; les commandes de réglage à deux états acceptent toutes `on` / `off` (avant : seuls
+`signal` et `waypoint`), sans argument elles basculent comme avant. Les réglages neufs (`announce`,
+`readAnnounces`) sont définis par `partage-direct.md`.
 
 ## Liens
 
@@ -167,6 +174,8 @@ définis par `partage-direct.md`.
 
 ## Plan (2026-10-08)
 
-1. La liste déclarative (O2) et le panneau avec les réglages d'aujourd'hui, `/ley options`, le
-   compartiment. Critères 1 à 8.
-2. Les lignes de l'annonce, avec le palier 1 du partage en direct.
+1. La liste déclarative (O2) et le panneau avec les réglages d'aujourd'hui, `/ley options`.
+   Critères 1 à 8. **Codé le 2026-10-08** (`feat/panneau-options`, empilée sur
+   `feat/point-de-route-option`), tests verts, jamais vu en jeu.
+2. Le compartiment (O3), une fois `feat/bouton-ticket` dans `main`.
+3. Les lignes de l'annonce, avec le palier 1 du partage en direct.

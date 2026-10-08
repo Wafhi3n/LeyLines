@@ -103,6 +103,62 @@ local en = {
         "Buff reminder: at %s min left (0 = off).",
     ["Point de route posé par le rappel de buff : %s."] = "Map pin from the buff reminder: %s.",
 
+    -- Options panel (docs/specs/panneau-options.md)
+    ["Affichage"]      = "Display",
+    ["Capture"]        = "Capture",
+    ["Rappel de buff"] = "Buff reminder",
+    ["Partage"]        = "Sharing",
+    ["Réglages communs à tous les personnages du compte."] = "These settings apply to every character on your account.",
+    ["Points sur la minicarte"]               = "Spots on the minimap",
+    ["Les points connus sur la minicarte."]   = "The spots you know, on the minimap.",
+    ["Garder au bord les points hors de portée"] = "Keep out-of-range spots on the edge",
+    ["Un point trop loin pour la minicarte reste à son bord, atténué, pour garder le cap."] =
+        "A spot too far for the minimap stays on its edge, dimmed, so you still know which way to go.",
+    ["Taille des points de la minicarte"]     = "Spot size on the minimap",
+    ["En pixels."]                            = "In pixels.",
+    ["Points sur la carte du monde"]          = "Spots on the world map",
+    ["Les points connus sur la grande carte."] = "The spots you know, on the world map.",
+    ["Taille des points de la carte du monde"] = "Spot size on the world map",
+    ["Bandeau de la plus proche"]             = "Nearest-spot tracker",
+    ["La distance et une flèche vers le point le plus proche. Un clic dessus pose un point de route."] =
+        "Distance and an arrow to the nearest spot. Click it to drop a map pin.",
+    ["Seulement sur mes personnages Skyborne"] = "Only on my Skyborne characters",
+    ["Les personnages d'une autre race ne voient plus les points."] =
+        "Characters of other races no longer show the spots.",
+    ["Échelle de la minicarte (avancé)"]      = "Minimap scale (advanced)",
+    ["À changer seulement si les points de la minicarte tombent à côté de leur place."] =
+        "Only change this if minimap spots land away from where they belong.",
+    ["Capture automatique"]                   = "Automatic capture",
+    ["Retient un point quand le jeu confirme ton absorption (buff de 15 min)."] =
+        "Saves a spot when the game confirms you absorbed it (15 minute buff).",
+    ["Capture par infobulle (approximative)"] = "Tooltip capture (rough)",
+    ["Retient ta position quand tu survoles l'objet : jusqu'à 40 yd d'écart."] =
+        "Saves your own position when you hover the object: up to 40 yd off.",
+    ["Prévenir à N min de la fin du buff"]    = "Warn N min before the buff ends",
+    ["0 = jamais. Le buff dure 15 min."]      = "0 = never. The buff lasts 15 minutes.",
+    ["Poser aussi un point de route"]         = "Also drop a map pin",
+    ["Le rappel pose le point de route du jeu sur le point le plus proche, à la place du tien."] =
+        "The reminder drops the game's map pin on the nearest spot, replacing yours.",
+    ["Signal des positions à partager"]       = "Reminder for spots to share",
+    ["Une icône près de la minicarte quand tu trouves un point que la liste commune n'a pas."] =
+        "An icon near the minimap when you find a spot the shared list doesn't have.",
+    ["Replacer le bandeau"]                   = "Reset tracker position",
+    ["Apprendre mon sort"]                    = "Learn my spell",
+    ["Effacer les relevés d'infobulle"]       = "Erase tooltip readings",
+    ["Contribuer"]                            = "Contribute",
+    ["Exporter"]                              = "Export",
+    ["Contributeurs"]                         = "Contributors",
+    ["Rétablir les réglages par défaut"]      = "Restore default settings",
+    ["Remettre les réglages de l'addon par défaut ? Tes positions ne sont pas touchées."] =
+        "Restore the addon's default settings? Your spots are kept.",
+    ["Réglages remis par défaut."]            = "Default settings restored.",
+    ["Raccourcis clavier : Échap → Options → Raccourcis. Toutes les commandes : /ley help."] =
+        "Key bindings: Esc → Options → Keybindings. All commands: /ley help.",
+    ["Options : /ley options, ou Échap → Options → AddOns."] =
+        "Options: /ley options, or Esc → Options → AddOns.",
+    ["Le panneau d'options n'est pas disponible sur ce client."] =
+        "The options panel isn't available on this client.",
+
     -- Partage
     ["Partage des positions"] = "Position sharing",
     ["Aucune position à exporter."] = "No position to export.",

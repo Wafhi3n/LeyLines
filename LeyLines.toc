@@ -50,6 +50,11 @@ LeyLines_Thanks.lua
 LeyLines_Signal.lua
 LeyLines_Indicator.lua
 
+# Reglages : la liste declarative lue par les commandes /ley ET par la page d'options du jeu
+# (docs/specs/panneau-options.md). Apres LeyLines.lua, dont elle remplit la table des commandes.
+LeyLines_Options.lua
+LeyLines_OptionsPanel.lua
+
 # Entree dans le compartiment d'addons de la minicarte (fonctions nommees par ## AddonCompartmentFunc).
 LeyLines_Compartment.lua
 

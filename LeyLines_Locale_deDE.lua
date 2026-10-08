@@ -103,6 +103,62 @@ local de = {
         "Buff-Erinnerung: bei %s Min Restzeit (0 = aus).",
     ["Point de route posé par le rappel de buff : %s."] = "Wegpunkt durch die Buff-Erinnerung: %s.",
 
+    -- Optionsfenster (docs/specs/panneau-options.md)
+    ["Affichage"]      = "Anzeige",
+    ["Capture"]        = "Erfassung",
+    ["Rappel de buff"] = "Buff-Erinnerung",
+    ["Partage"]        = "Teilen",
+    ["Réglages communs à tous les personnages du compte."] = "Diese Einstellungen gelten für alle Charaktere des Accounts.",
+    ["Points sur la minicarte"]               = "Punkte auf der Minikarte",
+    ["Les points connus sur la minicarte."]   = "Die bekannten Punkte auf der Minikarte.",
+    ["Garder au bord les points hors de portée"] = "Punkte außer Reichweite am Rand halten",
+    ["Un point trop loin pour la minicarte reste à son bord, atténué, pour garder le cap."] =
+        "Ein Punkt außerhalb der Minikarte bleibt abgeschwächt am Rand, damit du die Richtung kennst.",
+    ["Taille des points de la minicarte"]     = "Punktgröße auf der Minikarte",
+    ["En pixels."]                            = "In Pixeln.",
+    ["Points sur la carte du monde"]          = "Punkte auf der Weltkarte",
+    ["Les points connus sur la grande carte."] = "Die bekannten Punkte auf der Weltkarte.",
+    ["Taille des points de la carte du monde"] = "Punktgröße auf der Weltkarte",
+    ["Bandeau de la plus proche"]             = "Leiste zum nächsten Punkt",
+    ["La distance et une flèche vers le point le plus proche. Un clic dessus pose un point de route."] =
+        "Entfernung und ein Pfeil zum nächsten Punkt. Ein Klick darauf setzt einen Wegpunkt.",
+    ["Seulement sur mes personnages Skyborne"] = "Nur bei meinen Skyborne-Charakteren",
+    ["Les personnages d'une autre race ne voient plus les points."] =
+        "Charaktere anderer Völker zeigen die Punkte nicht mehr.",
+    ["Échelle de la minicarte (avancé)"]      = "Minikartenskalierung (erweitert)",
+    ["À changer seulement si les points de la minicarte tombent à côté de leur place."] =
+        "Nur ändern, wenn die Punkte auf der Minikarte neben ihrer Stelle liegen.",
+    ["Capture automatique"]                   = "Automatische Erfassung",
+    ["Retient un point quand le jeu confirme ton absorption (buff de 15 min)."] =
+        "Merkt sich einen Punkt, wenn das Spiel deine Absorption bestätigt (15-Minuten-Buff).",
+    ["Capture par infobulle (approximative)"] = "Tooltip-Erfassung (ungefähr)",
+    ["Retient ta position quand tu survoles l'objet : jusqu'à 40 yd d'écart."] =
+        "Merkt sich deine Position beim Überfahren des Objekts: bis zu 40 yd daneben.",
+    ["Prévenir à N min de la fin du buff"]    = "N Min vor Buff-Ende erinnern",
+    ["0 = jamais. Le buff dure 15 min."]      = "0 = nie. Der Buff hält 15 Minuten.",
+    ["Poser aussi un point de route"]         = "Auch einen Wegpunkt setzen",
+    ["Le rappel pose le point de route du jeu sur le point le plus proche, à la place du tien."] =
+        "Die Erinnerung setzt den Wegpunkt des Spiels auf den nächsten Punkt, anstelle deines eigenen.",
+    ["Signal des positions à partager"]       = "Hinweis auf zu teilende Positionen",
+    ["Une icône près de la minicarte quand tu trouves un point que la liste commune n'a pas."] =
+        "Ein Symbol an der Minikarte, wenn du einen Punkt findest, der in der gemeinsamen Liste fehlt.",
+    ["Replacer le bandeau"]                   = "Leiste zurücksetzen",
+    ["Apprendre mon sort"]                    = "Meinen Zauber lernen",
+    ["Effacer les relevés d'infobulle"]       = "Tooltip-Messungen löschen",
+    ["Contribuer"]                            = "Beitragen",
+    ["Exporter"]                              = "Exportieren",
+    ["Contributeurs"]                         = "Mitwirkende",
+    ["Rétablir les réglages par défaut"]      = "Standardeinstellungen wiederherstellen",
+    ["Remettre les réglages de l'addon par défaut ? Tes positions ne sont pas touchées."] =
+        "Standardeinstellungen des Addons wiederherstellen? Deine Punkte bleiben erhalten.",
+    ["Réglages remis par défaut."]            = "Standardeinstellungen wiederhergestellt.",
+    ["Raccourcis clavier : Échap → Options → Raccourcis. Toutes les commandes : /ley help."] =
+        "Tastenbelegung: Esc → Optionen → Tastenbelegung. Alle Befehle: /ley help.",
+    ["Options : /ley options, ou Échap → Options → AddOns."] =
+        "Optionen: /ley options, oder Esc → Optionen → AddOns.",
+    ["Le panneau d'options n'est pas disponible sur ce client."] =
+        "Das Optionsfenster ist auf diesem Client nicht verfügbar.",
+
     -- Teilen
     ["Partage des positions"] = "Positionen teilen",
     ["Aucune position à exporter."] = "Keine Position zum Exportieren.",
