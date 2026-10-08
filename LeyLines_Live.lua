@@ -50,12 +50,13 @@ function Live.IsGeneral(name)
     return GENERAL[base:lower()] == true
 end
 
--- Le numéro du canal General, ou nil : hors d'une zone qui en a un, ou après un `/leave`.
+-- Le numéro du canal General, ou nil : hors d'une zone qui en a un, ou après un `/leave`. Le numéro
+-- est testé comme le nom : on ne sait pas s'il peut être secret, et le comparer lèverait.
 function Live:GeneralIndex()
     if type(GetChannelName) ~= "function" then return nil end
     for i = 1, 20 do
         local id, name = GetChannelName(i)
-        if id and id > 0 and Live.IsGeneral(name) then return i, name end
+        if type(id) == "number" and not Secret(id) and id > 0 and Live.IsGeneral(name) then return i, name end
     end
     return nil
 end
