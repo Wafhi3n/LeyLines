@@ -152,10 +152,10 @@ local es = {
     ["Remettre les réglages de l'addon par défaut ? Tes positions ne sont pas touchées."] =
         "¿Restablecer los ajustes del addon por defecto? Tus puntos se conservan.",
     ["Réglages remis par défaut."]            = "Ajustes restablecidos por defecto.",
-    ["Raccourcis clavier : Échap → Options → Raccourcis. Toutes les commandes : /ley help."] =
-        "Atajos de teclado: Esc → Opciones → Atajos de teclado. Todos los comandos: /ley help.",
-    ["Options : /ley options, ou Échap → Options → AddOns."] =
-        "Opciones: /ley options, o Esc → Opciones → AddOns.",
+    ["Raccourcis clavier : Échap > Options > Raccourcis. Toutes les commandes : /ley help."] =
+        "Atajos de teclado: Esc > Opciones > Atajos de teclado. Todos los comandos: /ley help.",
+    ["Options : /ley options, ou Échap > Options > AddOns."] =
+        "Opciones: /ley options, o Esc > Opciones > AddOns.",
     ["Le panneau d'options n'est pas disponible sur ce client."] =
         "El panel de opciones no está disponible en este cliente.",
 

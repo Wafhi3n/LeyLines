@@ -152,10 +152,10 @@ local de = {
     ["Remettre les réglages de l'addon par défaut ? Tes positions ne sont pas touchées."] =
         "Standardeinstellungen des Addons wiederherstellen? Deine Punkte bleiben erhalten.",
     ["Réglages remis par défaut."]            = "Standardeinstellungen wiederhergestellt.",
-    ["Raccourcis clavier : Échap → Options → Raccourcis. Toutes les commandes : /ley help."] =
-        "Tastenbelegung: Esc → Optionen → Tastenbelegung. Alle Befehle: /ley help.",
-    ["Options : /ley options, ou Échap → Options → AddOns."] =
-        "Optionen: /ley options, oder Esc → Optionen → AddOns.",
+    ["Raccourcis clavier : Échap > Options > Raccourcis. Toutes les commandes : /ley help."] =
+        "Tastenbelegung: Esc > Optionen > Tastenbelegung. Alle Befehle: /ley help.",
+    ["Options : /ley options, ou Échap > Options > AddOns."] =
+        "Optionen: /ley options, oder Esc > Optionen > AddOns.",
     ["Le panneau d'options n'est pas disponible sur ce client."] =
         "Das Optionsfenster ist auf diesem Client nicht verfügbar.",
 

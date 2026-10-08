@@ -183,7 +183,8 @@ LL.CMD.config  = LL.CMD.options
 local function WithHint(fn)
     return function(rest)
         fn(rest)
-        LL:Print(L["Options : /ley options, ou Échap → Options → AddOns."])
+        -- « > » et pas une flèche : la police du jeu n'a pas le glyphe (vu en jeu le 2026-10-08).
+        LL:Print(L["Options : /ley options, ou Échap > Options > AddOns."])
     end
 end
 LL.CMD.status = WithHint(LL.CMD.status)

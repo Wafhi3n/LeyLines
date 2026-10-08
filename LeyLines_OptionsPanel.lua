@@ -149,7 +149,8 @@ function Panel:Build(f)
     reset:SetScript("OnClick", function() StaticPopup_Show("LEYLINES_RESET_OPTIONS") end)
     local foot = f:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 16, 16)
-    foot:SetText(L["Raccourcis clavier : Échap → Options → Raccourcis. Toutes les commandes : /ley help."])
+    -- « > » et pas une flèche : la police du jeu n'a pas le glyphe (une case vide, vu le 2026-10-08).
+    foot:SetText(L["Raccourcis clavier : Échap > Options > Raccourcis. Toutes les commandes : /ley help."])
 end
 
 function Panel:Refresh()
