@@ -3,9 +3,9 @@
 > État : **brouillon, mesures faites** (M1, M3 et M4 tiennent, 2026-10-08), à approuver, rien de
 > codé · Ouverte le 2026-10-08 par le
 > user sur une demande de joueur · Transport révisé le même jour par le user : **General en clair,
-> avec étiquette, comme les annonces de COC** (D2) · D4 tranchée par le user le même jour : le
-> joueur choisit entre automatique, popup et désactivé · D3 et D5 à D10 proposés par l'agent, pas
-> tranchés
+> avec étiquette, comme les annonces de COC** (D2) · Tranchés par le user le même jour : D4 (le
+> joueur choisit automatique, popup ou désactivé), D5, D7, D9, D10 (un panneau d'options) · D3, D6
+> et D8 proposés par l'agent, pas encore tranchés
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Revient sur « base locale au compte,
 > aucun réseau » (D1)
 
@@ -122,23 +122,42 @@ leur royaume. Qu'il suive le calque reste à mesurer (M2).
     panneau d'options de l'addon (Options → AddOns), comme les autres réglages (D10).
   - **Débit** : D5 vaut pour les modes automatique et popup ; en popup, une faille déjà annoncée
     (D5) n'ouvre même pas la fenêtre.
-- **D5 (proposé)** : pas d'annonce si la même faille (même espèce, `mergeRange`) a été annoncée
-  dans General depuis moins de 15 min (la durée du buff), par n'importe qui ; au plus une annonce
-  par joueur toutes les 5 min.
+- **D5 (user, 2026-10-08)** : pas d'annonce si la même faille (même espèce, `mergeRange`) a été
+  annoncée dans General depuis moins de 15 min (la durée du buff), par n'importe qui ; au plus une
+  annonce par joueur toutes les 5 min. Le user ajoute que **connaître le cycle d'apparition et de
+  disparition des failles compte plus encore** (Q5) : si on l'apprend, ces 15 min deviendront « le
+  temps qu'il reste à la faille ».
 - **D6 (proposé)** : les lignes `#LL` des autres restent affichées dans le chat des porteurs de
   l'addon, comme chez tout le monde : le lien leur sert aussi.
-- **D7 (proposé)** : une annonce d'une position inconnue du lecteur est ignorée au palier 1. Plus
+- **D7 (user, 2026-10-08)** : une annonce d'une position inconnue du lecteur est ignorée au palier 1. Plus
   tard, peut-être : un point temporaire « annoncé par un joueur », jamais enregistré, qui s'efface.
 - **D8 (proposé)** : l'âge s'affiche jusqu'à 24 h, en minutes sous 1 h (« il y a 4 min »), en
   heures au-delà. Il vit dans la base du compte (`node.live`, une date) et survit à un `/reload`.
-- **D9 (proposé)** : texte en anglais fixe, quelle que soit la langue du client, comme les jetons
-  de COC. La lecture ne s'appuie que sur l'étiquette et sur le lien, jamais sur la phrase.
-- **D10 (proposé, à préciser avec le user)** : un panneau d'options de l'addon (Options → AddOns →
-  LeyLines), qui n'existe pas aujourd'hui (tout passe par `/ley`). Il porte le mode d'annonce, la
-  lecture des annonces (oui / non) et, « comme pour le rappel », les réglages existants : minutes
-  du rappel (`/ley warn`), point de route du rappel (`/ley waypoint`). Le reste des commandes
-  reste en slash. Piège à vérifier avant de le coder : un menu déroulant a déjà tainté sur Forever
-  (choisir des boutons radio ou des cases).
+- **D9 (user, 2026-10-08)** : texte en anglais fixe, quelle que soit la langue du client, comme les
+  jetons de COC. La lecture ne s'appuie que sur l'étiquette et sur le lien, jamais sur la phrase.
+- **D10 (user, 2026-10-08)** : un **panneau d'options** est nécessaire (« les joueurs ne vont pas
+  faire que des commandes »), avec **toutes** les options de l'addon, pas seulement celles de
+  l'annonce. C'est une fonctionnalité à part : spec `panneau-options.md`. Ici, il porte le mode
+  d'annonce (D4) et la lecture des annonces des autres (oui / non).
+
+## Le cycle des failles (Q5, à étudier)
+
+Le user le dit plus important que le réglage de D5 : comment une faille disparaît, et quand elle
+revient. On sait seulement qu'elle disparaît puis revient au même endroit, sans cause connue. Les
+annonces de cette spec en sont la première source : chaque annonce dit « active à telle heure ».
+Ce qu'il faudrait savoir :
+
+- combien de temps une faille reste active, et combien de temps elle reste absente ;
+- si toutes les failles d'une zone suivent le même rythme, ou chacune le sien ;
+- si une absorption la fait disparaître (pour tous, ou pour le seul joueur) ;
+- si l'état dépend du calque (M2).
+
+Piste proposée, pas tranchée : chaque client tient un petit journal par point, « vue active à T »
+(absorption ou annonce) et « lancer raté près du point à T » (buff de 15 s à moins de ~10 yd d'un
+point connu : un indice d'absence, pas une preuve, la position d'un point étant incertaine de
+~25 yd). Ces journaux partiraient avec `/ley contribute`, et l'outillage chercherait le rythme.
+Le jour où le cycle est connu, le bandeau peut dire « active encore ~10 min » ou « revient dans
+~20 min ». Assez gros pour sa propre spec (`cycle-failles.md`), à ouvrir sur le mot du user.
 
 ## Mesures
 
@@ -227,12 +246,14 @@ dernière annonce connue de ce point, la sienne comprise). Rien d'autre n'est aj
 - Code Blizzard (clone `wow-ui-source-forever`) : `LinkUtil.lua` (`LinkTypes.WorldMapWaypoint` =
   `worldmap`), `ItemRefHandlers.lua` (le clic sur ce lien pose le point de route).
 - Skill `leylines-addon` : capture par la durée du buff, `mergeRange`, l'espèce d'un point.
-- Specs voisines : `contribution-positions.md`, `signal-contribution.md` (`seen` / `found`).
+- Specs voisines : `contribution-positions.md`, `signal-contribution.md` (`seen` / `found`),
+  `panneau-options.md` (D10).
 
 ## Plan (2026-10-08, mesures faites)
 
 1. Palier 1 : la question et les modes popup et désactivé (`/ley announce`), l'annonce avec le
    lien emprunté, lecture des lignes `#LL`, âge dans les infobulles et le bandeau. Critères 1 à 9
    et 11.
-2. Palier 2 : le panneau d'options (D10).
+2. Palier 2 : le mode d'annonce et la lecture dans le panneau d'options (spec
+   `panneau-options.md`, qui peut sortir avant).
 3. Palier 3 : le mode automatique, proposé dans la question. Critère 10.
