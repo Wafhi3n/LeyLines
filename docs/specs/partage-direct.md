@@ -1,6 +1,7 @@
 # Partage en direct des failles actives
 
-> État : **brouillon, suspendu aux mesures M1 à M4**, rien de codé · Ouverte le 2026-10-08 par le
+> État : **brouillon, mesures faites** (M1, M3 et M4 tiennent, 2026-10-08), à approuver, rien de
+> codé · Ouverte le 2026-10-08 par le
 > user sur une demande de joueur · Transport révisé le même jour par le user : **General en clair,
 > avec étiquette, comme les annonces de COC** (D2) · D4 tranchée par le user le même jour : le
 > joueur choisit entre automatique, popup et désactivé · D3 et D5 à D10 proposés par l'agent, pas
@@ -42,9 +43,9 @@ signalement : « vue active il y a 4 min » dans l'infobulle du point (minicarte
 et sur le bandeau. Un point qu'on a absorbé soi-même porte le même âge.
 
 **Pourquoi General (D2)** : c'est le canal de la zone, donc l'audience qui peut aller à la faille.
-Le user pense qu'il suit aussi le calque et qu'il traverse les royaumes, ce qui atteindrait des
-joueurs qu'aucun canal custom n'atteint. C'est à mesurer (M1, M2) : le Trade est découpé par
-royaume (mesuré le 2026-10-07), General ne l'a jamais été.
+Et il **traverse les royaumes** (M1, mesuré le 2026-10-08), là où le Trade et tout canal custom
+s'arrêtent au royaume du compte : une annonce atteint tous les joueurs de la zone, quel que soit
+leur royaume. Qu'il suive le calque reste à mesurer (M2).
 
 ## Ce qu'on NE fait PAS
 
@@ -64,7 +65,7 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 - **Prévenir à l'arrivée d'une annonce** : pas de son, pas d'icône, pas de seconde ligne.
 - **Dépendre de COC ou de CraftLink.**
 - **Le canal custom caché** de la première version de cette spec (en AddonMessage, invisible du
-  chat, limité au royaume) : il reste le plan B si les mesures ferment General.
+  chat) : écarté, il s'arrête au royaume du compte, General non (M1).
 
 ## Cas limites
 
@@ -88,22 +89,28 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 - **Calque** : si General suit le calque, une annonce vient d'un joueur qui voit la même faille que
   toi. Sinon, « vue active » peut être vrai sur son calque et faux sur le tien (M2).
 - **Annonce très vieille** : au-delà de 24 h, l'âge ne s'affiche plus (D8).
+- **Point de route du joueur pendant l'emprunt du lien** (Contrat) : il est mis de côté et rendu
+  dans le même geste, jamais perdu (vu en M4). Un autre addon qui écoute les changements de point
+  de route (`USER_WAYPOINT_UPDATED`) en voit passer deux ; sans effet connu.
+- **Langue du lien** : le texte affiché du lien (« Map Pin Location ») est celui du client qui
+  l'a fabriqué. Seule la phrase autour est en anglais fixe (D9).
 
 ## Décisions
 
 - **D1 (user, 2026-10-08)** : on ouvre une spec de partage en direct, ce qui revient sur « base
   locale au compte, aucun réseau ». Le partage par copier-coller et la liste livrée restent.
 - **D2 (user, 2026-10-08, révisée le même jour)** : transport = **le canal General de la zone, en
-  texte clair avec une étiquette**, sur le modèle des annonces `#CO` de COC. Sous réserve des
-  mesures M1 à M4. Première version, remplacée : un canal custom caché en AddonMessage.
+  texte clair avec une étiquette**, sur le modèle des annonces `#CO` de COC. Les mesures M1, M3 et
+  M4 l'ont confirmé le 2026-10-08. Première version, remplacée : un canal custom caché en
+  AddonMessage.
 - **D3 (proposé)** : seul un lancer confirmé par le buff long donne une annonce.
 - **D4 (user, 2026-10-08)** : **le joueur choisit**, dans une option de l'addon, entre trois modes,
   et l'addon lui **demande** lequel. Le joueur ne parle donc jamais dans General sans l'avoir
   choisi : c'est ce qui concilie la demande (« automatically ») avec le modèle de COC (rien
   d'automatique sans accord) et la règle « jamais à tous sur un événement local ».
   - **automatique** : la ligne attend le prochain clic ou la prochaine touche du joueur, puis part
-    (écrire dans un canal du jeu exige un geste). Seulement si M3 passe : la file vidée par l'input
-    n'est prouvée que sur Era. Si M3 échoue, ce mode n'est pas proposé.
+    (écrire dans un canal du jeu exige un geste). M3 tient : la ligne part au clic suivant dans le
+    monde (la touche n'a pas été essayée).
   - **popup** : après l'absorption, une fenêtre « Annoncer cette Ley Line dans General ? Oui /
     Non ». Le clic sur Oui est le geste qui poste. Prouvé sur Forever (un clic ou une commande
     tapée écrit dans le Trade, constat C15).
@@ -133,19 +140,27 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
   reste en slash. Piège à vérifier avant de le coder : un menu déroulant a déjà tainté sur Forever
   (choisir des boutons radio ou des cases).
 
-## Mesures avant tout code (fiche `mesure--general-leylines` de l'appli du banc)
+## Mesures
 
-- **M1** : General est-il découpé par royaume, comme le Trade ? Deux comptes de royaumes
-  différents, côte à côte dans la même zone, groupés. Si oui, l'argument « entre royaumes » de D2
-  tombe. General garde l'intérêt d'être lu et cliqué par tous, mais l'arbitrage avec le spam change.
-- **M2** : General suit-il le calque ? Même essai sur deux calques différents (le calque se lit dans
-  le GUID d'un même PNJ ciblé des deux côtés).
-- **M3** : une ligne mise en attente par l'addon part-elle au clic suivant dans le monde ? Sinon,
-  le mode automatique de D4 n'est pas proposé (restent popup et désactivé).
-- **M4** : le serveur laisse-t-il passer, dans General, un lien de point de route écrit par un
-  addon, et l'autre côté peut-il cliquer dessus ? Format exact relevé une fois sur le client
-  (`C_Map.GetUserWaypointHyperlink` après un ctrl-clic sur la carte), jamais écrit de mémoire.
-- **M5** (attendu) : un personnage Horde dans la même zone ne voit pas le General de l'Alliance.
+Fiche `mesure--general-leylines` de l'appli du banc, cochée par le user le 2026-10-08 entre 13:39
+et 13:50, build 70245 : Zef Lora (royaume 4618) et Mal Fanisa (4620), groupés, même zone, même
+calque (même GUID d'un PNJ ciblé des deux côtés). Les faits sont versés au skill public
+(`chat-channels-and-communities.md`).
+
+- **M1, tient** : General n'est PAS découpé par royaume. Chacun a lu la ligne de l'autre dans
+  `/1`, et le lien posté par l'un a été cliqué par l'autre. Le Trade, lui, l'est (2026-10-07).
+- **M2, pas mesuré** : se dégrouper ne change pas de calque tout de suite (dit par le user : une
+  annonce du jeu prévient d'abord). General suit-il le calque ? On ne sait pas.
+- **M3, tient** : une ligne mise en attente par du code d'addon est partie dans General au clic
+  suivant dans le monde (`WorldFrame` `OnMouseDown`). La touche n'a pas été essayée.
+- **M4, tient à moitié** : le lien fabriqué par le jeu (`C_Map.GetUserWaypointHyperlink`), posté
+  par du code d'addon, arrive cliquable dans l'autre royaume. Un lien écrit à la main
+  (`[Map Pin Location]` sans l'icône) arrive en texte brut, sans lien. Le vrai texte affiché est
+  `[|A:Waypoint-MapPin-ChatIcon:13:13:0:0|a Map Pin Location]`. **L'emprunt marche** : mettre de
+  côté le point de route du joueur, poser le nôtre, prendre le lien, rendre le sien ; le lien est
+  arrivé cliquable au centre de la zone, et le point du joueur est revenu à sa place.
+- **M5** (attendu, pas mesuré) : un personnage Horde dans la même zone ne voit pas le General de
+  l'Alliance.
 - **M6** (au palier 1) : comment reconnaître General quelle que soit la langue
   (`GetChannelDisplayInfo`, `C_ChatInfo.GetChannelInfoFromIdentifier`).
 
@@ -153,6 +168,7 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 
 1. [test] Une annonce construite tient en 255 octets ; relue, elle rend la même espèce, carte et
    position ; une ligne sans `#LL`, sans lien valide, ou aux coordonnées hors bornes est ignorée.
+   L'emprunt du lien rend au joueur son point de route, ou n'en laisse aucun s'il n'en avait pas.
    → `tests/test_leylines_live.lua`
 2. [test] Une annonce reçue date (`live`) le point de même espèce le plus proche dans `mergeRange`,
    et ne change ni `src`, ni `seen`, ni `found`, ni le compte du signal de contribution.
@@ -170,10 +186,10 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
    « vue active il y a 0 min ». Témoin : la même infobulle chez B AVANT l'annonce, sans âge.
    Observateur : le user, au banc.
 8. [human] Chez B, addon LeyLines désactivé : la ligne se lit et le lien se clique pareil.
-9. [human] (si M1 dit que General traverse les royaumes) Même essai que 7, avec A et B sur deux
-   royaumes différents.
-10. [human] (palier 2, si M3 passe) Mode automatique : A absorbe, puis clique par terre ; la ligne
-    part à ce clic, pas avant.
+9. [human] Même essai que 7, avec A et B sur deux royaumes différents. Chez A, un point de route
+   posé avant l'absorption est toujours là après l'annonce.
+10. [human] (palier 3) Mode automatique : A absorbe, puis clique par terre ; la ligne part à ce
+    clic, pas avant.
 11. [agent] Aucune écriture hors d'un geste du joueur, débit tenu, gardes de valeurs secrètes en
     place, pas de taint par le panneau d'options. → `api-gotcha-reviewer`
 
@@ -187,12 +203,12 @@ royaume (mesuré le 2026-10-07), General ne l'a jamais été.
 
 - `<Espèce>` : `Ley Line` ou `Elemental Convergence`. `<x>, <y>` : coordonnées de carte à une
   décimale, pour l'œil seulement.
-- Le **lien** porte la carte (`uiMapID`) et la position : c'est lui que l'addon lit, par
-  `C_Map.GetUserWaypointFromHyperlink`. Il se construit à la main au format relevé en M4 :
-  `C_Map.GetUserWaypointHyperlink` ne lit que le point de route du joueur, et s'en servir
-  demanderait d'écraser le sien.
-- Si M4 refuse le lien : `#LL<uiMapID>` (par exemple `#LL1429`) et la position lue dans
-  `<x>, <y>`.
+- Le **lien** porte la carte (`uiMapID`) et la position (`|Hworldmap:<carte>:<x>:<y>|h`, en
+  dix-millièmes) : c'est lui que l'addon lit, par `C_Map.GetUserWaypointFromHyperlink`. Il est
+  **emprunté au jeu**, jamais écrit à la main (un lien fait main arrive sans lien, M4) : dans le
+  même geste, `C_Map.GetUserWaypoint()` met de côté le point du joueur, `C_Map.SetUserWaypoint`
+  pose celui de la faille, `C_Map.GetUserWaypointHyperlink()` donne le lien, puis le point du
+  joueur est rendu (`SetUserWaypoint`), ou effacé s'il n'y en avait pas (`ClearUserWaypoint`).
 - L'étiquette `#LL` est la seule marque d'une annonce ; le reste de la phrase peut changer sans
   casser les lecteurs.
 
@@ -213,10 +229,10 @@ dernière annonce connue de ce point, la sienne comprise). Rien d'autre n'est aj
 - Skill `leylines-addon` : capture par la durée du buff, `mergeRange`, l'espèce d'un point.
 - Specs voisines : `contribution-positions.md`, `signal-contribution.md` (`seen` / `found`).
 
-## Plan (2026-10-08, à revoir après les mesures)
+## Plan (2026-10-08, mesures faites)
 
-0. Mesures M1 à M4 au banc, fiche `mesure--general-leylines`.
-1. Palier 1 : la question et les modes popup et désactivé (`/ley announce`), lecture des lignes
-   `#LL`, âge dans les infobulles et le bandeau. Critères 1 à 9 et 11.
+1. Palier 1 : la question et les modes popup et désactivé (`/ley announce`), l'annonce avec le
+   lien emprunté, lecture des lignes `#LL`, âge dans les infobulles et le bandeau. Critères 1 à 9
+   et 11.
 2. Palier 2 : le panneau d'options (D10).
-3. Palier 3, si M3 passe : le mode automatique, proposé dans la question. Critère 10.
+3. Palier 3 : le mode automatique, proposé dans la question. Critère 10.
