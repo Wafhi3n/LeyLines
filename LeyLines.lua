@@ -40,14 +40,10 @@ LL.DEFAULTS = {
     -- propageaient à tout le monde. Contrepartie acceptée : deux vraies fissures à moins de 100 yd
     -- (une seule paire connue, à 73,5 yd) peuvent fusionner si on les absorbe par leurs bords.
     mergeRange = 50,
-    -- Minutes restantes du buff de faille à partir desquelles on prévient. 0 = jamais. Le buff dure
-    -- 15 min, d'où 5 par défaut.
+    -- Minutes de buff restantes pour le rappel (0 = jamais ; le buff dure 15 min).
     warnMinutes = 5,
-    -- Le rappel pose-t-il AUSSI un point de route sur la plus proche (`/ley waypoint`) ? Faux par
-    -- défaut depuis le 2026-10-08 : un joueur sur CurseForge ne voulait voir « que les failles », et
-    -- l'API n'a qu'UN point de route du joueur (au singulier), donc le nôtre doit remplacer le sien
-    -- (déduit, jamais vu en jeu). Clé neuve, donc CopyDefaults la
-    -- pose à faux sur les bases existantes aussi : pas de palier de migration.
+    -- Le rappel pose aussi un point de route (`/ley waypoint`) : faux depuis le 2026-10-08, il
+    -- remplaçait celui du joueur (déduit de l'API). Clé neuve : pas de palier de migration.
     autoWaypoint = false,
     -- « vergence » attrape « Elemental Vergence » et, sans le connaître, un nom français du même
     -- tronc. Si le client nomme l'objet autrement : `/ley name <texte>`.
@@ -313,8 +309,7 @@ CMD.warn = function(rest)
 end
 CMD.rappel = CMD.warn
 
--- `on` / `off`, sans argument on bascule : la forme de `/ley signal` et `/ley waypoint`.
-local function Switch(current, rest)
+local function Switch(current, rest)   -- `on` / `off`, sinon bascule (`signal`, `waypoint`)
     local arg = string.lower(rest)
     if arg == "on" then return true elseif arg == "off" then return false end
     return not current
