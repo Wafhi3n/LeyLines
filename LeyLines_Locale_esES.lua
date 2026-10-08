@@ -111,7 +111,7 @@ local es = {
     ["Réglages communs à tous les personnages du compte."] = "Estos ajustes valen para todos los personajes de la cuenta.",
     ["Points sur la minicarte"]               = "Puntos en el minimapa",
     ["Les points connus sur la minicarte."]   = "Los puntos conocidos, en el minimapa.",
-    ["Garder au bord les points hors de portée"] = "Mantener en el borde los puntos fuera de alcance",
+    ["Garder au bord les points hors de portée"] = "Puntos lejanos en el borde",
     ["Un point trop loin pour la minicarte reste à son bord, atténué, pour garder le cap."] =
         "Un punto demasiado lejos para el minimapa queda en su borde, atenuado, para no perder el rumbo.",
     ["Taille des points de la minicarte"]     = "Tamaño de los puntos en el minimapa",

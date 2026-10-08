@@ -15,7 +15,7 @@ local L = LL.L
 local Panel = {}
 LL.OptionsPanel = Panel
 
-local COL_X = { 16, 340 }
+local COL_X, COL_W = { 16, 340 }, 318
 local TOP_Y = -70
 local ROW_CHECK, ROW_SLIDER, ROW_BUTTON, GAP = 28, 50, 28, 14
 
@@ -27,10 +27,12 @@ local SECTIONS = {
 }
 
 -- Les boutons d'une section, sous ses réglages. La fenêtre de partage est en strate DIALOG,
--- au-dessus des options (HIGH) ; les autres gestes répondent dans le chat.
+-- au-dessus des options (HIGH) ; les autres gestes répondent dans le chat. `perRow = 1` : des
+-- libellés trop longs en allemand et en espagnol pour deux boutons par rangée.
 local ACTIONS = {
     display = { { L["Replacer le bandeau"], function() LL.Options:ResetHUDPosition() end } },
-    capture = { { L["Apprendre mon sort"], function() LL.CMD.learn("") end },
+    capture = { perRow = 1,
+                { L["Apprendre mon sort"], function() LL.CMD.learn("") end },
                 { L["Effacer les relevés d'infobulle"], function() LL.CMD.clean("") end } },
     share   = { { L["Contribuer"], function() LL.Share:ShowContribute() end },
                 { L["Exporter"], function() LL.Share:ShowExport() end },
@@ -41,9 +43,9 @@ local ACTIONS = {
 -- Muette pendant la fabrication (fait 6 de la skill) : une infobulle qui contient « Ley Line » est
 -- exactement ce que la capture par infobulle cherche.
 local function Tip(region, title, text)
-    region:HookScript("OnEnter", function(self)
+    region:HookScript("OnEnter", function(owner)
         LL.Capture:Mute()
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetOwner(owner, "ANCHOR_RIGHT")
         GameTooltip:SetText(title, 1, 1, 1)
         if text then GameTooltip:AddLine(text, 0.9, 0.9, 0.9, true) end
         GameTooltip:Show()
@@ -61,12 +63,15 @@ function Panel:Check(parent, e, x, y)
     cb:SetPoint("TOPLEFT", x, y)
     cb:SetSize(26, 26)
     cb.Text:SetFontObject("GameFontHighlight")
+    cb.Text:SetWidth(COL_W - 30)   -- jamais sur l'autre colonne ; l'infobulle redonne le libellé
+    cb.Text:SetWordWrap(false)
+    cb.Text:SetJustifyH("LEFT")
     cb.Text:SetText(e.label)
-    cb:SetScript("OnClick", function(self)
-        LL.Options:Set(e, self:GetChecked() and true or false)
+    cb:SetScript("OnClick", function(box)
+        LL.Options:Set(e, box:GetChecked() and true or false)
     end)
     Tip(cb, e.label, e.tip)
-    cb.Load = function(self) self:SetChecked(LL.Options:Get(e) and true or false) end
+    cb.Load = function(box) box:SetChecked(LL.Options:Get(e) and true or false) end
     return cb, ROW_CHECK
 end
 
@@ -89,20 +94,22 @@ function Panel:Slider(parent, e, x, y)
         if r ~= LL.Options:Get(e) then LL.Options:Set(e, r) end
     end, s)
     Tip(s.Slider, e.label, e.tip)
-    s.Load = function(self) self:SetValue(math.min(LL.Options:Get(e), max)) end
+    s.Load = function(ctl) ctl:SetValue(math.min(LL.Options:Get(e), max)) end
     return s, ROW_SLIDER
 end
 
--- Deux boutons par rangée. Rend la hauteur occupée.
+-- Deux boutons par rangée, ou un seul (`perRow`). Rend la hauteur occupée.
 function Panel:Buttons(parent, list, x, y)
+    local per = list.perRow or 2
+    local w = (per == 1) and 250 or 156
     for i, a in ipairs(list) do
         local b = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-        b:SetSize(150, 22)
-        b:SetPoint("TOPLEFT", x + ((i - 1) % 2) * 156, y - math.floor((i - 1) / 2) * ROW_BUTTON)
+        b:SetSize(w, 22)
+        b:SetPoint("TOPLEFT", x + ((i - 1) % per) * 162, y - math.floor((i - 1) / per) * ROW_BUTTON)
         b:SetText(a[1])
         b:SetScript("OnClick", a[2])
     end
-    return math.ceil(#list / 2) * ROW_BUTTON
+    return math.ceil(#list / per) * ROW_BUTTON
 end
 
 -- Une section : son titre, ses réglages dans l'ordre de la liste, puis ses boutons. Rend le y suivant.
