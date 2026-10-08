@@ -1,9 +1,10 @@
 # Panneau d'options
 
-> État : **brouillon, mesures faites** (M7, M8, C17 le 2026-10-08), rien de codé · Demandé par le
-> user le 2026-10-08 (« il faut un panneau
-> d'options, les joueurs ne vont pas faire que des commandes ; essaie de prévoir les options
-> possibles de l'addon ») · Arbitrages O1 à O6 proposés par l'agent, pas tranchés
+> État : **approuvée, en cours de code** (branche `feat/panneau-options`) · Mesures M7, M8, C17 le
+> 2026-10-08 · Demandé par le user le 2026-10-08 (« il faut un panneau d'options, les joueurs ne
+> vont pas faire que des commandes ; essaie de prévoir les options possibles de l'addon ») · O3, O4
+> et O6 tranchés par le user le même jour ; O1, O2, O5 proposés par l'agent et pris pour le code
+> (le user a lancé le code sans objection)
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Spec voisine : `partage-direct.md`
 > (D4 et D10 y renvoient)
 
@@ -92,7 +93,11 @@ raccourcis clavier (Options → Raccourcis) et à `/ley help`.
 - **Taille d'écran** : la page tient dans la zone de contenu des options sans défiler à 1080 p ;
   sinon, un défilement natif.
 
-## Arbitrages proposés
+## Arbitrages
+
+O3, O4 et O6 : tranchés par le user le 2026-10-08. Pour O3, il rappelle que le menu de Blizzard
+(Options → AddOns) mène déjà aux options et laisse l'agent juger d'un accès de plus : Maj + clic,
+qui ne coûte rien et que l'infobulle annonce. O1, O2, O5 : proposés par l'agent, pris pour le code.
 
 - **O1** : une page « canevas » (`Settings.RegisterCanvasLayoutCategory` puis
   `Settings.RegisterAddOnCategory`), avec nos propres contrôles faits des modèles du jeu (case,
