@@ -103,6 +103,63 @@ local es = {
         "Recordatorio de buff: a %s min restantes (0 = desactivado).",
     ["Point de route posé par le rappel de buff : %s."] = "Punto de ruta del recordatorio de buff: %s.",
 
+    -- Panel de opciones (docs/specs/panneau-options.md)
+    ["Affichage"]      = "Visualización",
+    ["Capture"]        = "Captura",
+    ["Rappel de buff"] = "Recordatorio de buff",
+    ["Partage"]        = "Compartir",
+    ["Réglages communs à tous les personnages du compte."] = "Estos ajustes valen para todos los personajes de la cuenta.",
+    ["Points sur la minicarte"]               = "Puntos en el minimapa",
+    ["Les points connus sur la minicarte."]   = "Los puntos conocidos, en el minimapa.",
+    ["Garder au bord les points hors de portée"] = "Puntos lejanos en el borde",
+    ["Un point trop loin pour la minicarte reste à son bord, atténué, pour garder le cap."] =
+        "Un punto demasiado lejos para el minimapa queda en su borde, atenuado, para no perder el rumbo.",
+    ["Taille des points de la minicarte"]     = "Tamaño de los puntos en el minimapa",
+    ["En pixels."]                            = "En píxeles.",
+    ["Points sur la carte du monde"]          = "Puntos en el mapa del mundo",
+    ["Les points connus sur la grande carte."] = "Los puntos conocidos, en el mapa del mundo.",
+    ["Taille des points de la carte du monde"] = "Tamaño de los puntos en el mapa del mundo",
+    ["Bandeau de la plus proche"]             = "Barra del punto más cercano",
+    ["La distance et une flèche vers le point le plus proche. Un clic dessus pose un point de route."] =
+        "La distancia y una flecha hacia el punto más cercano. Un clic en ella coloca un punto de ruta.",
+    ["Seulement sur mes personnages Skyborne"] = "Solo en mis personajes Skyborne",
+    ["Les personnages d'une autre race ne voient plus les points."] =
+        "Los personajes de otras razas ya no muestran los puntos.",
+    ["Échelle de la minicarte (avancé)"]      = "Escala del minimapa (avanzado)",
+    ["À changer seulement si les points de la minicarte tombent à côté de leur place."] =
+        "Cámbiala solo si los puntos del minimapa caen fuera de su sitio.",
+    ["Capture automatique"]                   = "Captura automática",
+    ["Retient un point quand le jeu confirme ton absorption (buff de 15 min)."] =
+        "Guarda un punto cuando el juego confirma tu absorción (buff de 15 min).",
+    ["Capture par infobulle (approximative)"] = "Captura por información (aproximada)",
+    ["Retient ta position quand tu survoles l'objet : jusqu'à 40 yd d'écart."] =
+        "Guarda tu posición al pasar el ratón por el objeto: hasta 40 yd de error.",
+    ["Prévenir à N min de la fin du buff"]    = "Avisar N min antes del fin del buff",
+    ["0 = jamais. Le buff dure 15 min."]      = "0 = nunca. El buff dura 15 minutos.",
+    ["Poser aussi un point de route"]         = "Colocar también un punto de ruta",
+    ["Le rappel pose le point de route du jeu sur le point le plus proche, à la place du tien."] =
+        "El recordatorio coloca el punto de ruta del juego en el punto más cercano, en lugar del tuyo.",
+    ["Signal des positions à partager"]       = "Aviso de posiciones por compartir",
+    ["Une icône près de la minicarte quand tu trouves un point que la liste commune n'a pas."] =
+        "Un icono junto al minimapa cuando encuentras un punto que la lista común no tiene.",
+    ["Replacer le bandeau"]                   = "Recolocar la barra",
+    ["Apprendre mon sort"]                    = "Aprender mi hechizo",
+    ["Effacer les relevés d'infobulle"]       = "Borrar lecturas de información",
+    ["Contribuer"]                            = "Contribuir",
+    ["Exporter"]                              = "Exportar",
+    ["Contributeurs"]                         = "Colaboradores",
+    ["Rétablir les réglages par défaut"]      = "Restablecer los ajustes por defecto",
+    ["Remettre les réglages de l'addon par défaut ? Tes positions ne sont pas touchées."] =
+        "¿Restablecer los ajustes del addon por defecto? Tus puntos se conservan.",
+    ["Réglages remis par défaut."]            = "Ajustes restablecidos por defecto.",
+    ["Raccourcis clavier : Échap > Options > Raccourcis. Toutes les commandes : /ley help."] =
+        "Atajos de teclado: Esc > Opciones > Atajos de teclado. Todos los comandos: /ley help.",
+    ["Options : /ley options, ou Échap > Options > AddOns."] =
+        "Opciones: /ley options, o Esc > Opciones > AddOns.",
+    ["Le panneau d'options n'est pas disponible sur ce client."] =
+        "El panel de opciones no está disponible en este cliente.",
+    ["Les options s'ouvrent hors combat."]   = "Las opciones se abren fuera de combate.",
+
     -- Compartir
     ["Partage des positions"] = "Compartir posiciones",
     ["Aucune position à exporter."] = "Ninguna posición que exportar.",

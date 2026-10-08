@@ -29,6 +29,35 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-08 15:30 - jusqu'a 14780d9 - main-dev@7fc90e8 2026-10-08 15:19 - Forever -
+  **GO, dit par le user + capture d'ecran** - branche `feat/panneau-options`, les retouches de la
+  revue `api-gotcha-reviewer` : `/ley options` hors combat ouvre la page ; en combat il refuse
+  (la garde `InCombatLockdown`, voulue) ; par Echap > Options, la page s'ouvre EN COMBAT sans
+  plantage (chemin de Blizzard, pas un appel d'addon). Pied de page lu sur la capture :
+  « Key bindings: Esc > Options > Keybindings. All commands: /ley help. » (la fleche en case vide
+  est corrigee). `taint.log` (`taintLog 2`) relu par l'agent : il ne couvre que le chargement
+  (15:22:52) ; 0 action bloquee ; LeyLines n'y figure que pour la lecture de ses noms de
+  raccourcis (`BINDING_HEADER_LEYLINES`, `BINDING_NAME_LEYLINES_*`) par l'ecran des raccourcis de
+  Blizzard, comme avant le panneau. PAS observe : la partie du journal apres le chargement
+  (ouverture de la page, combat), pas encore ecrite sur le disque par le client ; le libelle
+  d'une case qui coche au clic ; le message exact du refus en combat.
+- 2026-10-08 15:07 - jusqu'a 466daba - main-dev@21be437 2026-10-08 14:49 - Forever -
+  **GO, sur la parole du user, coche dans l'appli du banc + capture d'ecran de la page** (fiche
+  `LeyLines--feat-panneau-options`, 9 gestes sur 9 « Vu, OK », 15:03-15:07, client anglais) -
+  branche `feat/panneau-options` : la page « Ley Line / Elemental Convergence Tracker » est dans
+  Options > AddOns, deux colonnes, rien ne deborde (capture) ; decocher « Spots on the minimap »
+  efface les points et `/ley` dit « Minimap off », `/ley pins on` recoche la case ; curseur du
+  rappel sur 10 puis `/ley warn` : 10 ; `/ley warn 30` puis ouvrir la page : curseur au bout, et
+  `/ley warn` dit toujours 30 ; infobulles ; « Contribute » ouvre sa fenetre PAR-DESSUS les
+  options ; « Restore default settings » + Yes : taille des points revenue a 16 ; `/ley options`
+  ouvre la page, `/ley` finit sur la ligne qui la rappelle ; mode Edition puis combat : aucun
+  message a l'ecran. Defaut vu sur la capture et corrige ensuite (pas revu en jeu) : la fleche
+  « → » du pied de page s'affichait en case vide (police du jeu sans le glyphe), remplacee par
+  « > ». PAS observe : `taint.log` (pas ecrit depuis le 2026-10-06 ; avec `taintLog 1` le jeu ne
+  note que les actions BLOQUEES, ce qui colle avec « rien de bloque », sans pouvoir l'exclure
+  d'un journal qui ne tournait pas) ; le nombre de points avant/apres les defauts (case « avant »
+  non cochee) ; les clients allemand et espagnol ; les boutons « Learn my spell », « Erase
+  tooltip readings », « Export », « Import », « Reset tracker position ».
 - 2026-10-08 14:47 - jusqu'a 6f0ed1f - main-dev@1a17336 2026-10-08 14:18 - Forever -
   **GO, sur la parole du user, coche dans l'appli du banc** (fiche
   `LeyLines--feat-point-de-route-option`, 6 gestes sur 6 « Vu, OK », 14:43-14:47) - branche

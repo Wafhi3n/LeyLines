@@ -146,7 +146,10 @@ end
 -- ---------------------------------------------------------------------------
 -- Commandes
 -- ---------------------------------------------------------------------------
+-- Les commandes de RÉGLAGE (pins, map, hud, warn, signal…) n'y sont pas : elles s'y inscrivent depuis
+-- la liste déclarative de LeyLines_Options.lua, que le panneau d'options lit aussi.
 local CMD = {}
+LL.CMD = CMD
 
 -- Les comptes sont ceux de l'espèce du JOUEUR : ce qu'il voit sur sa carte, pas ce que la base
 -- du compte range pour ses personnages de l'autre faction.
@@ -213,62 +216,11 @@ CMD.clear = function()
 end
 CMD.vider = CMD.clear
 
--- Partagé par `/ley hud` et le clic droit du compartiment d'addons (LeyLines_Compartment.lua).
-function LL:ToggleHUD()
-    LL.db.hud.show = not LL.db.hud.show
-    LL.HUD:Apply()
-    LL:Printf(L["Suivi à l'écran : %s."], LL:OnOff(LL.db.hud.show))
-    LL:WarnHidden()
-end
-
-CMD.hud = function() LL:ToggleHUD() end
-
-CMD.pins = function()
-    LL.db.minimap.show = not LL.db.minimap.show
-    LL:Refresh()
-    LL:Printf(L["Affichage sur la minicarte : %s."], LL:OnOff(LL.db.minimap.show))
-    LL:WarnHidden()
-end
-CMD.minimap = CMD.pins
-
-CMD.map = function()
-    LL.db.worldmap.show = not LL.db.worldmap.show
-    LL:Refresh()
-    LL:Printf(L["Affichage sur la carte du monde : %s."], LL:OnOff(LL.db.worldmap.show))
-    LL:WarnHidden()
-end
-CMD.carte = CMD.map
-
--- Demandé sur CurseForge le 2026-10-04 (« only show ley lines when playing a skyborn ») : la base
--- est au compte, donc un personnage d'une autre race voyait des points qu'il ne peut pas absorber.
-CMD.skyborne = function()
-    LL.db.skyborneOnly = not LL.db.skyborneOnly
-    LL:Refresh()
-    LL:Printf(L["Points seulement sur un personnage Skyborne : %s."], LL:OnOff(LL.db.skyborneOnly))
-    LL:WarnHidden()
-end
-CMD.skyborn = CMD.skyborne
-
 CMD.track = function() LL:TrackNearest() end
 CMD.suivre = CMD.track
 
 CMD.learn = function() LL.Capture:ArmLearn() end
 CMD.apprendre = CMD.learn
-
-CMD.auto = function()
-    local on = not LL.Capture:AutoEnabled()
-    LL.db.capture.vignette, LL.db.capture.spell = on, on
-    LL:Printf(L["Capture automatique : %s."], LL:OnOff(on))
-end
-
--- La capture par infobulle a son propre interrupteur : elle relève la position du JOUEUR qui
--- VISE, donc elle pose des points approximatifs. On ne la rallume pas par mégarde avec `auto`.
-CMD.tooltip = function()
-    LL.db.capture.tooltip = not LL.db.capture.tooltip
-    LL:Printf(L["Capture par infobulle : %s (relevé approximatif, à ta position)."],
-        LL:OnOff(LL.db.capture.tooltip))
-end
-CMD.infobulle = CMD.tooltip
 
 CMD.clean = function()
     local n = LL.Nodes:RemoveBySource("tooltip")
@@ -292,35 +244,6 @@ CMD.name = function(rest)
 end
 CMD.nom = CMD.name
 
-CMD.scale = function(rest)
-    local n = tonumber(rest)
-    if n and n >= 0.25 and n <= 4 then LL.db.minimap.scale = n end
-    LL:Printf(L["Échelle de la minicarte : %s (rayon lu : %s yd)."],
-        LL.db.minimap.scale, math.floor(LL.Geo:MinimapRadius() + 0.5))
-end
-
-CMD.warn = function(rest)
-    local n = tonumber(rest)
-    if n and n >= 0 and n <= 60 then
-        LL.db.warnMinutes = n
-        LL.HUD.warned = false   -- un nouveau seuil doit pouvoir se déclencher tout de suite
-    end
-    LL:Printf(L["Rappel de buff : à %s min restantes (0 = désactivé)."], LL.db.warnMinutes)
-end
-CMD.rappel = CMD.warn
-
-local function Switch(current, rest)   -- `on` / `off`, sinon bascule (`signal`, `waypoint`)
-    local arg = string.lower(rest)
-    if arg == "on" then return true elseif arg == "off" then return false end
-    return not current
-end
-
-CMD.waypoint = function(rest)
-    LL.db.autoWaypoint = Switch(LL.db.autoWaypoint, rest)
-    LL:Printf(L["Point de route posé par le rappel de buff : %s."], LL:OnOff(LL.db.autoWaypoint))
-end
-CMD.route = CMD.waypoint
-
 CMD.export = function() LL.Share:ShowExport() end
 CMD.import = function(rest)
     -- Un code court tient dans la ligne de chat ; au-dela, la fenetre est le seul chemin.
@@ -337,18 +260,6 @@ CMD.contribuer = CMD.contribute
 -- Les contributeurs de la liste livrée (docs/specs/remerciements.md).
 CMD.credits = function() LL.Thanks:Show() end
 CMD.merci = CMD.credits
-
--- `/ley signal on|off` ; sans argument, bascule, comme hud / pins / map. Coupé, le signal se tait
--- mais le nombre reste calculé : il est redonné ici.
-CMD.signal = function(rest)
-    LL.db.signal = Switch(LL.db.signal, rest)
-    LL:Refresh()
-    LL:Printf(L["Signal des positions à partager : %s."], LL:OnOff(LL.db.signal))
-    local pending = LL.Signal:Count()
-    if pending > 0 then
-        LL:Printf(L["%s position(s) à partager, absente(s) de la liste commune."], pending)
-    end
-end
 
 CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe

@@ -45,6 +45,18 @@ les SavedVariables.
 | `/ley learn` | apprend ton sort de ligne tellurique (voir ci-dessous) |
 | `/ley name <texte>` | ajoute un nom d'objet à reconnaître |
 | `/ley probe` | diagnostic : ce que le client expose vraiment autour de toi |
+| `/ley options` | ouvre la page de l'addon dans Options → AddOns (alias `config`) |
+
+Les commandes de réglage à deux états (`pins`, `map`, `hud`, `skyborne`, `auto`, `tooltip`,
+`waypoint`, `signal`) acceptent `on` / `off` ; sans argument, elles basculent.
+
+**La page d'options** (Échap → Options → AddOns, ou `/ley options`) reprend tous ces réglages en
+quatre sections (affichage, capture, rappel de buff, partage), plus ceux qui n'ont pas de commande
+(taille des points, points hors de portée au bord de la minicarte, position du bandeau) et un bouton
+« Rétablir les réglages par défaut ». Commandes et page lisent la même liste,
+`LeyLines_Options.lua` ; la page est construite par `LeyLines_OptionsPanel.lua`, sans menu
+déroulant (sur Forever, un menu déroulant créé par un addon fait planter le client). Spec :
+`docs/specs/panneau-options.md`.
 
 L'addon est aussi dans le **compartiment d'addons** de la minicarte (le bouton natif qui liste les
 addons) : clic gauche = `/ley contribute`, clic droit = bandeau. Inscription par les lignes
