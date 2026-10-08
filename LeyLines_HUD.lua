@@ -55,6 +55,15 @@ function HUD:Build()
     f.dist = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     f.dist:SetPoint("BOTTOMLEFT", f.icon, "BOTTOMRIGHT", 6, 1)
     f.dist:SetJustifyH("LEFT")
+
+    -- L'âge du dernier signalement (partage en direct, D8) : une 3e ligne, et le bandeau grandit
+    -- seulement quand elle a quelque chose à dire.
+    f.age = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    f.age:SetPoint("TOPLEFT", f.dist, "BOTTOMLEFT", 0, -2)
+    f.age:SetPoint("RIGHT", f, "RIGHT", -6, 0)   -- sous la flèche, jamais hors du fond
+    f.age:SetJustifyH("LEFT")
+    f.age:SetWordWrap(false)
+    f.age:SetTextColor(0.5, 0.9, 1)
 end
 
 function HUD:Wire()
@@ -142,6 +151,9 @@ function HUD:Update()
     else
         f.dist:SetTextColor(1, 0.82, 0)
     end
+    local age = LL.Live and LL.Live.AgeText(node)
+    f.age:SetText(age or "")
+    f:SetHeight(age and 50 or 36)
     self:PointArrow(node)
 end
 

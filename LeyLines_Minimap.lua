@@ -65,6 +65,8 @@ function MM:ShowTooltip(pin)
     GameTooltip:AddLine(LL.Nodes:Label(pin.node), 0.75, 0.55, 1)
     GameTooltip:AddLine(string.format(L["%s yd — source : %s"],
         math.floor((pin.dist or 0) + 0.5), LL.Nodes:SourceLabel(pin.node)), 1, 1, 1)
+    local age = LL.Live and LL.Live.AgeText(pin.node)   -- partage en direct (D8)
+    if age then GameTooltip:AddLine(age, 0.5, 0.9, 1) end
     GameTooltip:Show()
     LL.Capture:Unmute()
 end

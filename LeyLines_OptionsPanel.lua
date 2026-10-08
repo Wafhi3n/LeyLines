@@ -18,6 +18,7 @@ LL.OptionsPanel = Panel
 local COL_X, COL_W = { 16, 340 }, 318
 local TOP_Y = -70
 local ROW_CHECK, ROW_SLIDER, ROW_BUTTON, GAP = 28, 50, 28, 14
+local BUILD = { bool = "Check", num = "Slider", choice = "Choice" }   -- le contrôle de chaque `kind`
 
 local SECTIONS = {
     { id = "display", title = L["Affichage"],      col = 1 },
@@ -99,6 +100,22 @@ function Panel:Slider(parent, e, x, y)
     return s, ROW_SLIDER
 end
 
+-- Un choix : une case par valeur, qui s'excluent (un menu déroulant planterait le client, C17).
+-- Aucune cochée tant que le joueur n'a pas choisi : la question de l'annonce reste à poser.
+function Panel:Choice(parent, e, x, y)
+    local boxes = {}
+    for i, c in ipairs(e.choices) do
+        local cb = self:Check(parent, { label = c.label, tip = e.tip }, x, y - (i - 1) * ROW_CHECK)
+        cb:SetScript("OnClick", function() LL.Options:Set(e, c.value) end)   -- onChange recoche
+        boxes[i] = cb
+    end
+    boxes[1].Load = function()
+        local v = LL.Options:Get(e)
+        for i, c in ipairs(e.choices) do boxes[i]:SetChecked(v == c.value) end
+    end
+    return boxes[1], #e.choices * ROW_CHECK
+end
+
 -- Deux boutons par rangée, ou un seul (`perRow`). Rend la hauteur occupée.
 function Panel:Buttons(parent, list, x, y)
     local per = list.perRow or 2
@@ -122,8 +139,7 @@ function Panel:Section(parent, sec, y)
     y = y - 24
     for _, e in ipairs(LL.Options.LIST) do
         if e.section == sec.id then
-            local build = (e.kind == "bool") and self.Check or self.Slider
-            local ctl, h = build(self, parent, e, x, y)
+            local ctl, h = self[BUILD[e.kind]](self, parent, e, x, y)
             self.controls[#self.controls + 1] = ctl
             y = y - h
         end

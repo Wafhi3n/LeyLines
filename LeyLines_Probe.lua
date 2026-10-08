@@ -24,6 +24,19 @@ function Probe:Dump()
     self:DumpVignettes()
     self:DumpAreaPOIs()
     self:DumpCapture()
+    self:DumpLive()
+end
+
+-- Partage en direct (docs/specs/partage-direct.md) : le canal General trouve, et son
+-- zoneChannelID lu sur une ligne recue (M6 : jamais mesure, d'ou le releve).
+function Probe:DumpLive()
+    local Live = LL.Live
+    if not Live then return end
+    local index, name = Live:GeneralIndex()
+    LL:Printf("partage : General %s, zoneChannelID lu %s, annonce %s, lecture %s",
+        index and string.format("/%s %q", index, tostring(name)) or "absent",
+        tostring(Live.generalZoneID or "pas encore"), tostring(LL.db.announce or "pas choisie"),
+        YesNo(LL.db.readAnnounces ~= false))
 end
 
 -- Ce que le client a rendu au chargement, avant que l'addon n'y touche.

@@ -1,7 +1,7 @@
 # Partage en direct des failles actives
 
-> État : **brouillon, mesures faites** (M1, M3 et M4 tiennent, 2026-10-08), à approuver, rien de
-> codé · Ouverte le 2026-10-08 par le
+> État : **approuvée, palier 1 codé** (branche `feat/partage-direct`, 2026-10-08), **pas encore vu
+> en jeu** · Mesures faites (M1, M3 et M4 tiennent, 2026-10-08) · Ouverte le 2026-10-08 par le
 > user sur une demande de joueur · Transport révisé le même jour par le user : **General en clair,
 > avec étiquette, comme les annonces de COC** (D2) · Tranchés par le user le même jour : D4 (le
 > joueur choisit automatique, popup ou désactivé), D5, D7, D9, D10 (un panneau d'options), puis D3,
@@ -253,7 +253,36 @@ dernière annonce connue de ce point, la sienne comprise). Rien d'autre n'est aj
 
 1. Palier 1 : la question et les modes popup et désactivé (`/ley announce`), l'annonce avec le
    lien emprunté, lecture des lignes `#LL`, âge dans les infobulles et le bandeau. Critères 1 à 9
-   et 11.
-2. Palier 2 : le mode d'annonce et la lecture dans le panneau d'options (spec
-   `panneau-options.md`, qui peut sortir avant).
+   et 11. **Codé** (`LeyLines_Live.lua`), critères 1 à 5 tenus par `tests/test_leylines_live.lua`.
+2. Palier 2 : le mode d'annonce et la lecture dans le panneau d'options. **Fait avec le palier 1** :
+   le panneau est sorti en v1.7.0, il a suffi de deux entrées dans `LL.Options.LIST`.
 3. Palier 3 : le mode automatique, proposé dans la question. Critère 10.
+
+## Ce que le code du palier 1 a tranché (2026-10-08)
+
+Des points que les décisions laissaient ouverts, tranchés en codant, à revoir au banc :
+
+- **La question** propose les deux modes du palier : **Oui** passe en « demander » et poste
+  aussitôt (ce clic est le geste), **Jamais** passe en « désactivé », **Échap** ne tranche rien.
+  Elle s'ouvre une fois par session au plus. Elle ne s'ouvre pas sans canal General.
+- **La fenêtre « demander »** se ferme seule au bout de 2 min, et ne se rouvre pas pour la même
+  faille avant 15 min. Une annonce de la même faille lue pendant qu'elle est ouverte la ferme.
+  Au clic sur Oui, tout se revérifie : annonce lue entre-temps, General parti, messagerie
+  verrouillée (`C_ChatInfo.InChatMessagingLockdown`, combat de boss) : rien ne part, et le chat
+  le dit.
+- **D5 vit en mémoire de session**, pas dans la base (le contrat n'ajoute que `live` à un point) :
+  après un `/reload`, une faille annoncée il y a 5 min peut l'être une fois de plus. Une annonce
+  lue compte pour D5 même lecture coupée : se taire après un autre n'est pas un affichage.
+- **Les coordonnées annoncées sont celles du point**, pas celles du lancer : le lecteur les
+  cherche dans sa liste à `mergeRange` près.
+- **L'espèce d'une annonce lue est celle du lecteur** : la phrase n'est pas lue (D9), et General
+  est attendu propre à chaque faction (M5, pas mesuré).
+- **General se reconnaît à son nom**, numéro et zone retirés (« General », « Général »,
+  « Allgemein »), à l'envoi comme à la lecture. Une ligne `#LL` d'un autre canal est ignorée. Le
+  `zoneChannelID` dirait General sans texte, mais il n'est pas mesuré (M6) : `/ley probe` le relève.
+- **Notre propre ligne revient en écho** : écartée par le GUID de l'auteur, jamais par son nom.
+- **Réglages** : `LeyLinesDB.announce` est un choix sans défaut, que la réinitialisation des
+  options ne touche pas (c'est une réponse du joueur). `readAnnounces` n'a pas de clé dans
+  `DEFAULTS` : nil vaut vrai. Commande `/ley announce popup|off` (alias `annonce`) ; dans le
+  panneau, deux cases qui s'excluent, section Partage (jamais un menu déroulant, C17).
+- **L'âge** s'affiche sur une 3e ligne du bandeau, qui grandit seulement quand il y en a un.

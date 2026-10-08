@@ -81,6 +81,8 @@ function WM:ShowTooltip(pin)
     GameTooltip:AddLine(string.format("%.1f / %.1f", pin.node.x * 100, pin.node.y * 100), 1, 1, 1)
     GameTooltip:AddLine(string.format(L["Source : %s — %s relevé(s)"],
         LL.Nodes:SourceLabel(pin.node), pin.node.hits or 1), 0.7, 0.7, 0.7)
+    local age = LL.Live and LL.Live.AgeText(pin.node)   -- partage en direct (D8)
+    if age then GameTooltip:AddLine(age, 0.5, 0.9, 1) end
     GameTooltip:AddLine(L["Clic gauche : poser un point de route."], 0.4, 0.8, 0.4)
     GameTooltip:AddLine(L["Clic droit : effacer ce point."], 0.9, 0.5, 0.5)
     GameTooltip:Show()

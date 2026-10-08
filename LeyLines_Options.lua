@@ -85,6 +85,21 @@ Options.LIST = {
       label = L["Signal des positions à partager"],
       tip = L["Une icône près de la minicarte quand tu trouves un point que la liste commune n'a pas."],
       msg = L["Signal des positions à partager : %s."], after = Refresh, tell = Pending },
+    -- Partage en direct (docs/specs/partage-direct.md, D4) : nil = pas encore choisi, et la première
+    -- absorption pose la question. Aucun défaut, donc la réinitialisation n'y touche pas : c'est une
+    -- réponse du joueur, pas un réglage livré. Le mode automatique viendra au palier 3.
+    { key = "announce", kind = "choice", section = "share", cmd = { "announce", "annonce" },
+      choices = { { value = "popup", label = L["Annonce dans Général : me demander"] },
+                  { value = "off",   label = L["Annonce dans Général : jamais"] } },
+      unset = L["Annonce dans Général : pas encore choisie (la question viendra à ta prochaine absorption)."],
+      tip = L["Après une absorption confirmée, une ligne avec un lien de point de route dans le canal Général de la zone. Les joueurs sans l'addon la lisent aussi."] },
+    -- D10 : vrai tant que le joueur ne l'a pas coupée (pas de clé dans DEFAULTS : nil = vrai).
+    { key = "readAnnounces", kind = "bool", section = "share",
+      label = L["Lire les annonces des autres joueurs"],
+      tip = L["Une annonce d'un autre joueur date le point connu le plus proche : « vue active il y a 4 min »."],
+      get = function() return LL.db.readAnnounces ~= false end,
+      set = function(v) LL.db.readAnnounces = v end,
+      def = function() return true end },
 }
 
 -- « minimap.show » → LeyLinesDB.minimap, "show".
@@ -123,9 +138,26 @@ local function Switch(current, rest)   -- `on` / `off`, sinon bascule
     return not current
 end
 
+-- Un choix : `/ley announce popup`. Un mot inconnu ne change rien et donne les mots permis ; la
+-- ligne dit le choix en place par son libellé, ou qu'il reste à faire.
+function Options:Choose(e, rest)
+    local arg, words = string.lower(rest or ""), {}
+    for _, c in ipairs(e.choices) do
+        if c.value == arg then self:Set(e, arg) end
+        words[#words + 1] = c.value
+    end
+    local current = self:Get(e)
+    for _, c in ipairs(e.choices) do
+        if c.value == current then LL:Print(c.label .. ".") end
+    end
+    if current == nil then LL:Print(e.unset) end
+    if arg ~= current then LL:Printf(L["Choix possibles : %s."], table.concat(words, ", ")) end
+end
+
 -- La commande : change (si l'argument le permet), puis le dit. Un nombre hors bornes ne change
 -- rien, et la ligne redonne la valeur en place.
 function Options:Command(e, rest)
+    if e.kind == "choice" then return self:Choose(e, rest) end
     if e.kind == "bool" then
         self:Set(e, Switch(self:Get(e), rest))
     else

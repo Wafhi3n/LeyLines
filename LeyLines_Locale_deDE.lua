@@ -160,6 +160,31 @@ local de = {
         "Das Optionsfenster ist auf diesem Client nicht verfügbar.",
     ["Les options s'ouvrent hors combat."]   = "Die Optionen öffnen sich außerhalb des Kampfes.",
 
+    -- Partage en direct (docs/specs/partage-direct.md). La LIGNE envoyée, elle, est en anglais fixe.
+    ["Annonce dans Général : me demander"]    = "Ankündigung in Allgemein: nachfragen",
+    ["Annonce dans Général : jamais"]         = "Ankündigung in Allgemein: nie",
+    ["Annonce dans Général : pas encore choisie (la question viendra à ta prochaine absorption)."] =
+        "Ankündigung in Allgemein: noch nicht gewählt (die Frage kommt bei deiner nächsten Absorption).",
+    ["Après une absorption confirmée, une ligne avec un lien de point de route dans le canal Général de la zone. Les joueurs sans l'addon la lisent aussi."] =
+        "Nach einer bestätigten Absorption eine Zeile mit Wegpunkt-Link im Allgemein-Kanal der Zone. Spieler ohne das Addon können sie auch lesen.",
+    ["Lire les annonces des autres joueurs"]  = "Ankündigungen anderer Spieler lesen",
+    ["Une annonce d'un autre joueur date le point connu le plus proche : « vue active il y a 4 min »."] =
+        "Die Ankündigung eines anderen Spielers datiert den nächsten bekannten Punkt: 'vor 4 Min. aktiv gesehen'.",
+    ["Choix possibles : %s."]                 = "Mögliche Werte: %s.",
+    ["Annoncer cette %s dans le canal Général ?"] = "Diese %s im Kanal Allgemein ankündigen?",
+    ["Annoncer cette %s dans le canal Général ? Une ligne avec un lien de point de route, que tous les joueurs de la zone peuvent lire. Oui : l'annoncer, et te le proposer après chaque absorption. Jamais : ne plus le proposer. Ça se change dans /ley options."] =
+        "Diese %s im Kanal Allgemein ankündigen? Eine Zeile mit Wegpunkt-Link, die alle Spieler der Zone lesen können. Ja: ankündigen und nach jeder Absorption wieder anbieten. Nie: nicht mehr anbieten. Änderbar unter /ley options.",
+    ["Jamais"]                                = "Nie",
+    ["Annonce dans Général : jamais. /ley options pour changer."] =
+        "Ankündigung in Allgemein: nie. Ändern mit /ley options.",
+    ["Déjà annoncée par un autre joueur : rien n'est parti."] =
+        "Schon von einem anderen Spieler angekündigt: nichts gesendet.",
+    ["Pas de canal Général ici : rien n'est parti."] = "Kein Allgemein-Kanal hier: nichts gesendet.",
+    ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
+        "Diese Zone erlaubt keinen Wegpunkt: nichts gesendet.",
+    ["Vue active il y a %s min"]              = "Vor %s Min. aktiv gesehen",
+    ["Vue active il y a %s h"]                = "Vor %s Std. aktiv gesehen",
+
     -- Teilen
     ["Partage des positions"] = "Positionen teilen",
     ["Aucune position à exporter."] = "Keine Position zum Exportieren.",

@@ -160,6 +160,31 @@ local es = {
         "El panel de opciones no está disponible en este cliente.",
     ["Les options s'ouvrent hors combat."]   = "Las opciones se abren fuera de combate.",
 
+    -- Partage en direct (docs/specs/partage-direct.md). La LIGNE envoyée, elle, est en anglais fixe.
+    ["Annonce dans Général : me demander"]    = "Anuncio en General: preguntarme",
+    ["Annonce dans Général : jamais"]         = "Anuncio en General: nunca",
+    ["Annonce dans Général : pas encore choisie (la question viendra à ta prochaine absorption)."] =
+        "Anuncio en General: aún sin elegir (la pregunta llegará en tu próxima absorción).",
+    ["Après une absorption confirmée, une ligne avec un lien de point de route dans le canal Général de la zone. Les joueurs sans l'addon la lisent aussi."] =
+        "Tras una absorción confirmada, una línea con un enlace de punto de ruta en el canal General de la zona. Los jugadores sin el addon también pueden leerla.",
+    ["Lire les annonces des autres joueurs"]  = "Leer los anuncios de otros jugadores",
+    ["Une annonce d'un autre joueur date le point connu le plus proche : « vue active il y a 4 min »."] =
+        "El anuncio de otro jugador fecha el punto conocido más cercano: 'vista activa hace 4 min'.",
+    ["Choix possibles : %s."]                 = "Opciones posibles: %s.",
+    ["Annoncer cette %s dans le canal Général ?"] = "¿Anunciar esta %s en el canal General?",
+    ["Annoncer cette %s dans le canal Général ? Une ligne avec un lien de point de route, que tous les joueurs de la zone peuvent lire. Oui : l'annoncer, et te le proposer après chaque absorption. Jamais : ne plus le proposer. Ça se change dans /ley options."] =
+        "¿Anunciar esta %s en el canal General? Una línea con un enlace de punto de ruta que todos los jugadores de la zona pueden leer. Sí: anunciarla y ofrecértelo tras cada absorción. Nunca: no volver a ofrecerlo. Se cambia en /ley options.",
+    ["Jamais"]                                = "Nunca",
+    ["Annonce dans Général : jamais. /ley options pour changer."] =
+        "Anuncio en General: nunca. /ley options para cambiarlo.",
+    ["Déjà annoncée par un autre joueur : rien n'est parti."] =
+        "Ya anunciada por otro jugador: no se envió nada.",
+    ["Pas de canal Général ici : rien n'est parti."] = "No hay canal General aquí: no se envió nada.",
+    ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
+        "Esta zona no admite puntos de ruta: no se envió nada.",
+    ["Vue active il y a %s min"]              = "Vista activa hace %s min",
+    ["Vue active il y a %s h"]                = "Vista activa hace %s h",
+
     -- Compartir
     ["Partage des positions"] = "Compartir posiciones",
     ["Aucune position à exporter."] = "Ninguna posición que exportar.",

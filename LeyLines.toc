@@ -50,6 +50,10 @@ LeyLines_Thanks.lua
 LeyLines_Signal.lua
 LeyLines_Indicator.lua
 
+# Partage en direct des failles actives par le canal General (docs/specs/partage-direct.md) : une
+# ligne lisible avec le lien de point de route du jeu, et la lecture de celles des autres.
+LeyLines_Live.lua
+
 # Reglages : la liste declarative lue par les commandes /ley ET par la page d'options du jeu
 # (docs/specs/panneau-options.md). Apres LeyLines.lua, dont elle remplit la table des commandes.
 LeyLines_Options.lua

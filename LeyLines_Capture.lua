@@ -387,7 +387,9 @@ function Capture:ResolveCast(map, x, y)
     -- s'il nomme l'objet de l'AUTRE faction (survolé en chemin, il n'est pas celui qu'on a absorbé).
     local seen = self:Matches(self.lastText) and LL.Nodes:CleanName(self.lastText) or nil
     if seen and (LL.Nodes:KindOfName(seen) or kind) ~= kind then seen = nil end
-    self:Store(map, x, y, { src = "spell", name = seen, kind = kind })
+    local node = self:Store(map, x, y, { src = "spell", name = seen, kind = kind })
+    -- Partage en direct (docs/specs/partage-direct.md) : la faille est vue active maintenant.
+    if node and LL.Live then LL.Live:OnAbsorb(node) end
 end
 
 function Capture:ArmLearn()

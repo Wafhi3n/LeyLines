@@ -160,6 +160,31 @@ local en = {
         "The options panel isn't available on this client.",
     ["Les options s'ouvrent hors combat."]   = "The options open out of combat.",
 
+    -- Partage en direct (docs/specs/partage-direct.md). La LIGNE envoyée, elle, est en anglais fixe.
+    ["Annonce dans Général : me demander"]    = "Announce in General: ask me",
+    ["Annonce dans Général : jamais"]         = "Announce in General: never",
+    ["Annonce dans Général : pas encore choisie (la question viendra à ta prochaine absorption)."] =
+        "Announce in General: not chosen yet (you'll be asked at your next absorption).",
+    ["Après une absorption confirmée, une ligne avec un lien de point de route dans le canal Général de la zone. Les joueurs sans l'addon la lisent aussi."] =
+        "After a confirmed absorption, a line with a map pin link in the zone's General channel. Players without the addon can read it too.",
+    ["Lire les annonces des autres joueurs"]  = "Read other players' announcements",
+    ["Une annonce d'un autre joueur date le point connu le plus proche : « vue active il y a 4 min »."] =
+        "Another player's announcement dates the nearest known spot: 'seen active 4 min ago'.",
+    ["Choix possibles : %s."]                 = "Possible choices: %s.",
+    ["Annoncer cette %s dans le canal Général ?"] = "Announce this %s in the General channel?",
+    ["Annoncer cette %s dans le canal Général ? Une ligne avec un lien de point de route, que tous les joueurs de la zone peuvent lire. Oui : l'annoncer, et te le proposer après chaque absorption. Jamais : ne plus le proposer. Ça se change dans /ley options."] =
+        "Announce this %s in the General channel? One line with a map pin link that every player in the zone can read. Yes: announce it, and offer it after each absorption. Never: stop offering. You can change this in /ley options.",
+    ["Jamais"]                                = "Never",
+    ["Annonce dans Général : jamais. /ley options pour changer."] =
+        "Announce in General: never. /ley options to change it.",
+    ["Déjà annoncée par un autre joueur : rien n'est parti."] =
+        "Already announced by another player: nothing was sent.",
+    ["Pas de canal Général ici : rien n'est parti."] = "No General channel here: nothing was sent.",
+    ["Cette zone n'accepte pas de point de route : rien n'est parti."] =
+        "This zone doesn't take map pins: nothing was sent.",
+    ["Vue active il y a %s min"]              = "Seen active %s min ago",
+    ["Vue active il y a %s h"]                = "Seen active %s h ago",
+
     -- Partage
     ["Partage des positions"] = "Position sharing",
     ["Aucune position à exporter."] = "No position to export.",
