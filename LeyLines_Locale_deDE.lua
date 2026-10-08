@@ -40,8 +40,8 @@ local de = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minikarte %s — Karte %s — Verfolgung %s — Auto-Erfassung %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."] =
-        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <Min>, name <Text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."] =
+        "Befehle: /ley (Status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <Min>, waypoint, name <Text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "So geht's: Stell dich AUF die %s und tippe /ley add (oder nutze die Tastenbelegung).",
 
@@ -101,6 +101,7 @@ local de = {
         "%s: Buff endet in %s Min — keine bekannt in dieser Zone.",
     ["Rappel de buff : à %s min restantes (0 = désactivé)."] =
         "Buff-Erinnerung: bei %s Min Restzeit (0 = aus).",
+    ["Point de route posé par le rappel de buff : %s."] = "Wegpunkt durch die Buff-Erinnerung: %s.",
 
     -- Teilen
     ["Partage des positions"] = "Positionen teilen",

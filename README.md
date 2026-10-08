@@ -41,6 +41,7 @@ les SavedVariables.
 | `/ley skyborne` | points (minicarte, carte, bandeau) sur un personnage **Skyborne** seulement, masqués sur les autres races (désactivé par défaut) ; Skyborne = jeton de race `UnitRace` **ou** sort d'absorption livré connu, lus par `/ley probe` |
 | `/ley track` | pose un point de route natif sur la plus proche |
 | `/ley warn <min>` | rappel quand il reste N min de buff (défaut 5, `0` = jamais) |
+| `/ley waypoint [on\|off]` | le rappel pose aussi un point de route natif sur la plus proche (désactivé par défaut) |
 | `/ley learn` | apprend ton sort de ligne tellurique (voir ci-dessous) |
 | `/ley name <texte>` | ajoute un nom d'objet à reconnaître |
 | `/ley probe` | diagnostic : ce que le client expose vraiment autour de toi |
@@ -86,8 +87,11 @@ fusionne que les points que le joueur n'a pas encore reçus. Si tu en effaces un
 ## Le rappel de buff
 
 Le buff d'absorption dure 15 minutes. À **5 minutes restantes** (réglable par `/ley warn`), l'addon
-annonce le temps qu'il reste, la distance de la faille connue la plus proche, et **pose le point de
-route dessus** — le point de route natif du client, pas de TomTom à installer.
+annonce le temps qu'il reste et la distance de la faille connue la plus proche. Avec
+`/ley waypoint`, il **pose aussi le point de route dessus** (le point de route natif du client, pas
+de TomTom à installer). C'est coupé par défaut depuis le 2026-10-08 : le client n'a qu'un point de
+route, celui de l'addon remplaçait celui que le joueur avait posé, et un joueur ne voulait voir que
+les failles sur sa carte. Le clic sur le bandeau, `/ley track` et le raccourci en posent toujours un.
 
 Il ne se déclenche qu'une fois par buff, et se réarme dès que tu te recharges. Il tourne même
 bandeau masqué : c'est un rappel, pas un affichage.

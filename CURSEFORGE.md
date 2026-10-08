@@ -21,7 +21,7 @@ Nothing to set up. You can also stand on one and type /ley add, or bind a key to
 Spots then show up on your minimap and on the world map. A pin slides to the minimap edge and dims
 when one is out of range, so you still know which way to ride, and the continent view shows every
 spot you've found. Five minutes before your buff ends, the addon tells you how far the nearest one
-is and drops the game's own map pin on it, so you don't need TomTom.
+is. Type /ley waypoint if you also want it to drop the game's own map pin there (no TomTom needed).
 
 Each spot knows its faction. Your Alliance characters see ley lines, your Horde characters see
 convergences, and all of them share one list. If you'd rather not see them on characters that
