@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.7.0
+
+The addon has its own page in the game's options now. Press Esc, then Options, AddOns, and pick
+Ley Line / Elemental Convergence Tracker, or type /ley options. Everything the slash commands set is
+there, plus a few things that never had a command: the size of the spots on the minimap and on the
+world map, whether far-away spots stay on the minimap's edge, and a button that puts the tracker
+back where it started. "Restore default settings" resets the options and leaves your spots alone.
+
+The buff reminder doesn't drop a map pin on its own anymore. With 5 minutes left on your buff you
+still get the line in chat with the distance to the nearest spot, but the pin is up to you: tick
+"Also drop a map pin" in the options, or type /ley waypoint. Thanks to the player who asked about
+it on CurseForge!
+
+Small extra: every on/off command (/ley pins, map, hud, skyborne, auto, tooltip, waypoint, signal)
+now also takes "on" or "off" instead of only flipping.
+
 ## v1.6.4
 
 Seven new ley lines from four players, and two zones that had none on the list until now.

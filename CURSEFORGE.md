@@ -21,11 +21,17 @@ Nothing to set up. You can also stand on one and type /ley add, or bind a key to
 Spots then show up on your minimap and on the world map. A pin slides to the minimap edge and dims
 when one is out of range, so you still know which way to ride, and the continent view shows every
 spot you've found. Five minutes before your buff ends, the addon tells you how far the nearest one
-is. Type /ley waypoint if you also want it to drop the game's own map pin there (no TomTom needed).
+is. Tick "Also drop a map pin" in the options if you also want the game's own map pin there (no
+TomTom needed).
 
 Each spot knows its faction. Your Alliance characters see ley lines, your Horde characters see
 convergences, and all of them share one list. If you'd rather not see them on characters that
-aren't Skyborne, type /ley skyborne.
+aren't Skyborne, there's a box for that in the options.
+
+All the settings are in the game's options: press Esc, then Options, AddOns, and pick Ley Line /
+Elemental Convergence Tracker (or type /ley options). Spot sizes, the on-screen tracker, the buff
+reminder, capture, and a button to restore the defaults without touching your spots. Every setting
+still has its /ley command if you prefer typing.
 
 Found a spot the addon doesn't ship with? As soon as the spell confirms it, the addon's icon shows
 up at the top of the minimap, next to the mail letter. Click it (or type /ley contribute) and copy

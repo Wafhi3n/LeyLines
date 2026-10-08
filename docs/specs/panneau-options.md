@@ -1,7 +1,7 @@
 # Panneau d'options
 
-> État : **approuvée, en cours de code** (branche `feat/panneau-options`) · Mesures M7, M8, C17 le
-> 2026-10-08 · Demandé par le user le 2026-10-08 (« il faut un panneau d'options, les joueurs ne
+> État : **implémentée, vue au banc, sort en v1.7.0** (le 2026-10-08 ; O3 le compartiment, reste à
+> faire) · Mesures M7, M8, C17 le 2026-10-08 · Demandé par le user le 2026-10-08 (« il faut un panneau d'options, les joueurs ne
 > vont pas faire que des commandes ; essaie de prévoir les options possibles de l'addon ») · O3, O4
 > et O6 tranchés par le user le même jour ; O1, O2, O5 proposés par l'agent et pris pour le code
 > (le user a lancé le code sans objection)
