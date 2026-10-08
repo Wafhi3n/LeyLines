@@ -4,8 +4,8 @@
 > codé · Ouverte le 2026-10-08 par le
 > user sur une demande de joueur · Transport révisé le même jour par le user : **General en clair,
 > avec étiquette, comme les annonces de COC** (D2) · Tranchés par le user le même jour : D4 (le
-> joueur choisit automatique, popup ou désactivé), D5, D7, D9, D10 (un panneau d'options) · D3, D6
-> et D8 proposés par l'agent, pas encore tranchés
+> joueur choisit automatique, popup ou désactivé), D5, D7, D9, D10 (un panneau d'options), puis D3,
+> D6 et D8 : **toutes les décisions sont prises**
 > Cible : WoW: Forever / Camelot (16001) · Addon : LeyLines · Revient sur « base locale au compte,
 > aucun réseau » (D1)
 
@@ -103,7 +103,7 @@ leur royaume. Qu'il suive le calque reste à mesurer (M2).
   texte clair avec une étiquette**, sur le modèle des annonces `#CO` de COC. Les mesures M1, M3 et
   M4 l'ont confirmé le 2026-10-08. Première version, remplacée : un canal custom caché en
   AddonMessage.
-- **D3 (proposé)** : seul un lancer confirmé par le buff long donne une annonce.
+- **D3 (user, 2026-10-08)** : seul un lancer confirmé par le buff long donne une annonce.
 - **D4 (user, 2026-10-08)** : **le joueur choisit**, dans une option de l'addon, entre trois modes,
   et l'addon lui **demande** lequel. Le joueur ne parle donc jamais dans General sans l'avoir
   choisi : c'est ce qui concilie la demande (« automatically ») avec le modèle de COC (rien
@@ -127,11 +127,11 @@ leur royaume. Qu'il suive le calque reste à mesurer (M2).
   annonce par joueur toutes les 5 min. Le user ajoute que **connaître le cycle d'apparition et de
   disparition des failles compte plus encore** (Q5) : si on l'apprend, ces 15 min deviendront « le
   temps qu'il reste à la faille ».
-- **D6 (proposé)** : les lignes `#LL` des autres restent affichées dans le chat des porteurs de
+- **D6 (user, 2026-10-08)** : les lignes `#LL` des autres restent affichées dans le chat des porteurs de
   l'addon, comme chez tout le monde : le lien leur sert aussi.
 - **D7 (user, 2026-10-08)** : une annonce d'une position inconnue du lecteur est ignorée au palier 1. Plus
   tard, peut-être : un point temporaire « annoncé par un joueur », jamais enregistré, qui s'efface.
-- **D8 (proposé)** : l'âge s'affiche jusqu'à 24 h, en minutes sous 1 h (« il y a 4 min »), en
+- **D8 (user, 2026-10-08)** : l'âge s'affiche jusqu'à 24 h, en minutes sous 1 h (« il y a 4 min »), en
   heures au-delà. Il vit dans la base du compte (`node.live`, une date) et survit à un `/reload`.
 - **D9 (user, 2026-10-08)** : texte en anglais fixe, quelle que soit la langue du client, comme les
   jetons de COC. La lecture ne s'appuie que sur l'étiquette et sur le lien, jamais sur la phrase.
