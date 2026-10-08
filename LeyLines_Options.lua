@@ -168,8 +168,12 @@ function Options:ResetDefaults()
 end
 
 -- O5 : `/ley options` ouvre la page (enregistrée par LeyLines_OptionsPanel.lua au PLAYER_LOGIN).
+-- Hors combat seulement : `C_SettingsUtil.OpenSettingsPanel`, que `Settings.OpenToCategory` appelle,
+-- est marqué HasRestrictions, et l'appel n'a été mesuré que hors combat (2026-10-08).
 function Options:Open()
-    if self.category and Settings and Settings.OpenToCategory then
+    if InCombatLockdown and InCombatLockdown() then
+        LL:Print(L["Les options s'ouvrent hors combat."])
+    elseif self.category and Settings and Settings.OpenToCategory then
         Settings.OpenToCategory(self.category:GetID())
     else
         LL:Print(L["Le panneau d'options n'est pas disponible sur ce client."])
@@ -189,3 +193,4 @@ local function WithHint(fn)
 end
 LL.CMD.status = WithHint(LL.CMD.status)
 LL.CMD.help   = WithHint(LL.CMD.help)
+LL.CMD.aide   = LL.CMD.help   -- l'alias de LeyLines.lua pointe encore sur l'aide d'avant l'enveloppe

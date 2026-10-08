@@ -152,7 +152,12 @@ build 70245, un compte, par `/run` (aucun de nos addons n'avait de page d'option
    au nom de LeyLines dans `taint.log`. Témoin : mêmes gestes, addon désactivé (M7).
 7. [human] `/ley options` ouvre la page de l'addon (le compartiment : O3, plus tard).
 8. [agent] Aucun menu déroulant, aucune écriture dans le panneau des options de Blizzard ni dans
-   ses tables. → `api-gotcha-reviewer`
+   ses tables. → `api-gotcha-reviewer`. **Passé le 2026-10-08** : aucun défaut bloquant ; corrigés
+   aussitôt : l'alias `/ley aide` qui sautait la ligne de rappel, `/ley options` en combat (refusé
+   avec un message : `OpenSettingsPanel` est marqué HasRestrictions, jamais mesuré en combat), le
+   libellé des cases qui ne répondait pas au survol, la largeur du pied de page. Restent à mesurer :
+   `/ley options` en combat, et `taint.log` au niveau 2 (`/console taintLog 2`) à la première
+   ouverture de la page.
 
 ## Contrat
 

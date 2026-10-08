@@ -158,6 +158,7 @@ local de = {
         "Optionen: /ley options, oder Esc > Optionen > AddOns.",
     ["Le panneau d'options n'est pas disponible sur ce client."] =
         "Das Optionsfenster ist auf diesem Client nicht verfügbar.",
+    ["Les options s'ouvrent hors combat."]   = "Die Optionen öffnen sich außerhalb des Kampfes.",
 
     -- Teilen
     ["Partage des positions"] = "Positionen teilen",

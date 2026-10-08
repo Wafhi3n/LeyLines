@@ -67,6 +67,7 @@ function Panel:Check(parent, e, x, y)
     cb.Text:SetWordWrap(false)
     cb.Text:SetJustifyH("LEFT")
     cb.Text:SetText(e.label)
+    cb:SetHitRectInsets(0, -(COL_W - 30), 0, 0)   -- le libellé fait partie de la case : survol et clic
     cb:SetScript("OnClick", function(box)
         LL.Options:Set(e, box:GetChecked() and true or false)
     end)
@@ -149,6 +150,8 @@ function Panel:Build(f)
     reset:SetScript("OnClick", function() StaticPopup_Show("LEYLINES_RESET_OPTIONS") end)
     local foot = f:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 16, 16)
+    foot:SetWidth(620)                 -- les versions allemande et espagnole sont plus longues
+    foot:SetJustifyH("LEFT")
     -- « > » et pas une flèche : la police du jeu n'a pas le glyphe (une case vide, vu le 2026-10-08).
     foot:SetText(L["Raccourcis clavier : Échap > Options > Raccourcis. Toutes les commandes : /ley help."])
 end
