@@ -154,8 +154,8 @@ function HUD:PointArrow(node)
     self.frame.arrow:SetRotation(LL.Geo:ArrowRotation(east, north))
 end
 
--- Le buff d'absorption dure 15 min : le rappel prévient AVANT qu'il tombe et pose le point de
--- route sur la faille connue la plus proche, pour repartir se recharger sans ouvrir la carte.
+-- Le buff d'absorption dure 15 min : le rappel prévient AVANT qu'il tombe et donne la distance de
+-- la faille connue la plus proche ; avec `/ley waypoint`, il y pose aussi le point de route.
 -- Il ne se déclenche qu'UNE fois par buff : `warned` se réarme dès que le buff est repris (temps
 -- restant redevenu supérieur au seuil) ou disparaît.
 function HUD:CheckBuff()
@@ -182,7 +182,10 @@ function HUD:WarnExpiring(left)
     end
     LL:Printf(L["%s : buff à %s min de la fin — la plus proche à %s yd."],
         title, mins, math.floor(dist + 0.5))
-    self:Track(node)
+    -- Sur demande seulement (`/ley waypoint`) : un pin posé sans qu'on le demande gênait un joueur,
+    -- et l'API n'a qu'UN point de route du joueur, donc le nôtre doit remplacer le sien (déduit,
+    -- jamais vu en jeu). Le clic du bandeau, `/ley track` et le raccourci en posent toujours un.
+    if LL.db.autoWaypoint then self:Track(node) end
 end
 
 function HUD:Track(node)

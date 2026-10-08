@@ -29,6 +29,18 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-08 14:47 - jusqu'a 6f0ed1f - main-dev@1a17336 2026-10-08 14:18 - Forever -
+  **GO, sur la parole du user, coche dans l'appli du banc** (fiche
+  `LeyLines--feat-point-de-route-option`, 6 gestes sur 6 « Vu, OK », 14:43-14:47) - branche
+  `feat/point-de-route-option`, demande CurseForge du 2026-10-08 : `/ley help` liste `bug` et
+  `waypoint` (fusion de la ligne d'aide avec `feat/bouton-ticket` au banc) ; `/ley warn 14`
+  avec le buff : ligne de rappel avec la distance et AUCUN point de route ; `/ley waypoint on`
+  puis `/ley warn 13` : point de route pose sur la plus proche ; `/ley waypoint off` puis
+  `/ley track` : point de route pose quand meme (temoin) ; `/ley waypoint on`, `/reload`, puis la
+  bascule affiche « desactive » (l'option allumee a tenu au rechargement). Geste
+  « remplace-le-sien » coche OK mais SANS la reponse demandee : on ne sait toujours pas si le
+  point de route de l'addon remplace celui du joueur (la phrase du code et du README reste
+  « deduit de l'API »). PAS observe : le geste fait sur un client autre qu'anglais.
 - 2026-10-04 20:50 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
   **GO, capture du chat + « c'est tout bon » du user** - branche `feat/skyborne-seulement`, l'option
   elle-meme : `/ley skyborne` activee, sur un personnage d'une autre race que Skyborne, la ligne

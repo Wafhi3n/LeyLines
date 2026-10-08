@@ -40,9 +40,11 @@ LL.DEFAULTS = {
     -- propageaient à tout le monde. Contrepartie acceptée : deux vraies fissures à moins de 100 yd
     -- (une seule paire connue, à 73,5 yd) peuvent fusionner si on les absorbe par leurs bords.
     mergeRange = 50,
-    -- Minutes restantes du buff de faille à partir desquelles on prévient et on pose le point de
-    -- route sur la plus proche. 0 = jamais. Le buff dure 15 min, d'où 5 par défaut.
+    -- Minutes de buff restantes pour le rappel (0 = jamais ; le buff dure 15 min).
     warnMinutes = 5,
+    -- Le rappel pose aussi un point de route (`/ley waypoint`) : faux depuis le 2026-10-08, il
+    -- remplaçait celui du joueur (déduit de l'API). Clé neuve : pas de palier de migration.
+    autoWaypoint = false,
     -- « vergence » attrape « Elemental Vergence » et, sans le connaître, un nom français du même
     -- tronc. Si le client nomme l'objet autrement : `/ley name <texte>`.
     names      = { "ley line", "ligne tellurique", "vergence" },
@@ -307,6 +309,18 @@ CMD.warn = function(rest)
 end
 CMD.rappel = CMD.warn
 
+local function Switch(current, rest)   -- `on` / `off`, sinon bascule (`signal`, `waypoint`)
+    local arg = string.lower(rest)
+    if arg == "on" then return true elseif arg == "off" then return false end
+    return not current
+end
+
+CMD.waypoint = function(rest)
+    LL.db.autoWaypoint = Switch(LL.db.autoWaypoint, rest)
+    LL:Printf(L["Point de route posé par le rappel de buff : %s."], LL:OnOff(LL.db.autoWaypoint))
+end
+CMD.route = CMD.waypoint
+
 CMD.export = function() LL.Share:ShowExport() end
 CMD.import = function(rest)
     -- Un code court tient dans la ligne de chat ; au-dela, la fenetre est le seul chemin.
@@ -327,10 +341,7 @@ CMD.merci = CMD.credits
 -- `/ley signal on|off` ; sans argument, bascule, comme hud / pins / map. Coupé, le signal se tait
 -- mais le nombre reste calculé : il est redonné ici.
 CMD.signal = function(rest)
-    local arg = string.lower(rest)
-    if arg == "on" then LL.db.signal = true
-    elseif arg == "off" then LL.db.signal = false
-    else LL.db.signal = not LL.db.signal end
+    LL.db.signal = Switch(LL.db.signal, rest)
     LL:Refresh()
     LL:Printf(L["Signal des positions à partager : %s."], LL:OnOff(LL.db.signal))
     local pending = LL.Signal:Count()
@@ -343,7 +354,7 @@ CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end
