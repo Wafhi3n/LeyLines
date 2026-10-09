@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.8.1
+
+Four new spots from three players. axlmcc found the list's first Elemental Convergence in
+Ashenvale, at 9.8, 27.9, on the far west side of the zone. asylumlouie is back with a ley line in
+Duskwood at 78.4, 35.5. kehtemine sent two: one in Westfall at 46.0, 19.9, and one right on the
+southern edge of Elwynn Forest at 27.9, 94.7. kehtemine also confirmed five ley lines on Zephras
+Isle. Thanks, all three of you!
+
 ## v1.8.0
 
 Found a bug, or have an idea? Shift-click Ley Lines in the minimap's addon menu (or type /ley bug).
