@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.8.0
+
+Found a bug, or have an idea? Shift-click Ley Lines in the minimap's addon menu (or type /ley bug).
+Pick Bug or Idea and the addon gives you a link, already selected. Press Ctrl+C, paste it in your
+browser, and the GitHub form opens with your addon and game versions filled in. Nothing about your
+character goes in it. No GitHub account? The third choice gives you the addon's CurseForge page,
+where you can leave a comment.
+
+Sharing your spots for the common list works as before: a plain click on the same menu entry.
+
 ## v1.7.1
 
 Two new spots from three players. vananyask1 and larsas-cmyk each sent their first ticket, and both
