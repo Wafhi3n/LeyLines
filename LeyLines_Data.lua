@@ -40,7 +40,7 @@ LL.THANKS = {
     [22] = { "isaacoolbeans", "ohnoezlennydied", "asylumlouie", "kehtemine" },
     [23] = { "asylumlouie", "zetakirby", "ThirdIrony", "FlooferStabbington" },
     [24] = { "vananyask1", "alcaras", "larsas-cmyk" },
-    [25] = { "asylumlouie" },
+    [25] = { "kehtemine" },
 }
 
 LL.DATA = {
@@ -74,7 +74,6 @@ LL.DATA = {
             0.7246, 0.3056, 17,
             0.1863, 0.5725, 18,
             0.3408, 0.7071, 19,
-            0.7841, 0.3553, 25,
         },
         [1432] = {
             0.2828, 0.4212, 16,
@@ -94,6 +93,7 @@ LL.DATA = {
             0.5107, 0.6752, 9,
             0.5111, 0.2169, 15,
             0.4655, 0.5895, 16,
+            0.4595, 0.1986, 25,
         },
         [1437] = {
             0.4626, 0.2517, 18,
