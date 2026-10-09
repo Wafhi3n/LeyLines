@@ -264,8 +264,14 @@ CMD.merci = CMD.credits
 CMD.probe = function() LL.Probe:Dump() end
 CMD.diag  = CMD.probe
 
+-- Signaler un bug ou une idée : le lien d'un ticket GitHub (LeyLines_Report.lua).
+CMD.bug  = function() LL.Report:Open("bug") end
+CMD.idea = function() LL.Report:Open("idea") end
+CMD.idee = CMD.idea
+CMD["idée"] = CMD.idea
+
 CMD.help = function()
-    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."])
+    LL:Print(L["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, bug, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."])
     LL:Printf(L["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."],
         LL.Nodes:Word("one"))
 end

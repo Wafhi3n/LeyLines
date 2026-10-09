@@ -6,7 +6,8 @@
 -- bouton maison sur la minicarte, pas de bibliothèque à embarquer.
 --
 -- Pourquoi : `/ley contribute` ne sert que si on le trouve. Clic gauche = la fenêtre de
--- contribution, clic droit = le bandeau. Pas de menu déroulant : c'est ce genre de menu qui a déjà
+-- contribution, clic droit = le bandeau, Maj+clic = signaler un bug ou une idée (LeyLines_Report.lua).
+-- Pas de menu déroulant : c'est ce genre de menu qui a déjà
 -- semé de la taint sur Forever (voir la chasse au taint des barres d'action).
 --
 -- Le client appelle ces fonctions par leur NOM GLOBAL, lu dans le .toc : ne pas les renommer sans
@@ -16,7 +17,9 @@ local L = LL.L
 
 function LeyLines_OnCompartmentClick(_, button)
     if not LL.db then return end
-    if button == "RightButton" then
+    if IsShiftKeyDown() then
+        LL.Report:Open()   -- signaler un bug ou une idée (LeyLines_Report.lua)
+    elseif button == "RightButton" then
         LL:ToggleHUD()
     else
         LL.Share:ShowContribute()
@@ -41,6 +44,7 @@ function LeyLines_OnCompartmentEnter(_, frame)
     end
     GameTooltip:AddLine(L["Clic gauche : partager tes captures pour la liste commune."], 0.4, 0.8, 0.4)
     GameTooltip:AddLine(L["Clic droit : afficher ou masquer le suivi."], 0.7, 0.7, 0.7)
+    GameTooltip:AddLine(L["Maj+clic : signaler un bug ou proposer une idée."], 0.7, 0.7, 0.7)
     GameTooltip:Show()
     LL.Capture:Unmute()
 end

@@ -70,6 +70,16 @@ l'equivalent, le message est identique).
   « remplace-le-sien » coche OK mais SANS la reponse demandee : on ne sait toujours pas si le
   point de route de l'addon remplace celui du joueur (la phrase du code et du README reste
   « deduit de l'API »). PAS observe : le geste fait sur un client autre qu'anglais.
+- 2026-10-09 12:35 - jusqu'a 9ebfeb3 - main-dev@c909fc9 2026-10-09 11:59 - Forever, build 70291 -
+  **GO, coche dans l'appli du banc (fiche `LeyLines--feat-bouton-ticket`, 5 gestes OK, sans
+  remarque), sur la parole du user** - branche `feat/bouton-ticket` (spec `docs/specs/signaler.md`
+  de l'outillage) : l'infobulle du compartiment d'addons finit par la ligne du Maj+clic ; Maj+clic
+  ouvre la fenetre « Signaler », le clic gauche sans Maj ouvre toujours la contribution ; la zone
+  montre le debut du lien et « Link copied » s'affiche en vert apres Ctrl+C ; Bug et Idea ouvrent
+  les formulaires du depot LeyLines avec la zone Version remplie, No GitHub account la page
+  CurseForge ; `/ley bug`, `/ley idee` et `bug` dans `/ley help`. Pas de capture du formulaire
+  GitHub : le contenu exact de la zone Version est celui qu'attendait la fiche, coche OK.
+
 - 2026-10-04 20:50 - jusqu'a be83e84 - main-dev@4b4f3b7 2026-10-04 20:32 - Forever -
   **GO, capture du chat + « c'est tout bon » du user** - branche `feat/skyborne-seulement`, l'option
   elle-meme : `/ley skyborne` activee, sur un personnage d'une autre race que Skyborne, la ligne

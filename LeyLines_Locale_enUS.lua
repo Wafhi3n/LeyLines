@@ -41,8 +41,8 @@ local en = {
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
         "Minimap %s — map %s — tracker %s — auto capture %s.",
     ["%s %s dans %s :"]                     = "%s %s in %s:",
-    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."] =
-        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <text>, scale <n>, probe.",
+    ["Commandes : /ley (état), add, del, list, clean, clear, export, import, contribute, bug, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <texte>, scale <n>, probe."] =
+        "Commands: /ley (status), add, del, list, clean, clear, export, import, contribute, bug, credits, signal, hud, pins, map, skyborne, track, learn, auto, tooltip, warn <min>, waypoint, name <text>, scale <n>, probe.",
     ["Marche à suivre : place-toi SUR la %s et fais /ley add (ou le raccourci clavier)."] =
         "How it works: stand ON the %s, then type /ley add (or use the keybind).",
 
@@ -221,6 +221,17 @@ local en = {
     -- Raccourcis clavier
     ["Enregistrer une %s ici"]      = "Record the %s here",
     ["Suivre la %s la plus proche"] = "Track the nearest %s",
+
+    -- Signaler un bug ou une idée (LeyLines_Report.lua, 2026-10-07)
+    ["Signaler un bug ou proposer une idée"] = "Report a bug or suggest an idea",
+    ["Bug"] = "Bug",
+    ["Idée"] = "Idea",
+    ["Sans compte GitHub"] = "No GitHub account",
+    ["Lien copié : colle-le (Ctrl+V) dans ton navigateur."] = "Link copied: paste it (Ctrl+V) into your browser.",
+    ["Copie ce lien (Ctrl+C) et ouvre-le dans ton navigateur : le formulaire arrive avec la version déjà remplie."] = "Copy this link (Ctrl+C) and open it in your browser: the form comes up with the version already filled in.",
+    ["Pas de compte GitHub ? Copie ce lien (Ctrl+C) et laisse un commentaire sur la page CurseForge."] = "No GitHub account? Copy this link (Ctrl+C) and leave a comment on the CurseForge page.",
+    ["Un bug, ou une idée pour l'addon ? Choisis ci-dessous : l'addon te donne le lien du formulaire, déjà rempli."] = "A bug, or an idea for the addon? Pick below: the addon gives you the link to the form, already filled in.",
+    ["Maj+clic : signaler un bug ou proposer une idée."] = "Shift-click: report a bug or suggest an idea.",
 }
 
 for k, v in pairs(en) do LL.L[k] = v end
