@@ -29,6 +29,11 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-09 13:15 - jusqu'a 3986db6 - main-dev@7b2e90c 2026-10-09 13:12 - Forever, build 70291 -
+  **GO, coche dans l'appli du banc (fiche `LeyLines--release-v1.8.0`, 2 gestes OK), sur la parole
+  du user** - candidat v1.8.0 (`release/v1.8.0` : version et CHANGELOG ; le Maj+clic « Signaler » vu
+  au banc a 12:35) : `/ley` affiche v1.8.0 ; aucune erreur de LeyLines apres le /reload.
+
 - 2026-10-08 15:30 - jusqu'a 14780d9 - main-dev@7fc90e8 2026-10-08 15:19 - Forever -
   **GO, dit par le user + capture d'ecran** - branche `feat/panneau-options`, les retouches de la
   revue `api-gotcha-reviewer` : `/ley options` hors combat ouvre la page ; en combat il refuse
