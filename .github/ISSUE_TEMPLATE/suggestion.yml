@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for the idea! Write in any language you like.
 
-        **From the game, in versions after 1.6.3:** type `/ley bug` (or Shift-click Ley Lines in the minimap addon menu), pick **Idea**, copy the link (Ctrl+C) and open it in your browser.
+        **From the game, in versions after 1.7.1:** type `/ley bug` (or Shift-click Ley Lines in the minimap addon menu), pick **Idea**, copy the link (Ctrl+C) and open it in your browser.
   - type: textarea
     id: idea
     attributes:
