@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.8.3
+
+The toast warning that your buff is running out kept coming back after every fight. Once the buff
+was under the warning time, each kill brought the same toast again. During a fight the game hides
+your buffs from addons, and the addon took that to mean the buff was gone, so it warned you again
+as soon as the fight ended.
+
+It now remembers which buff it already warned you about: one reminder per buff, however many fights
+you go through. A fresh buff still gets its own reminder, and changing the time with /ley warn sets
+it off again.
+
 ## v1.8.2
 
 The chat is much quieter. A player wrote on CurseForge "Too much chat spam, and the /ley signal off
