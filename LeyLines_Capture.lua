@@ -439,15 +439,19 @@ function Capture:Store(map, x, y, info)
     if not node then return nil, false end
 
     -- `/ley add` (ou son raccourci) répond dans le chat ; un lancer, une vignette, une infobulle
-    -- arrivent sans qu'on ait rien demandé : toast (LeyLines_Toast.lua).
+    -- arrivent sans qu'on ait rien demandé : toast (LeyLines_Toast.lua), et seulement pour une
+    -- position NOUVELLE. Revenir absorber une fissure connue, c'est l'usage même de l'addon : un
+    -- toast « déjà connue » à chaque lancer, c'était du bruit (user, 2026-10-11).
     local asked = info.src == "manual"
     if isNew then
         LL:Tell(asked, string.format(L["Nouvelle %s enregistrée dans %s (%s ici)."],
             LL.Nodes:Word("one", info.kind), LL.Geo:MapName(map), before + 1))
         LL:Refresh()
     elseif asked or info.src == "spell" then
-        LL:Tell(asked, string.format(L["%s déjà connue — position confirmée (%s relevés)."],
-            LL.Nodes:Word("title", node.kind), node.hits))
+        if asked then
+            LL:Print(string.format(L["%s déjà connue — position confirmée (%s relevés)."],
+                LL.Nodes:Word("title", node.kind), node.hits))
+        end
         LL:Refresh()
     end
     return node, isNew

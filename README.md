@@ -71,8 +71,9 @@ clic = `/ley contribute`, et l'ouvrir l'éteint. `/ley signal off` la coupe. Cod
 recopiée de COC) ; spec `docs/specs/signal-contribution.md`.
 
 **Le chat ne répond qu'à tes gestes** (commande, clic, raccourci). Ce qui arrive sans que tu aies
-rien demandé (une position trouvée ou confirmée au sort, le signal, le rappel de buff) passe en
-**toast**, dans la pile du jeu, celle des hauts faits et du butin (`LeyLines_Toast.lua`). À la
+rien demandé (une position NOUVELLE trouvée au sort, le signal, le rappel de buff) passe en
+**toast**, dans la pile du jeu, celle des hauts faits et du butin (`LeyLines_Toast.lua`). Absorber
+une fissure déjà connue ne dit rien : le relevé est compté, en silence. À la
 connexion, rien, sauf une ligne à la première après une mise à jour : la version, ce que la liste
 commune vient d'apporter, et merci à ceux qui l'ont apporté. Règle générale : la skill publique
 `chat-output` du plugin `wow-addon-dev`.
