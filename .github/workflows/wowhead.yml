@@ -1,0 +1,49 @@
+# La veille Wowhead : chaque jour, les fissures et tornades que Wowhead montre et que la liste
+# commune n'a pas → une branche feat/positions-wowhead-AAAA-MM-JJ prête à relire.
+#
+# Ne fusionne, ne tague, ne publie rien. Le travail est dans .github/scripts/wowhead.sh (tri et
+# sécurité : tools/ll_wowhead.lua). Deux pages lues par passage, rien d'autre.
+#
+# Une page illisible fait ÉCHOUER le job (Wowhead a changé sa page, ou bloque le runner) : c'est
+# voulu, un échec se voit, un « rien de neuf » silencieux ne se verrait jamais.
+name: Wowhead watch
+
+on:
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Tout vérifier, ne rien pousser
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: wowhead-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Lua 5.1
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lua5.1
+          command -v lua5.1 && command -v luac5.1
+
+      - name: Wowhead vers branche
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: bash .github/scripts/wowhead.sh

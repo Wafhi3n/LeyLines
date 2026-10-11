@@ -1,0 +1,4 @@
+# Points de Wowhead refusés à la relecture : la veille (tools/ll_wowhead.lua) ne les propose plus.
+# Une ligne par point : espèce (L = fissure, V = tornade) + uiMapID, puis x et y en pourcent de
+# carte tels que Wowhead les donne, puis la raison après un dièse. Exemple :
+#   V1413 39.9 13.9  # pas vu en jeu, deux passages
