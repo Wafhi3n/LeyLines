@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.8.2
+
+Nine new ley lines from seven players, and ten Elemental Convergences for the Horde.
+
+copypastesgptcode sent the list's first spot in Alterac Mountains, at 19.9, 86.2, and confirmed nine
+ley lines on Zephras Isle. mrdick47 found two: one in Ashenvale at 33.1, 66.7 and one in Stonetalon
+Mountains at 58.7, 65.9. asylumlouie added two in The Barrens, at 46.0, 61.9 and 46.8, 82.8, and
+larsas-cmyk a third one there at 59.1, 39.6. bobjackson321 found one in Tirisfal Glades at 70.3,
+63.5 and confirmed eleven known spots along the way. Lustrous-Wanderer sent one in Elwynn Forest at
+38.5, 73.8, and chadrien one in Redridge Mountains at 65.6, 74.7.
+
+The convergences come from Wowhead. Its map for that object had ten spots the list didn't: nine in
+The Barrens, which now has 13, and one on Zephras Isle at 35.9, 33.6, right next to a ley line.
+Wowhead records them the way the addon does, from where a player stands when the buff lands, so
+they count like a player's report, and Wowhead now shows up among the contributors.
+
+Thanks, everyone!
+
 ## v1.8.1
 
 Four new spots from three players. axlmcc found the list's first Elemental Convergence in
