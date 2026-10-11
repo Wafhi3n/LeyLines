@@ -33,8 +33,8 @@ local es = {
     ["désactivé"]          = "desactivado",
 
     -- Estado y comandos
-    ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
-        "v%s cargada. /ley para el estado, /ley help para lo demás.",
+    ["v%s installée."] = "v%s instalada.",
+    ["/ley pour l'état, /ley help pour le reste."] = "/ley para el estado, /ley help para lo demás.",
     ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s aquí, %s en total.",
     ["La plus proche : %s à %s yd."]        = "La más cercana: %s a %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =

@@ -33,8 +33,8 @@ local de = {
     ["désactivé"]          = "aus",
 
     -- Status und Befehle
-    ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
-        "v%s geladen. /ley für den Status, /ley help für den Rest.",
+    ["v%s installée."] = "v%s installiert.",
+    ["/ley pour l'état, /ley help pour le reste."] = "/ley für den Status, /ley help für den Rest.",
     ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s hier, %s insgesamt.",
     ["La plus proche : %s à %s yd."]        = "Nächste: %s in %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =

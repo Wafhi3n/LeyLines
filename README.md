@@ -34,7 +34,7 @@ les SavedVariables.
 | `/ley export` | ouvre une fenêtre avec un code à copier et partager |
 | `/ley import` | colle un code reçu et fusionne les positions |
 | `/ley contribute [all]` | lien du ticket GitHub déjà rempli (titre + code) avec les captures confirmées par le jeu depuis ta dernière contribution (`all` : toutes) ; bouton « Code » = le code seul |
-| `/ley credits` | les contributeurs de la liste commune, du premier au dernier (`LL.THANKS`, généré par `ll_ingest`) ; ceux d'un palier sont remerciés dans le chat quand leurs positions arrivent |
+| `/ley credits` | les contributeurs de la liste commune, du premier au dernier (`LL.THANKS`, généré par `ll_ingest`) ; ceux d'un palier sont remerciés dans la ligne d'après la mise à jour qui apporte leurs positions |
 | `/ley signal [on\|off]` | le signal « position absente de la liste commune, à partager » (actif par défaut) ; donne le nombre en attente |
 | `/ley clear` | vide la zone (avec confirmation) |
 | `/ley hud` / `pins` / `map` | bandeau / minicarte / carte du monde |
@@ -65,10 +65,17 @@ addons) : clic gauche = `/ley contribute`, clic droit = bandeau. Inscription par
 `## AddonCompartmentFunc*` du `.toc` ; les fonctions globales vivent dans `LeyLines_Compartment.lua`.
 
 Quand le jeu confirme une position absente de la liste livrée, l'icône de l'addon apparaît dans la
-**barre d'icônes de la minicarte** (celle de la lettre du courrier, rang 10), avec une ligne de
-chat : clic = `/ley contribute`, et l'ouvrir l'éteint. `/ley signal off` la coupe. Code :
+**barre d'icônes de la minicarte** (celle de la lettre du courrier, rang 10), avec un toast :
+clic = `/ley contribute`, et l'ouvrir l'éteint. `/ley signal off` la coupe. Code :
 `LeyLines_Signal.lua` (le compte, déduit de la base) et `LeyLines_Indicator.lua` (l'icône, méthode
 recopiée de COC) ; spec `docs/specs/signal-contribution.md`.
+
+**Le chat ne répond qu'à tes gestes** (commande, clic, raccourci). Ce qui arrive sans que tu aies
+rien demandé (une position trouvée ou confirmée au sort, le signal, le rappel de buff) passe en
+**toast**, dans la pile du jeu, celle des hauts faits et du butin (`LeyLines_Toast.lua`). À la
+connexion, rien, sauf une ligne à la première après une mise à jour : la version, ce que la liste
+commune vient d'apporter, et merci à ceux qui l'ont apporté. Règle générale : la skill publique
+`chat-output` du plugin `wow-addon-dev`.
 
 Deux raccourcis clavier sont disponibles dans *Options → Raccourcis → Ley Line / Elemental Convergence Tracker* (enregistrer ici,
 suivre la plus proche).

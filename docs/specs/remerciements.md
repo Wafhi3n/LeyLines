@@ -15,8 +15,10 @@ part dans l'addon. Or voir son pseudo est la meilleure raison de recommencer.
 
 ## Ce qu'on veut
 
-**Quand une mise à jour ajoute des positions**, la ligne de chat qui les annonce est suivie d'une
-autre : merci à ceux qui ont apporté ces positions-là, et la commande qui donne tout le monde.
+**Quand une mise à jour ajoute des positions**, la ligne de chat qui les annonce dit aussi merci à
+ceux qui ont apporté ces positions-là, et la commande qui donne tout le monde. Depuis le 2026-10-11
+c'est une seule ligne, celle de la première connexion après la mise à jour (`LL:LoginLine` ; règle
+du user, skill publique `chat-output`) ; avant, le merci suivait sur une ligne à part.
 
 **`/ley credits`** (ou `/ley merci`) liste tous les contributeurs, du premier au dernier.
 

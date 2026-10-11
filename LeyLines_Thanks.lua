@@ -43,12 +43,12 @@ function Thanks:Text(names)
 end
 
 -- Après une fusion des données livrées qui a AJOUTÉ des positions : merci à ceux des paliers que
--- ce joueur vient de recevoir. `since` = son palier d'avant la fusion. Rend vrai si une ligne part.
-function Thanks:Announce(since)
+-- ce joueur vient de recevoir. `since` = son palier d'avant la fusion. Rend la phrase, ou nil : elle
+-- entre dans l'UNIQUE ligne d'après une mise à jour (LeyLines.lua, skill publique chat-output).
+function Thanks:Line(since)
     local names = self:Names(since)
-    if #names == 0 then return false end
-    LL:Printf(L["Merci à %s pour ces positions. /ley credits : tous les contributeurs."], self:Text(names))
-    return true
+    if #names == 0 then return nil end
+    return string.format(L["Merci à %s pour ces positions. /ley credits : tous les contributeurs."], self:Text(names))
 end
 
 -- `/ley credits` : tout le monde, du premier au dernier.

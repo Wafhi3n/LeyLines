@@ -49,10 +49,11 @@ function Signal:Count()
 end
 
 -- Recalcul après toute modification de la base (LL:Refresh). L'icône suit le compte (signal actif).
--- La ligne de chat part à l'ALLUMAGE seulement, quand une découverte fait passer le compte de rien à
--- quelque chose : plusieurs découvertes avant le clic n'en donnent qu'une, `/ley signal on` n'en
+-- Le toast part à l'ALLUMAGE seulement, quand une découverte fait passer le compte de rien à
+-- quelque chose : plusieurs découvertes avant le clic n'en donnent qu'un, `/ley signal on` n'en
 -- donne pas (la commande répond elle-même), et il n'y a pas de rappel. Le premier calcul (Init) sert
--- de point de départ : l'icône apparaît, la ligne ne part pas.
+-- de point de départ : l'icône apparaît, le toast ne part pas. Un toast et pas une ligne de chat
+-- depuis le 2026-10-11 (règle du user, LeyLines_Toast.lua) : une découverte n'est pas un geste.
 function Signal:Update()
     local count, before = self:Count(), self.count
     self.count = count
@@ -61,7 +62,7 @@ function Signal:Update()
     self.lit = lit
     local onBar = LL.Indicator:Set(lit)
     if lit and before == 0 then
-        LL:Print(onBar
+        LL.Toast:Show(onBar
             and L["Position absente de la liste commune : clique sur l'icône apparue en haut de la minicarte pour la partager avec tous."]
             or L["Position absente de la liste commune : /ley contribute pour la partager avec tous."])
     end

@@ -428,13 +428,16 @@ function Capture:Store(map, x, y, info)
     local node, isNew = LL.Nodes:Add(map, x, y, info)
     if not node then return nil, false end
 
+    -- `/ley add` (ou son raccourci) répond dans le chat ; un lancer, une vignette, une infobulle
+    -- arrivent sans qu'on ait rien demandé : toast (LeyLines_Toast.lua).
+    local asked = info.src == "manual"
     if isNew then
-        LL:Printf(L["Nouvelle %s enregistrée dans %s (%s ici)."],
-            LL.Nodes:Word("one", info.kind), LL.Geo:MapName(map), before + 1)
+        LL:Tell(asked, string.format(L["Nouvelle %s enregistrée dans %s (%s ici)."],
+            LL.Nodes:Word("one", info.kind), LL.Geo:MapName(map), before + 1))
         LL:Refresh()
-    elseif info.src == "manual" or info.src == "spell" then
-        LL:Printf(L["%s déjà connue — position confirmée (%s relevés)."],
-            LL.Nodes:Word("title", node.kind), node.hits)
+    elseif asked or info.src == "spell" then
+        LL:Tell(asked, string.format(L["%s déjà connue — position confirmée (%s relevés)."],
+            LL.Nodes:Word("title", node.kind), node.hits))
         LL:Refresh()
     end
     return node, isNew

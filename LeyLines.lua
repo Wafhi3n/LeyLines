@@ -342,6 +342,26 @@ local function NameBindings()
     _G.BINDING_NAME_LEYLINES_TRACK  = string.format(L["Suivre la %s la plus proche"], word)
 end
 
+-- À la connexion, le silence (règle du user du 2026-10-11, skill publique chat-output) : UNE ligne
+-- à la première connexion après une installation ou une mise à jour, qui dit aussi ce que la liste
+-- livrée vient d'apporter. Jusqu'à la v1.8.1 : « vX chargée » à CHAQUE connexion, puis une ligne
+-- par nouvelle (positions ajoutées, retirées, merci). `seenVersion` est au compte : une ligne par
+-- compte, pas par personnage. Rend la ligne écrite, ou nil.
+function LL:LoginLine(since, shipped, gone)
+    local fresh = self.db.seenVersion ~= self.VERSION
+    self.db.seenVersion = self.VERSION
+    local parts = {}
+    if fresh then parts[1] = string.format(L["v%s installée."], self.VERSION) end
+    if shipped > 0 then parts[#parts + 1] = string.format(L["%s position(s) ajoutée(s) depuis les données livrées."], shipped) end
+    if gone > 0 then parts[#parts + 1] = string.format(L["%s position(s) retirée(s) de la liste commune."], gone) end
+    if shipped > 0 then parts[#parts + 1] = self.Thanks:Line(since) end
+    if #parts == 0 then return nil end
+    if fresh then parts[#parts + 1] = L["/ley pour l'état, /ley help pour le reste."] end
+    local line = table.concat(parts, " ")
+    self:Print(line)
+    return line
+end
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
@@ -382,8 +402,10 @@ f:SetScript("OnEvent", function(_, event, arg1)
         LL.Minimap:Init()
         LL.WorldMap:Init()
         LL.HUD:Init()
+        LL.Toast:Init()   -- hors combat, comme à la mesure : le premier toast peut tomber en combat
         LL:Refresh()
-        LL:Printf(L["v%s chargée. /ley pour l'état, /ley help pour le reste."], LL.VERSION)
+        -- Une panne rattrapée reste dite (l'exception de chat-output pour ce qui empêche l'addon de
+        -- marcher) : sans elle, une base vidée ressemblerait à une base neuve.
         if restored > 0 then
             LL:Printf(L["%s position(s) restaurée(s) depuis la sauvegarde interne."], restored)
         end
@@ -393,13 +415,7 @@ f:SetScript("OnEvent", function(_, event, arg1)
         C_Timer.After(3, function()
             local since = LL.db.dataVersion or 0   -- lu AVANT la fusion, qui l'avance
             local shipped, gone = LL.Nodes:ApplyShipped()
-            if gone > 0 then
-                LL:Printf(L["%s position(s) retirée(s) de la liste commune."], gone)
-            end
-            if shipped > 0 then
-                LL:Printf(L["%s position(s) ajoutée(s) depuis les données livrées."], shipped)
-                LL.Thanks:Announce(since)
-            end
+            LL:LoginLine(since, shipped, gone)
             if shipped > 0 or gone > 0 then LL:Refresh() end
             LL.Nodes:Snapshot(gone > 0)   -- un retrait livré est VOULU : le filet ne doit pas le rendre
             LL.Signal:Init()

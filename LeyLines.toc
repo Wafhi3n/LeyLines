@@ -34,6 +34,10 @@ LeyLines_Data.lua
 # Acquisition des positions (vignette / infobulle / sort / manuel).
 LeyLines_Capture.lua
 
+# Toasts dans la pile du jeu (AlertFrame) : ce qui arrive sans geste du joueur, au lieu du chat.
+LeyLines_Toast.xml
+LeyLines_Toast.lua
+
 # Affichage.
 LeyLines_Minimap.lua
 LeyLines_WorldMap.lua
