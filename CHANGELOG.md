@@ -2,6 +2,23 @@
 
 ## v1.8.2
 
+The chat is much quieter. A player wrote on CurseForge "Too much chat spam, and the /ley signal off
+just turns itself back on", and both were fair.
+
+Typed on their own, /ley signal, /ley hud and the other on/off commands now show the current
+setting and change nothing. Only on and off change it. Typing /ley signal to check it used to flip
+it, which is how the signal kept coming back.
+
+A cast away from a spot no longer says "Short buff: nothing was recorded". What comes without you
+asking now shows as a toast at the bottom of the screen, where achievements and loot pop up: a new
+spot found with the spell, the reminder that your buff is running out, and the note that you have
+spots to share. Coming back to a spot that's already on your map shows nothing at all, the visit
+is just counted. /ley add still answers in the chat, since you asked for it. At login there's
+nothing, except one line after an install or an update.
+
+Absorbing during a fight said "Short buff" and recorded nothing, because the game won't let addons
+read your buffs in combat. The addon now waits for the fight to end and checks the buff then.
+
 Nine new ley lines from seven players, and ten Elemental Convergences for the Horde.
 
 copypastesgptcode sent the list's first spot in Alterac Mountains, at 19.9, 86.2, and confirmed nine
