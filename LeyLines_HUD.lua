@@ -157,12 +157,14 @@ end
 -- Le buff d'absorption dure 15 min : le rappel prévient AVANT qu'il tombe et donne la distance de
 -- la faille connue la plus proche ; avec `/ley waypoint`, il y pose aussi le point de route.
 -- Il ne se déclenche qu'UNE fois par buff : `warned` se réarme dès que le buff est repris (temps
--- restant redevenu supérieur au seuil) ou disparaît.
+-- restant redevenu supérieur au seuil) ou disparaît. Une lecture refusée (en combat) ne dit ni
+-- l'un ni l'autre : `warned` n'y bouge pas, sinon le rappel repartait à chaque fin de combat.
 function HUD:CheckBuff()
     local minutes = LL.db.warnMinutes or 0
     if minutes <= 0 then return end
 
-    local aura, left = LL.Capture:LeyAura()
+    local aura, left, blocked = LL.Capture:LeyAura()
+    if blocked then return end
     if not aura or left > minutes * 60 then
         self.warned = false
         return
