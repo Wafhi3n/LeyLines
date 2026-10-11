@@ -364,11 +364,9 @@ local function LeyRemaining(aura)
     return exp - GetTime()
 end
 
--- Le buff de faille actuellement actif sur le joueur : rend l'aura ET son temps restant, pour que
--- l'appelant n'ait jamais à toucher aux champs bruts. Sert au rappel d'expiration (LeyLines_HUD).
--- Troisième retour `blocked` : lecture refusée (en combat) ou champ secret, on ne SAIT pas, ce qui
--- n'est pas « plus de buff ». Pris pour une absence, il réarmait le rappel, reparti à chaque fin
--- de combat (vu en jeu le 2026-10-11, buff à 4 min de la fin).
+-- Le buff de faille actif : l'aura ET son temps restant, sans toucher aux champs bruts (rappel,
+-- LeyLines_HUD). 3e retour `blocked` : lecture refusée (combat) ou champ secret, on ne SAIT pas ;
+-- lu comme « plus de buff », le rappel repartait à chaque fin de combat (vu en jeu, 2026-10-11).
 function Capture:LeyAura()
     -- Une seule lecture, ciblée sur l'id connu : c'est le chemin qui bat chaque seconde.
     for id in pairs(LL.db.auras) do
