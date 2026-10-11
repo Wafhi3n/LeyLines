@@ -237,7 +237,8 @@ function Capture:OnSpellCast(spellID)
     -- La position est prise À L'INSTANT DU LANCER, pas après le délai : le joueur bouge.
     local map, x, y = LL.Geo:PlayerPos()
     if not map then return end
-    C_Timer.After(AURA_DELAY, function() Capture:ResolveCast(map, x, y) end)
+    local castAt = GetTime()   -- l'instant du lancer : le verdict peut attendre la fin du combat
+    C_Timer.After(AURA_DELAY, function() Capture:ResolveCast(map, x, y, castAt) end)
 end
 
 -- Un sort dont l'id n'est pas connu mais dont le NOM figure dans `spellNames` (Skysight, côté
@@ -256,11 +257,14 @@ function Capture:LearnByName(spellID)
 end
 
 -- Un buff est « posé à l'instant » quand son temps restant est encore (presque) sa durée totale.
--- Sans ce test, un buff de faille encore actif ferait passer pour réussi un lancer raté.
+-- Sans ce test, un buff de faille encore actif ferait passer pour réussi un lancer raté. `now` est
+-- l'instant du verdict tel qu'il aurait dû tomber : relu après un combat (LeyLines_CaptureCombat),
+-- le buff doit avoir été posé au moment du lancer, ni avant, ni après (LATE_MARGIN).
+local LATE_MARGIN = 5   -- s
 local function IsFreshLong(aura, now)
     local dur, exp = aura.duration, aura.expirationTime
     if type(dur) ~= "number" or type(exp) ~= "number" then return false end
-    return dur >= LONG_BUFF_MIN and (exp - now) > (dur - FRESH_MARGIN)
+    return dur >= LONG_BUFF_MIN and (exp - now) > (dur - FRESH_MARGIN) and (exp - now) <= dur + LATE_MARGIN
 end
 
 -- Un buff INCONNU n'est pris pour celui de la faille que s'il en a la durée (15 min, d'où la
@@ -307,14 +311,17 @@ end
 
 -- Cherche le buff long fraîchement appliqué. Les buffs DÉJÀ identifiés passent en premier : une
 -- lecture ciblée au lieu de balayer 40 emplacements, donc moins d'occasions de heurter le mur.
-function Capture:FreshLongBuff()
-    local now = GetTime()
+-- Rend aussi `blocked` : la lecture refusée (en combat) ou un champ secret qu'on ne peut comparer
+-- ne disent PAS « pas de buff », ils disent « on ne sait pas encore ».
+function Capture:FreshLongBuff(now)
+    now = now or GetTime()
     for id in pairs(LL.db.auras) do
         local aura, blocked = self:AuraBySpellID(id)
-        if blocked then return nil end
+        if blocked then return nil, true end
         if aura then
             local ok, fresh = pcall(IsFreshLong, aura, now)
-            if ok and fresh then return aura end
+            if not ok then return nil, true end
+            if fresh then return aura end
         end
     end
 
@@ -322,11 +329,12 @@ function Capture:FreshLongBuff()
     -- la bêta changerait l'id. Un autre buff long tout frais (la torche) ne suffit pas.
     for i = 1, MAX_BUFFS do
         local aura, blocked = self:AuraByIndex(i)
-        if blocked or not aura then break end
+        if blocked then return nil, true end
+        if not aura then break end
         local ok, fresh = pcall(IsFreshLeyLike, aura, now)
         if ok and fresh then return aura end
     end
-    return nil
+    return nil, false
 end
 
 -- Le buff de faille est LIVRÉ en dur (LL.DEFAULTS.auras) : la liste n'en garde pas d'autre.
@@ -371,12 +379,14 @@ function Capture:LeyAura()
     return nil
 end
 
-function Capture:ResolveCast(map, x, y)
+function Capture:ResolveCast(map, x, y, castAt)
     -- Un lancer raté se tait. Jusqu'à la v1.8.1 il écrivait « Buff court : pas de … ici » : le sort
     -- part de partout (buff de 15 s ailleurs), donc une ligne à chaque lancer hors d'une faille
-    -- (« too much chat spam », CurseForge, 2026-10-11). En combat, la lecture d'aura peut aussi être
-    -- refusée, et la ligne aurait menti sur un vrai lancer.
-    local aura = self:FreshLongBuff()
+    -- (« too much chat spam », CurseForge, 2026-10-11).
+    -- En combat, le jeu refuse la lecture d'aura : le lancer attend la fin du combat au lieu d'être
+    -- perdu (vu au banc le 2026-10-11, « le toast n'apparaît pas en combat » ; CaptureCombat.lua).
+    local aura, blocked = self:FreshLongBuff(castAt and castAt + AURA_DELAY)
+    if blocked then return self:Later(map, x, y, castAt or GetTime() - AURA_DELAY) end
     if not aura then return end
     -- Plus d'inscription du buff dans LL.db.auras (voir KeepShippedAuras) : un id inconnu trouvé
     -- par le filet confirme CE lancer, il ne devient pas le buff surveillé par le rappel.
