@@ -33,6 +33,12 @@ LeyLines_Data.lua
 
 # Acquisition des positions (vignette / infobulle / sort / manuel).
 LeyLines_Capture.lua
+# Une absorption faite en combat (lecture d'aura refusee) se confirme a la fin du combat.
+LeyLines_CaptureCombat.lua
+
+# Toasts dans la pile du jeu (AlertFrame) : ce qui arrive sans geste du joueur, au lieu du chat.
+LeyLines_Toast.xml
+LeyLines_Toast.lua
 
 # Affichage.
 LeyLines_Minimap.lua

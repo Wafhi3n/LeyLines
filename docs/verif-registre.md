@@ -29,6 +29,35 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-11 12:07 - jusqu'a 1f0210c - main-dev@18c623d 2026-10-11 11:56 - Forever -
+  **GO, coche dans l'appli du banc (fiche `LeyLines--fix-chat-moins-bavard`, 3 gestes ajoutes
+  OK), sur la parole du user** - branche `fix/chat-moins-bavard`, suite du releve de 10:55 :
+  `combat-toast-direct` : `LeyLines.Toast:Show` en plein combat affiche le toast (capture d'ecran
+  du user, combat contre un Skyhopper) ; la remarque « pas de toast en combat » venait donc de la
+  CAPTURE, pas du toast. `connue-muette` (`1f0210c`) : absorber hors combat une fissure deja sur la
+  carte n'affiche rien, ni toast ni chat, et le nombre de releves du point monte de 1.
+  `combat-differe` (`25a6c70`) : absorption faite EN COMBAT sur une fissure connue, rien a l'ecran,
+  et le nombre de releves monte de 1 apres la fin du combat (verdict differe a
+  PLAYER_REGEN_ENABLED). Dit par le user, pas coche : pour « empilement », deux toasts s'affichent
+  l'un au-dessus de l'autre. PAS observe : le toast « Nouvelle … » d'une fissure NOUVELLE absorbee
+  en combat (temoin facultatif du geste, sans occasion).
+
+- 2026-10-11 10:55 - jusqu'a f952bde - main-dev@7380216 2026-10-11 10:36 - Forever -
+  **GO hors combat, coche dans l'appli du banc (fiche `LeyLines--fix-chat-moins-bavard`, 8 gestes
+  OK), sur la parole du user** - branche `fix/chat-moins-bavard` : au 1er /reload une seule ligne
+  « v1.8.1 installee… », rien au 2e ; `/ley signal` et `/ley hud` tapes seuls disent l'etat sans le
+  changer, `off` sans la ligne du nombre en attente, le clic droit du compartiment bascule toujours
+  le bandeau ; un lancer rate n'ecrit plus rien ; une absorption donne un toast (pile du jeu) et
+  rien dans le chat ; `/ley add` repond dans le chat sans toast ; le rappel de buff (`/ley warn 14`)
+  arrive en toast ; geste facultatif « empilement » coche OK.
+  **Remarque du user sur l'absorption : « Le toast apparait pas en combat ».** Cause NON
+  departagee : le code de Blizzard ne retient pas les toasts en combat (AlertFrames.lua, aucune
+  condition de combat) ; piste la plus probable, la lecture d'aura refusee en combat
+  (`Capture:ReadAura`, fait du 2026-09-20) qui empeche la capture de confirmer le lancer, donc rien
+  a montrer (en v1.8.1 la meme situation ecrivait « Buff court », a tort). A departager par
+  `LeyLines.Toast:Show` en combat. PAS observe : ce que « empilement » a empile (nos deux toasts,
+  ou un toast de Blizzard avec le notre).
+
 - 2026-10-09 13:15 - jusqu'a 3986db6 - main-dev@7b2e90c 2026-10-09 13:12 - Forever, build 70291 -
   **GO, coche dans l'appli du banc (fiche `LeyLines--release-v1.8.0`, 2 gestes OK), sur la parole
   du user** - candidat v1.8.0 (`release/v1.8.0` : version et CHANGELOG ; le Maj+clic « Signaler » vu

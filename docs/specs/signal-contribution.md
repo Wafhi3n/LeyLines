@@ -24,8 +24,9 @@ croire qu'on envoie une zone à la fois. Le user lui-même l'a cru. Le joueur l'
 
 **Quand le jeu confirme une position que la liste livrée n'a pas** (lancer suivi du buff long, ou
 vignette), une icône s'allume dans la barre d'icônes de la minicarte, à côté de la lettre du
-courrier. Au même moment, une seule ligne dans le chat dit pourquoi : une position absente de la
-liste commune, clique sur l'icône pour la partager.
+courrier. Au même moment, un seul toast dit pourquoi : une position absente de la liste commune,
+clique sur l'icône pour la partager. (Une ligne de chat jusqu'à la v1.8.1 ; un toast dans la pile du
+jeu depuis, décision I3.)
 
 **Au survol**, l'icône dit combien de positions attendent d'être partagées, et que le clic les
 partage.
@@ -42,7 +43,7 @@ jour de l'addon livre ces positions. Elle ne se rallume que pour une découverte
 Le signal **survit** à un `/reload` et à une déconnexion : une découverte faite juste avant de
 quitter est encore signalée à la connexion suivante.
 
-**`/ley signal off`** coupe le signal (icône et ligne de chat) ; `/ley signal on` le remet. Il est
+**`/ley signal off`** coupe le signal (icône et toast) ; `/ley signal on` le remet. Il est
 actif par défaut. `/ley contribute` marche pareil dans les deux cas, et l'infobulle du compartiment
 d'addons donne toujours le nombre de positions à partager.
 
@@ -56,8 +57,8 @@ d'addons donne toujours le nombre de positions à partager.
   (A2 de la spec voisine), donc ils n'allument rien.
 - **Signaler un retrait** (`/ley del` d'un point livré). Les retraits livrés (`LL.GONE`) ne
   sont pas encore implémentés. Ce sera à revoir avec eux.
-- **Relancer le joueur.** Pas de rappel à intervalle, pas de clignotement, pas de son : une ligne de
-  chat à l'allumage, et l'icône qui attend.
+- **Relancer le joueur.** Pas de rappel à intervalle, pas de clignotement, pas de son : un toast à
+  l'allumage, et l'icône qui attend.
 - **Un bouton de minicarte à nous.** Le compartiment d'addons reste l'accès permanent ; l'icône
   n'existe que quand il y a quelque chose à dire.
 - **Dépendre de COC.** LeyLines recopie la méthode de l'icône, il n'appelle pas COC.
@@ -69,8 +70,8 @@ d'addons donne toujours le nombre de positions à partager.
   allume : la liste ne l'a pas, et il vient de devenir partageable.
 - **Point importé d'un ami** puis confirmé par un lancer → allume si la liste livrée ne l'a pas.
 - **Point déjà partagé** (confirmé avant la dernière contribution) et reconfirmé → n'allume pas.
-- **Plusieurs découvertes avant le clic** → une seule icône, le nombre monte ; une seule ligne de
-  chat, à l'allumage.
+- **Plusieurs découvertes avant le clic** → une seule icône, le nombre monte ; un seul toast du
+  signal, à l'allumage.
 - **Vignette de l'autre faction** (l'objet est nommé, l'espèce lue sur le nom) → compte comme les
   autres : elle est partageable, et le code porte son espèce.
 - **Joueur à deux factions** → un seul ticket, qui mélange fissures et tornades sans les
@@ -81,7 +82,8 @@ d'addons donne toujours le nombre de positions à partager.
   quand le lien tient : il sert au joueur sans compte GitHub (commentaire CurseForge).
 - **Mise à jour qui livre ces positions** → le nombre baisse, et l'icône s'éteint à zéro sans clic.
 - **En combat** → le clic ouvre une fenêtre à nous, non protégée : autorisé.
-- **Barre d'icônes absente** (Blizzard la retire ou la change) → pas d'icône, la ligne de chat reste.
+- **Barre d'icônes absente** (Blizzard la retire ou la change) → pas d'icône, le toast reste et donne
+  `/ley contribute`.
 - **COC installé aussi** → deux icônes dans la même barre, chacune à son rang (S4).
 - **Signal coupé** → rien ne s'allume, mais le nombre reste calculé : il réapparaît à
   `/ley signal on` si des positions attendent encore.
@@ -97,6 +99,11 @@ d'addons donne toujours le nombre de positions à partager.
   déroulante non pré-remplie, champ obligatoire, donc envoi refusé), puis la question du user
   « pourquoi ne pas mettre cette info dans la chaîne copiée ? ». L'ingestion lit déjà l'espèce dans
   le code ; sans faction déclarée, seule la vérification « point de l'autre faction » disparaît.
+- **I3 — 2026-10-11, user** : la ligne de chat de l'allumage devient un **toast** dans la pile du
+  jeu (`AlertFrame`, `LeyLines_Toast.lua`). Origine : un commentaire CurseForge, « Too much chat
+  spam ». Règle générale : la skill publique `chat-output` (le chat ne répond qu'à un geste du
+  joueur) ; « si Blizzard a sa propre API pour les toasts, on doit l'utiliser » (user), mesurée sans
+  blocage au TaintLab le même jour.
 
 ## Arbitrages — proposés par l'agent, acceptés par le user le 2026-09-28
 
@@ -123,7 +130,7 @@ d'addons donne toujours le nombre de positions à partager.
    position déjà partagée, reconfirmée, ne le rallume pas.
 4. [test] Le signal se déduit de la base : après rechargement, il est identique ; une liste livrée
    qui contient la position l'éteint.
-5. [test] Signal coupé : aucune icône, aucune ligne de chat ; `/ley contribute` rend le même lien.
+5. [test] Signal coupé : aucune icône, aucun toast ; `/ley contribute` rend le même lien.
 
    Critères 1 à 5 → `tests/test_leylines_signal.lua`, icône comprise (fausse barre qui compte ses
    `Layout()`, comme `test_minimap_indicator.lua` de COC).
@@ -133,7 +140,8 @@ d'addons donne toujours le nombre de positions à partager.
 7. [porte] Les quatre portes passent ; chaque chaîne nouvelle est dans les overlays enUS, deDE et
    esES. → `deploy.ps1`
 8. [humain] Après un lancer réussi sur une fissure absente de la liste, l'icône apparaît dans la
-   barre, lisible, sans toucher la carte, et la ligne de chat s'affiche une fois. Témoin connu-bon :
+   barre, lisible, sans toucher la carte, et le toast s'affiche une fois (une ligne de chat jusqu'à
+   la v1.8.1, I3 ; le toast n'a jamais été vu en jeu). Témoin connu-bon :
    l'icône « mise à jour » de COC dans la même barre (registre COC, relevés 14-15). Terrain : la
    fissure (46,26 / 17,78) de Zephras Isle, capturée par le user le 2026-09-27 et absente de la
    liste livrée. Observateur : le user, en jeu.
@@ -161,12 +169,13 @@ d'addons donne toujours le nombre de positions à partager.
   `vignette` ; un point redescendu en `manual` par un `/ley add` n'est plus envoyé, il ne compte donc
   plus), si `found` est postérieur à `db.contrib.at`, et s'il est absent de la liste livrée (S3).
   Taille de zone inconnue : le point est tenu pour livré, le signal se tait.
-- **Ligne de chat** : à l'allumage seulement, de 0 à au moins 1, signal actif. Le premier calcul se
-  fait 3 s après la connexion, après la fusion des données livrées (avant, la taille des zones peut
-  manquer), et il ne dit rien : une découverte d'avant la déconnexion est signalée par l'icône (P4),
-  pas par un rappel dans le chat. La ligne renvoie à l'icône quand la barre existe, à
-  `/ley contribute` sinon. `/ley signal on` avec des positions en attente rallume l'icône sans
-  ligne : la commande répond elle-même, avec le nombre.
+- **Toast** (ligne de chat jusqu'à la v1.8.1, I3) : à l'allumage seulement, de 0 à au moins 1,
+  signal actif. Le premier calcul se fait 3 s après la connexion, après la fusion des données
+  livrées (avant, la taille des zones peut manquer), et il ne dit rien : une découverte d'avant la
+  déconnexion est signalée par l'icône (P4), pas par un rappel. Le toast renvoie à l'icône quand la
+  barre existe, à `/ley contribute` sinon. Sans la pile de toasts du jeu, rien : le chat n'est pas
+  un repli. `/ley signal on` avec des positions en attente rallume l'icône sans toast : la commande
+  répond elle-même dans le chat, avec le nombre.
 - **Barre d'icônes** (`LeyLines_Indicator.lua`) : rang 10 (S4), méthode de COC recopiée, aucun appel
   à COC. Au clic : la fenêtre de contribution. Au survol : le nombre en attente. **À inscrire dans
   la liste des rangs de `CraftingOrderClassic\docs\specs\icone-minicarte.md`** une fois

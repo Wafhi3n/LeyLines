@@ -166,6 +166,12 @@ Aucun réglage existant ne change de nom, de forme ou de défaut. Ajouts : `/ley
 `signal` et `waypoint`), sans argument elles basculent comme avant. Les réglages neufs (`announce`,
 `readAnnounces`) sont définis par `partage-direct.md`.
 
+**Changé après la v1.8.1 (décision du user, 2026-10-11)** : sans argument, ou avec un mot autre que
+`on` / `off`, une commande à deux états dit l'état et le mot qui le change, sur la même ligne, sans
+rien changer. Raison : un joueur sur CurseForge, « /ley signal off just turns itself back on » ; un
+`/ley signal` tapé pour voir l'état le rallumait. Le clic droit du compartiment bascule toujours le
+bandeau (`LL:ToggleHUD`).
+
 ## Liens
 
 - Faits d'API : skill public `wow-addon-dev:wow-forever-api`, `taint-and-protected-frames.md`

@@ -34,8 +34,8 @@ local en = {
     ["désactivé"]          = "off",
 
     -- État et commandes
-    ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
-        "v%s loaded. /ley for status, /ley help for the rest.",
+    ["v%s installée."] = "v%s installed.",
+    ["/ley pour l'état, /ley help pour le reste."] = "/ley for status, /ley help for the rest.",
     ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s here, %s in total.",
     ["La plus proche : %s à %s yd."]        = "Nearest: %s at %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
@@ -69,8 +69,7 @@ local en = {
     ["Apprentissage abandonné : aucun sort lancé."] = "Learning cancelled: no spell was cast.",
     ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
         "Spell remembered: %s (%s). From now on, only a cast followed by a LONG buff records the %s.",
-    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
-        "Short buff: no %s here, nothing was recorded.",
+    ["(/ley %s %s pour changer)"] = "(/ley %s %s to change)",
 
     -- Affichage
     ["Affichage sur la minicarte : %s."]      = "Minimap display: %s.",

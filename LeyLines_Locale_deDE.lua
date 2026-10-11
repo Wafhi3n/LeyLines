@@ -33,8 +33,8 @@ local de = {
     ["désactivé"]          = "aus",
 
     -- Status und Befehle
-    ["v%s chargée. /ley pour l'état, /ley help pour le reste."] =
-        "v%s geladen. /ley für den Status, /ley help für den Rest.",
+    ["v%s installée."] = "v%s installiert.",
+    ["/ley pour l'état, /ley help pour le reste."] = "/ley für den Status, /ley help für den Rest.",
     ["v%s — %s %s ici, %s au total."]       = "v%s — %s %s hier, %s insgesamt.",
     ["La plus proche : %s à %s yd."]        = "Nächste: %s in %s yd.",
     ["Minicarte %s — carte %s — suivi %s — capture auto %s."] =
@@ -69,8 +69,7 @@ local de = {
         "Lernen abgebrochen: kein Zauber gewirkt.",
     ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
         "Zauber gemerkt: %s (%s). Ab jetzt markiert nur ein Zauber mit LANGEM Buff eine %s.",
-    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
-        "Kurzer Buff: hier ist keine %s, nichts wurde aufgezeichnet.",
+    ["(/ley %s %s pour changer)"] = "(/ley %s %s zum Ändern)",
 
     -- Anzeige
     ["Affichage sur la minicarte : %s."]      = "Minikartenanzeige: %s.",

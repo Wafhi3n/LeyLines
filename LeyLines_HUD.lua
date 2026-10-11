@@ -172,26 +172,30 @@ function HUD:CheckBuff()
     self:WarnExpiring(left)
 end
 
+-- Un toast, pas une ligne de chat (règle du user du 2026-10-11, LeyLines_Toast.lua) : le rappel
+-- tombe sans geste du joueur, souvent en plein combat.
 function HUD:WarnExpiring(left)
     local mins = math.max(0, math.floor(left / 60 + 0.5))
     local title = LL.Nodes:Word("title")
     local node, dist = LL.Nodes:NearestToPlayer()
     if not node then
-        LL:Printf(L["%s : buff à %s min de la fin — aucune connue dans cette zone."], title, mins)
+        LL.Toast:Show(string.format(L["%s : buff à %s min de la fin — aucune connue dans cette zone."], title, mins))
         return
     end
-    LL:Printf(L["%s : buff à %s min de la fin — la plus proche à %s yd."],
-        title, mins, math.floor(dist + 0.5))
+    LL.Toast:Show(string.format(L["%s : buff à %s min de la fin — la plus proche à %s yd."],
+        title, mins, math.floor(dist + 0.5)))
     -- Sur demande seulement (`/ley waypoint`) : un pin posé sans qu'on le demande gênait un joueur,
     -- et l'API n'a qu'UN point de route du joueur, donc le nôtre doit remplacer le sien (déduit,
     -- jamais vu en jeu). Le clic du bandeau, `/ley track` et le raccourci en posent toujours un.
-    if LL.db.autoWaypoint then self:Track(node) end
+    -- Muet ici : le toast vient de tout dire.
+    if LL.db.autoWaypoint then self:Track(node, true) end
 end
 
-function HUD:Track(node)
+-- `quiet` : posé par le rappel, pas par un geste du joueur ; rien dans le chat.
+function HUD:Track(node, quiet)
     if not node then return LL:NoneHere() end
     if C_Map.CanSetUserWaypointOnMap and not C_Map.CanSetUserWaypointOnMap(node.map) then
-        LL:Print(L["Cette zone n'accepte pas de point de route."])
+        if not quiet then LL:Print(L["Cette zone n'accepte pas de point de route."]) end
         return
     end
     local point = UiMapPoint and UiMapPoint.CreateFromCoordinates(node.map, node.x, node.y)
@@ -205,6 +209,6 @@ function HUD:Track(node)
     -- la même ligne. On n'annonce que le CHANGEMENT de cible.
     if self.tracked ~= node then
         self.tracked = node
-        LL:Printf(L["Point de route posé sur %s."], LL.Nodes:Label(node))
+        if not quiet then LL:Printf(L["Point de route posé sur %s."], LL.Nodes:Label(node)) end
     end
 end
