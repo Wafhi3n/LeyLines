@@ -29,6 +29,24 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-11 15:30 - jusqu'a 40fe320 - main-dev@cf615b9 2026-10-11 15:26 - Forever 1.60.1.70338 -
+  **GO, coche dans l'appli du banc (fiche `LeyLines--fix-rappel-fin-de-combat`), sur la parole du
+  user** - branche `fix/rappel-fin-de-combat` : le toast du rappel de buff ne revient plus a chaque
+  sortie de combat (capture du user : « buff ends in 4 min — nearest one 289 yd away » a chaque
+  fin de combat). `fin-combat` : sonde avant le combat `false true false 25665.971` (hors combat,
+  buff lu, `C_Secrets.ShouldSpellAuraBeSecret(1259691)` faux, rappel retenu sur l'heure de fin
+  25665.971) ; pendant le combat `true false true` (`Capture:LeyAura` ne lit RIEN, sans erreur, et
+  le buff se dit secret) ; aucun toast de rappel a la sortie, sur deux combats. `reprise` :
+  reabsorber une faille, seuil a 15 min, donne un nouveau toast (autre buff, autre heure de fin).
+  `rearme` : `/ley warn 15` redonne un toast. Le decoupage `LeyLines_CaptureAura.lua` (`e77fe74`)
+  tourne sur ce build : la sonde appelle `Capture:LeyAura`, et la reabsorption passe sans erreur.
+  **Precede d'un NO-GO a 15:19 sur `main-dev@82f26a7` (jusqu'a `e77fe74`)** : `module` (`true
+  true` apres un SIMPLE /reload : le fichier neuf du .toc est charge sans relancer le client),
+  `absorber` et `temoin` OK, mais `fin-combat` KO : sonde en combat `false false`, aucun refus de
+  lecture et rappel rearme. Ce correctif attendait une ERREUR en combat ; GetPlayerAuraBySpellID
+  porte `RequiresNonSecretAura` (doc du client) et rend nil sans erreur. PAS observe : le 4e mot
+  de la sonde en combat (heure de fin retenue, non recopiee) ; un buff qui EXPIRE pendant un combat.
+
 - 2026-10-11 12:07 - jusqu'a 1f0210c - main-dev@18c623d 2026-10-11 11:56 - Forever -
   **GO, coche dans l'appli du banc (fiche `LeyLines--fix-chat-moins-bavard`, 3 gestes ajoutes
   OK), sur la parole du user** - branche `fix/chat-moins-bavard`, suite du releve de 10:55 :
