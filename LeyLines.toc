@@ -33,6 +33,8 @@ LeyLines_Data.lua
 
 # Acquisition des positions (vignette / infobulle / sort / manuel).
 LeyLines_Capture.lua
+# La lecture du buff de faille : verdict d'un lancer, temps restant pour le rappel.
+LeyLines_CaptureAura.lua
 # Une absorption faite en combat (lecture d'aura refusee) se confirme a la fin du combat.
 LeyLines_CaptureCombat.lua
 
