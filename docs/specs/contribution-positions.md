@@ -431,6 +431,30 @@ remerciements des paliers 10 à 15. Donc : fusionner, `ll_ingest.ps1 -Build`, et
 se commite. Une PR du bot se fusionne de la même façon, en local, jamais par le bouton de GitHub
 quand une autre a été fusionnée depuis sa création.
 
+### Veille Wowhead — la même voie, une source de plus (2026-10-11)
+
+Wowhead publie les positions des deux objets (fissure : `object=602735`, tornade : `object=616992`
+sur `wowhead.com/forever`), relevées par son addon Wowhead Looter : la position du JOUEUR quand le
+buff de site est tout frais (≥ 14 min 55 restantes), arrondie au 0,1 % de carte. C'est notre
+capture, donc un point Wowhead vaut un relevé de joueur, pas la position exacte de l'objet.
+
+```
+cron     .github/workflows/wowhead.yml, chaque jour (ou relance à la main, en essai par défaut)
+Action   .github/scripts/wowhead.sh, depuis main :
+           une PR de la veille encore ouverte ? → rien (la fermer rouvre la veille)
+           les 2 pages → tools/ll_wowhead.lua : des NOMBRES seulement, triés comme `build` les trierait
+           rien de neuf → rien d'écrit (une contribution vide monterait le palier quand même)
+           page illisible → le run ÉCHOUE (Wowhead a changé, ou bloque le runner)
+           ll_ingest add + build, mêmes vérifications que pour un ticket → branche
+           feat/positions-wowhead-AAAA-MM-JJ + PR, contribution data/contrib/wowhead-AAAA-MM-JJ.ll
+toi      relire le tableau (chaque point neuf, sa distance au plus proche connu), fusion, release
+```
+
+**Wowhead n'oublie rien** : un point refusé reviendrait au passage suivant. Il s'écrit dans
+`data/wowhead_refus.txt` (`V1413 39.9 13.9  # raison`) avant de fermer la PR. Auteur des
+contributions : `Wowhead` (variable `AUTEUR` du script, vide = personne n'est remercié en jeu).
+Relire en local : `DRY_RUN=1 LUA=… LUAC=… bash .github/scripts/wowhead.sh`.
+
 ## Renvois
 
 - Skill **leylines-addon** : capture par durée du buff, piège de l'infobulle qui se relisait.
