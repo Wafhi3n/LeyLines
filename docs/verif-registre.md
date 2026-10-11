@@ -29,6 +29,19 @@ l'equivalent, le message est identique).
 
 ## Releves
 
+- 2026-10-11 12:07 - jusqu'a 1f0210c - main-dev@18c623d 2026-10-11 11:56 - Forever -
+  **GO, coche dans l'appli du banc (fiche `LeyLines--fix-chat-moins-bavard`, 3 gestes ajoutes
+  OK), sur la parole du user** - branche `fix/chat-moins-bavard`, suite du releve de 10:55 :
+  `combat-toast-direct` : `LeyLines.Toast:Show` en plein combat affiche le toast (capture d'ecran
+  du user, combat contre un Skyhopper) ; la remarque « pas de toast en combat » venait donc de la
+  CAPTURE, pas du toast. `connue-muette` (`1f0210c`) : absorber hors combat une fissure deja sur la
+  carte n'affiche rien, ni toast ni chat, et le nombre de releves du point monte de 1.
+  `combat-differe` (`25a6c70`) : absorption faite EN COMBAT sur une fissure connue, rien a l'ecran,
+  et le nombre de releves monte de 1 apres la fin du combat (verdict differe a
+  PLAYER_REGEN_ENABLED). Dit par le user, pas coche : pour « empilement », deux toasts s'affichent
+  l'un au-dessus de l'autre. PAS observe : le toast « Nouvelle … » d'une fissure NOUVELLE absorbee
+  en combat (temoin facultatif du geste, sans occasion).
+
 - 2026-10-11 10:55 - jusqu'a f952bde - main-dev@7380216 2026-10-11 10:36 - Forever -
   **GO hors combat, coche dans l'appli du banc (fiche `LeyLines--fix-chat-moins-bavard`, 8 gestes
   OK), sur la parole du user** - branche `fix/chat-moins-bavard` : au 1er /reload une seule ligne
