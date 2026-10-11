@@ -69,8 +69,7 @@ local de = {
         "Lernen abgebrochen: kein Zauber gewirkt.",
     ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
         "Zauber gemerkt: %s (%s). Ab jetzt markiert nur ein Zauber mit LANGEM Buff eine %s.",
-    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
-        "Kurzer Buff: hier ist keine %s, nichts wurde aufgezeichnet.",
+    ["(/ley %s %s pour changer)"] = "(/ley %s %s zum Ändern)",
 
     -- Anzeige
     ["Affichage sur la minicarte : %s."]      = "Minikartenanzeige: %s.",

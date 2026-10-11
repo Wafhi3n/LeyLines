@@ -48,7 +48,9 @@ les SavedVariables.
 | `/ley options` | ouvre la page de l'addon dans Options → AddOns (alias `config`) |
 
 Les commandes de réglage à deux états (`pins`, `map`, `hud`, `skyborne`, `auto`, `tooltip`,
-`waypoint`, `signal`) acceptent `on` / `off` ; sans argument, elles basculent.
+`waypoint`, `signal`) acceptent `on` / `off` ; sans argument, elles disent l'état et le mot qui le
+change, sans y toucher (elles basculaient jusqu'à la v1.8.1). Le clic droit du compartiment
+d'addons bascule toujours le bandeau.
 
 **La page d'options** (Échap → Options → AddOns, ou `/ley options`) reprend tous ces réglages en
 quatre sections (affichage, capture, rappel de buff, partage), plus ceux qui n'ont pas de commande
@@ -121,7 +123,8 @@ Par précision décroissante :
 2. **Sort** — lance ton sort d'absorption, rien à configurer. C'est **le jeu qui tranche** : sur une
    faille le sort donne un buff de 15 minutes, à côté un buff de 15 secondes. L'addon lit la durée
    du buff obtenu et n'enregistre que sur un buff long — aucune estimation de distance, aucun faux
-   positif. Un lancer raté te le dit en une ligne et n'écrit rien. C'est la meilleure source.
+   positif. Un lancer raté n'écrit rien, ni dans la base ni dans le chat (le sort part de partout :
+   une ligne par lancer raté remplissait le chat). C'est la meilleure source.
 3. **Manuel** — `/ley add` ou le raccourci, en étant posé dessus.
 4. **Infobulle** — **éteinte par défaut** (`/ley tooltip` pour l'allumer). Survoler l'objet suffit,
    mais le relevé vaut la position du **joueur**, mesurée à 40 yd de l'objet en jeu le 2026-09-20 :

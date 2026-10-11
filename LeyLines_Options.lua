@@ -18,7 +18,10 @@ LL.Options = Options
 
 local function Refresh() LL:Refresh() end
 local function Hidden() LL:WarnHidden() end   -- les quatre bascules d'affichage le rappellent
-local function Pending()   -- coupé, le signal se tait, mais le nombre reste calculé : redonné ici
+-- Le nombre en attente, signal allumé seulement : dit juste après « désactivé », il se lisait comme un
+-- signal qui parle encore (CurseForge, 2026-10-11). Coupé, l'infobulle du compartiment le donne.
+local function Pending()
+    if not LL.db.signal then return end
     local n = LL.Signal:Count()
     if n > 0 then LL:Printf(L["%s position(s) à partager, absente(s) de la liste commune."], n) end
 end
@@ -117,23 +120,33 @@ function Options:Set(e, value)
     if self.onChange then self.onChange() end
 end
 
-local function Switch(current, rest)   -- `on` / `off`, sinon bascule
-    local arg = string.lower(rest or "")
-    if arg == "on" then return true elseif arg == "off" then return false end
-    return not current
-end
+local ON_OFF = { on = true, off = false }
 
--- La commande : change (si l'argument le permet), puis le dit. Un nombre hors bornes ne change
+-- La commande : change (si l'argument le permet), puis le dit. Deux états : `on` / `off` seulement.
+-- Sans mot, ou avec un autre, elle dit l'état sans y toucher, et la même ligne donne le mot qui le
+-- change. Jusqu'à la v1.8.1 elle basculait : un `/ley signal` tapé pour voir l'état rallumait le
+-- signal (« it turns itself back on », CurseForge, 2026-10-11). Un nombre hors bornes ne change
 -- rien, et la ligne redonne la valeur en place.
 function Options:Command(e, rest)
+    local arg = string.lower(rest or "")
     if e.kind == "bool" then
-        self:Set(e, Switch(self:Get(e), rest))
+        if ON_OFF[arg] ~= nil then self:Set(e, ON_OFF[arg]) end
     else
         local n = tonumber(rest)
         if n and n >= e.min and n <= e.max then self:Set(e, n) end
     end
     local v = self:Get(e)
-    if e.say then e.say(v) else LL:Printf(e.msg, e.kind == "bool" and LL:OnOff(v) or v) end
+    if e.say then
+        e.say(v)
+    elseif e.kind == "bool" then
+        local line = string.format(e.msg, LL:OnOff(v))
+        if ON_OFF[arg] == nil then
+            line = line .. " " .. string.format(L["(/ley %s %s pour changer)"], e.cmd[1], v and "off" or "on")
+        end
+        LL:Print(line)
+    else
+        LL:Printf(e.msg, v)
+    end
     if e.tell then e.tell() end
 end
 
@@ -145,9 +158,11 @@ for _, e in ipairs(Options.LIST) do
     end
 end
 
--- Partagé par `/ley hud` et le clic droit du compartiment d'addons (LeyLines_Compartment.lua).
+-- Le clic droit du compartiment d'addons (LeyLines_Compartment.lua) bascule, lui : `/ley hud` sans
+-- mot ne fait plus que dire l'état.
 function LL:ToggleHUD()
-    Options:Command(Options.BY_KEY["hud.show"], "")
+    local e = Options.BY_KEY["hud.show"]
+    Options:Command(e, Options:Get(e) and "off" or "on")
 end
 
 function Options:ResetHUDPosition()

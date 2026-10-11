@@ -372,11 +372,12 @@ function Capture:LeyAura()
 end
 
 function Capture:ResolveCast(map, x, y)
+    -- Un lancer raté se tait. Jusqu'à la v1.8.1 il écrivait « Buff court : pas de … ici » : le sort
+    -- part de partout (buff de 15 s ailleurs), donc une ligne à chaque lancer hors d'une faille
+    -- (« too much chat spam », CurseForge, 2026-10-11). En combat, la lecture d'aura peut aussi être
+    -- refusée, et la ligne aurait menti sur un vrai lancer.
     local aura = self:FreshLongBuff()
-    if not aura then
-        LL:Printf(L["Buff court : pas de %s ici, rien n'a été enregistré."], LL.Nodes:Word("one"))
-        return
-    end
+    if not aura then return end
     -- Plus d'inscription du buff dans LL.db.auras (voir KeepShippedAuras) : un id inconnu trouvé
     -- par le filet confirme CE lancer, il ne devient pas le buff surveillé par le rappel.
     -- Le sort n'absorbe que l'objet de SA faction (dit par le joueur le 2026-09-27) : l'espèce d'une

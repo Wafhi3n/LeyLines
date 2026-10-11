@@ -69,8 +69,7 @@ local es = {
         "Aprendizaje cancelado: no se lanzó ningún hechizo.",
     ["Sort retenu : %s (%s). Désormais, seul un lancer suivi d'un buff LONG marquera une %s."] =
         "Hechizo recordado: %s (%s). A partir de ahora, solo un lanzamiento con buff LARGO marca una %s.",
-    ["Buff court : pas de %s ici, rien n'a été enregistré."] =
-        "Buff corto: aquí no hay %s, no se registró nada.",
+    ["(/ley %s %s pour changer)"] = "(/ley %s %s para cambiar)",
 
     -- Visualización
     ["Affichage sur la minicarte : %s."]      = "Mostrar en el minimapa: %s.",
