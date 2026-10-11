@@ -112,30 +112,29 @@ function Capture:KeepShippedAuras(db)
     return removed
 end
 
--- Temps restant du buff de faille, ou nil si cette aura n'est pas la nôtre. Isolée dans sa propre
--- fonction pour être appelée SOUS pcall : sur Forever une donnée d'aura peut être secrète, et le
--- soustraire ferait exploser l'appelant loin de l'origine.
+-- Temps restant du buff de faille et son heure de fin, ou nil si cette aura n'est pas la nôtre.
+-- Isolée dans sa propre fonction pour être appelée SOUS pcall : sur Forever une donnée d'aura peut
+-- être secrète, et le soustraire ferait exploser l'appelant loin de l'origine.
 local function LeyRemaining(aura)
     if not aura.spellId or not LL.db.auras[aura.spellId] then return nil end
     local exp = aura.expirationTime
     if type(exp) ~= "number" or exp <= 0 then return nil end
-    return exp - GetTime()
+    return exp - GetTime(), exp
 end
 
--- Le buff de faille actuellement actif sur le joueur : rend l'aura ET son temps restant, pour que
--- l'appelant n'ait jamais à toucher aux champs bruts. Sert au rappel d'expiration (LeyLines_HUD).
--- Troisième retour `blocked` : lecture refusée (en combat) ou champ secret, on ne SAIT pas, ce qui
--- n'est pas « plus de buff ». Pris pour une absence, il réarmait le rappel, reparti à chaque fin
--- de combat (vu en jeu le 2026-10-11, buff à 4 min de la fin).
+-- Le buff de faille actuellement actif sur le joueur : rend l'aura, son temps restant et son heure
+-- de fin (ce qui DÉSIGNE ce buff : le reprendre la change), pour que l'appelant n'ait jamais à
+-- toucher aux champs bruts. Sert au rappel d'expiration (LeyLines_HUD).
+-- nil ne veut PAS dire « plus de buff ». En combat le buff devient secret, et GetPlayerAuraBySpellID
+-- porte RequiresNonSecretAura (doc du client, build 70338) : il rend nil SANS erreur, « protected
+-- APIs will return no values ». Vu au banc le 2026-10-11 : nil en combat, aucun refus relevé.
 function Capture:LeyAura()
     -- Une seule lecture, ciblée sur l'id connu : c'est le chemin qui bat chaque seconde.
     for id in pairs(LL.db.auras) do
-        local aura, blocked = self:AuraBySpellID(id)
-        if blocked then return nil, nil, true end
+        local aura = self:AuraBySpellID(id)
         if aura then
-            local ok, left = pcall(LeyRemaining, aura)
-            if not ok then return nil, nil, true end
-            if left then return aura, left end
+            local ok, left, ends = pcall(LeyRemaining, aura)
+            if ok and left then return aura, left, ends end
         end
     end
     return nil
