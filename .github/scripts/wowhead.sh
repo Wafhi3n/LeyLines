@@ -47,24 +47,14 @@ if [ -n "$(git status --porcelain -- LeyLines_Data.lua data/contrib)" ]; then
     echo "LeyLines_Data.lua ou data/contrib modifiés : arbre à nettoyer d'abord." >&2; exit 1
 fi
 
-# --- 1. Une veille déjà en attente de relecture ? -----------------------------------------------------
-# Une PR ouverte de la veille bloque la suivante : ses points seraient proposés deux fois. Fermer la
-# PR (après une fusion locale, ou pour la refuser) rouvre la veille.
-if [ "$DRY_RUN" != "1" ]; then
-    OPEN=$(gh pr list -R "$REPO" --state open --limit 100 --json headRefName \
-        --jq "[.[] | select(.headRefName | startswith(\"$PREFIX\"))] | length")
-    [ "$OPEN" = "0" ] || { say "Une PR de la veille Wowhead attend encore sa relecture : rien de proposé."; exit 0; }
-    if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
-        say "Branche $BRANCH déjà poussée aujourd'hui : rien à faire."; exit 0
-    fi
-fi
-
-# --- 2. Les deux pages (602735 = fissure, 616992 = tornade) -------------------------------------------
+# --- 1. Les deux pages (602735 = fissure, 616992 = tornade) -------------------------------------------
+# Lues AVANT de regarder si une PR attend : une page bloquée ou remaniée doit faire échouer le run
+# chaque jour, même quand la veille n'a rien à proposer.
 curl -fsSL --retry 3 --retry-delay 10 --max-time 60 -A "$UA" "${BASE}602735" -o "$WORK/fissure.html"
 sleep 2
 curl -fsSL --retry 3 --retry-delay 10 --max-time 60 -A "$UA" "${BASE}616992" -o "$WORK/tornade.html"
 
-# --- 3. Le tri : 0 = points neufs, 4 = rien de neuf, 2 = page illisible --------------------------------
+# --- 2. Le tri : 0 = points neufs, 4 = rien de neuf, 2 = page illisible --------------------------------
 set +e
 "$LUA" tools/ll_wowhead.lua delta . "$WORK/fissure.html" "$WORK/tornade.html" \
     "$WORK/code.txt" "$WORK/report.md" data/contrib/*.ll
@@ -77,6 +67,18 @@ case $RC in
     2) echo "Page Wowhead illisible : la veille ne sait plus lire Wowhead, à corriger." >&2; exit 1 ;;
     *) echo "Erreur de ll_wowhead.lua (code $RC)." >&2; exit 1 ;;
 esac
+
+# --- 3. Une veille déjà en attente de relecture ? -----------------------------------------------------
+# Une PR ouverte de la veille bloque la suivante : ses points seraient proposés deux fois. Fermer la
+# PR (après une fusion locale, ou pour la refuser) rouvre la veille.
+if [ "$DRY_RUN" != "1" ]; then
+    OPEN=$(gh pr list -R "$REPO" --state open --limit 100 --json headRefName \
+        --jq "[.[] | select(.headRefName | startswith(\"$PREFIX\"))] | length")
+    [ "$OPEN" = "0" ] || { say "Une PR de la veille Wowhead attend encore sa relecture : rien de proposé."; exit 0; }
+    if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
+        say "Branche $BRANCH déjà poussée aujourd'hui : rien à faire."; exit 0
+    fi
+fi
 
 # --- 4. Verser, régénérer, vérifier --------------------------------------------------------------------
 BEFORE=$(git status --porcelain | LC_ALL=C sort)

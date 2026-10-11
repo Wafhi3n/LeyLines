@@ -441,10 +441,10 @@ capture, donc un point Wowhead vaut un relevé de joueur, pas la position exacte
 ```
 cron     .github/workflows/wowhead.yml, chaque jour (ou relance à la main, en essai par défaut)
 Action   .github/scripts/wowhead.sh, depuis main :
-           une PR de la veille encore ouverte ? → rien (la fermer rouvre la veille)
            les 2 pages → tools/ll_wowhead.lua : des NOMBRES seulement, triés comme `build` les trierait
+           page illisible → le run ÉCHOUE (Wowhead a changé, ou bloque le runner), chaque jour
            rien de neuf → rien d'écrit (une contribution vide monterait le palier quand même)
-           page illisible → le run ÉCHOUE (Wowhead a changé, ou bloque le runner)
+           une PR de la veille encore ouverte ? → rien (la fermer rouvre la veille)
            ll_ingest add + build, mêmes vérifications que pour un ticket → branche
            feat/positions-wowhead-AAAA-MM-JJ + PR, contribution data/contrib/wowhead-AAAA-MM-JJ.ll
 toi      relire le tableau (chaque point neuf, sa distance au plus proche connu), fusion, release
