@@ -42,7 +42,7 @@ LL.THANKS = {
     [24] = { "vananyask1", "alcaras", "larsas-cmyk" },
     [25] = { "axlmcc", "asylumlouie", "kehtemine" },
     [26] = { "copypastesgptcode", "mrdick47", "asylumlouie", "bobjackson321", "Lustrous-Wanderer", "chadrien", "larsas-cmyk", "Wowhead" },
-    [27] = { "Lustrous-Wanderer" },
+    [27] = { "Narii2623", "Lustrous-Wanderer" },
 }
 
 LL.DATA = {
@@ -163,6 +163,14 @@ LL.DATA = {
             0.5400, 0.2660, 26,
             0.5460, 0.1490, 26,
             0.6310, 0.4110, 26,
+        },
+        [1420] = {
+            0.7542, 0.5019, 27,
+        },
+        [1421] = {
+            0.4808, 0.7535, 27,
+            0.5499, 0.6605, 27,
+            0.6121, 0.7925, 27,
         },
         [1434] = {
             0.1334, 0.1510, 11,
