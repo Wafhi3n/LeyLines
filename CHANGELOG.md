@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.8.4
+
+Six new spots from three players. Narii2623 sent the list's first Elemental Convergences in
+Tirisfal Glades and Silverpine Forest: one in Tirisfal at 75.4, 50.2, and three in Silverpine at
+48.1, 75.4, at 55.0, 66.1 and at 61.2, 79.3. That last one shares its spot with a ley line already
+in the list, which has happened twice before elsewhere. Lustrous-Wanderer is back with a ley line
+in Elwynn Forest at 64.9, 67.4, and confirmed one in Redridge Mountains. anttiej sent their first
+ticket: a new ley line in Darkshore at 43.0, 59.5, plus four confirmations, two in Westfall, one in
+Stonetalon Mountains and one on Zephras Isle. Thanks, all three of you!
+
 ## v1.8.3
 
 The toast warning that your buff is running out kept coming back after every fight. Once the buff
