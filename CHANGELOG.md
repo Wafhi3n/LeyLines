@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.5
+
+No new spots this time, but two confirmations from anttiej: the ley line in Elwynn Forest at
+64.9, 67.5, which Lustrous-Wanderer found last week, and the one in Redridge Mountains at 30.9,
+46.1. A second player standing on the same spot is what makes a point trustworthy. Thanks, anttiej!
+
 ## v1.8.4
 
 Six new spots from three players. Narii2623 sent the list's first Elemental Convergences in
