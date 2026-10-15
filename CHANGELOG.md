@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.8.6
+
+No new spots again, but nine confirmations in one ticket from andreaskristan86-creator, who sent
+their first one: Duskwood, two in Redridge Mountains, two in Westfall, one in Darkshore and three
+on Zephras Isle. Every one of them matched a ley line already in the list, most within a few
+yards. Thanks for checking all of those!
+
 ## v1.8.5
 
 No new spots this time, but two confirmations from anttiej: the ley line in Elwynn Forest at
