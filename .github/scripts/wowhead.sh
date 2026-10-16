@@ -4,8 +4,10 @@
 #
 # DEPUIS LE 2026-10-16, À LA MAIN. Wowhead défie les robots (pare-feu AWS WAF) : ni le runner ni un
 # script ne lisent plus ses pages, et on ne contourne pas le défi. Le user ouvre les deux pages dans
-# son navigateur, les enregistre (Ctrl+S, « Page Web, HTML uniquement »), et la session lance, dans
-# un worktree de LeyLines tiré d'origin/main (le script y crée la branche) :
+# son navigateur et les enregistre avec l'extension Chrome de l'outillage (tools\wowhead-page :
+# Téléchargements\wowhead\forever_object_602735.html et …616992.html), ou à défaut Ctrl+S « Page
+# Web, HTML uniquement ». La session lance, dans un worktree de LeyLines tiré d'origin/main (le
+# script y crée la branche) :
 #   FISSURE_HTML=<page 602735> TORNADE_HTML=<page 616992> LUA=<lua 5.1> LUAC=<luac 5.1> \
 #     bash .github/scripts/wowhead.sh
 # Le reste (tri, garde-fous, branche, PR) est le même que sans les deux variables, où le script
