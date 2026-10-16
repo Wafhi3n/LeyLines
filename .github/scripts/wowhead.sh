@@ -50,9 +50,28 @@ fi
 # --- 1. Les deux pages (602735 = fissure, 616992 = tornade) -------------------------------------------
 # Lues AVANT de regarder si une PR attend : une page bloquée ou remaniée doit faire échouer le run
 # chaque jour, même quand la veille n'a rien à proposer.
-curl -fsSL --retry 3 --retry-delay 10 --max-time 60 -A "$UA" "${BASE}602735" -o "$WORK/fissure.html"
+#
+# Une page lue, ou un échec qui dit POURQUOI. Pas de `curl -f` : il laisse passer un 202, et c'est
+# par un 202 vide portant `x-amzn-waf-action: challenge` que Wowhead défie les robots (mesuré le
+# 2026-10-16 depuis le poste du user ; 403 avec un User-Agent de navigateur). Ce défi demande
+# d'exécuter le JavaScript de la page : on ne le contourne pas, on le nomme, et le job échoue.
+fetch() {  # fetch <nom> <id de l'objet>
+    local name=$1 id=$2 code waf
+    code=$(curl -sSL --retry 3 --retry-delay 10 --max-time 60 -A "$UA" -D "$WORK/$name.headers" \
+        -o "$WORK/$name.html" -w '%{http_code}' "$BASE$id")
+    waf=$({ grep -i '^x-amzn-waf-action:' "$WORK/$name.headers" || true; } | tail -1 | cut -d: -f2- | tr -d ' \r')
+    if [ -n "$waf" ]; then
+        say "Wowhead refuse la page $name (objet $id) : HTTP $code, x-amzn-waf-action: $waf. C'est le pare-feu anti-robot de Wowhead (AWS WAF), pas notre lecteur : la veille ne passera pas tant qu'il défie le runner."
+        exit 1
+    fi
+    if [ "$code" != "200" ]; then
+        say "Wowhead répond HTTP $code pour la page $name (objet $id), $(wc -c < "$WORK/$name.html") octets : page non lue."
+        exit 1
+    fi
+}
+fetch fissure 602735
 sleep 2
-curl -fsSL --retry 3 --retry-delay 10 --max-time 60 -A "$UA" "${BASE}616992" -o "$WORK/tornade.html"
+fetch tornade 616992
 
 # --- 2. Le tri : 0 = points neufs, 4 = rien de neuf, 2 = page illisible --------------------------------
 set +e
