@@ -446,8 +446,9 @@ Wowhead Client ni l'addon Wowhead Looter n'y changent rien : ils envoient NOS re
 rien ne redescend (vérifié le 2026-10-16 : `wlUploaded = 1`, `wlObject` vide).
 
 ```
-toi      les 2 pages dans ton navigateur, Ctrl+S « Page Web, HTML uniquement », puis « pages
-         Wowhead enregistrées » à la session
+toi      les 2 pages dans ton navigateur, enregistrées avec l'extension Chrome de l'outillage
+         (tools\wowhead-page → Téléchargements\wowhead\forever_object_<id>.html ; à défaut Ctrl+S
+         « Page Web, HTML uniquement »), puis « pages Wowhead enregistrées » à la session
 session  dans un worktree tiré d'origin/main :
          FISSURE_HTML=… TORNADE_HTML=… LUA=… LUAC=… bash .github/scripts/wowhead.sh
            (sans ces deux variables, le script télécharge lui-même : c'est le workflow)
