@@ -1,16 +1,19 @@
-# La veille Wowhead : chaque jour, les fissures et tornades que Wowhead montre et que la liste
-# commune n'a pas → une branche feat/positions-wowhead-AAAA-MM-JJ prête à relire.
+# La veille Wowhead : les fissures et tornades que Wowhead montre et que la liste commune n'a pas
+# → une branche feat/positions-wowhead-AAAA-MM-JJ prête à relire.
+#
+# PLUS DE CRON depuis le 2026-10-16 : Wowhead défie les robots (pare-feu AWS WAF, 202 vide +
+# `x-amzn-waf-action: challenge`), le runner ne lit plus ses pages, et on ne contourne pas le défi.
+# La veille se fait à la main (pages enregistrées par le user, cf. .github/scripts/wowhead.sh) ; ce
+# workflow ne sert plus qu'à essayer, à la main, si Wowhead a levé le défi.
 #
 # Ne fusionne, ne tague, ne publie rien. Le travail est dans .github/scripts/wowhead.sh (tri et
 # sécurité : tools/ll_wowhead.lua). Deux pages lues par passage, rien d'autre.
 #
-# Une page illisible fait ÉCHOUER le job (Wowhead a changé sa page, ou bloque le runner) : c'est
-# voulu, un échec se voit, un « rien de neuf » silencieux ne se verrait jamais.
+# Une page illisible ou refusée fait ÉCHOUER le job, en disant pourquoi : un échec se voit, un
+# « rien de neuf » silencieux ne se verrait jamais.
 name: Wowhead watch
 
 on:
-  schedule:
-    - cron: "23 6 * * *"
   workflow_dispatch:
     inputs:
       dry_run:

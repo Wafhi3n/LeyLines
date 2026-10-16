@@ -2,9 +2,16 @@
 # wowhead.sh — la veille Wowhead : les fissures et tornades que Wowhead montre et que la liste
 # commune n'a pas, versées sur une branche feat/positions-wowhead-AAAA-MM-JJ prête à relire.
 #
-# Lancé chaque jour par .github/workflows/wowhead.yml. En local, pour relire sans rien pousser :
-#   DRY_RUN=1 LUA=<lua 5.1> LUAC=<luac 5.1> bash .github/scripts/wowhead.sh
-# DRY_RUN s'arrête avant la branche et remet l'arbre dans l'état où il l'a trouvé.
+# DEPUIS LE 2026-10-16, À LA MAIN. Wowhead défie les robots (pare-feu AWS WAF) : ni le runner ni un
+# script ne lisent plus ses pages, et on ne contourne pas le défi. Le user ouvre les deux pages dans
+# son navigateur, les enregistre (Ctrl+S, « Page Web, HTML uniquement »), et la session lance, dans
+# un worktree de LeyLines tiré d'origin/main (le script y crée la branche) :
+#   FISSURE_HTML=<page 602735> TORNADE_HTML=<page 616992> LUA=<lua 5.1> LUAC=<luac 5.1> \
+#     bash .github/scripts/wowhead.sh
+# Le reste (tri, garde-fous, branche, PR) est le même que sans les deux variables, où le script
+# télécharge lui-même : c'est ce que fait .github/workflows/wowhead.yml, lancé à la main seulement,
+# pour voir si Wowhead a levé le défi.
+# DRY_RUN=1 s'arrête avant la branche et remet l'arbre dans l'état où il l'a trouvé.
 #
 # Ne fusionne, ne tague, ne publie rien : un humain relit la branche, passe les portes et les tests
 # de l'outillage, puis publie. Rien de neuf = rien d'écrit (une contribution vide monterait quand
@@ -69,9 +76,21 @@ fetch() {  # fetch <nom> <id de l'objet>
         exit 1
     fi
 }
-fetch fissure 602735
-sleep 2
-fetch tornade 616992
+# Deux pages enregistrées à la main : on les prend telles quelles (ll_wowhead.lua vérifie qu'il
+# s'agit bien de la page de chaque objet). Les deux ou aucune.
+if [ -n "${FISSURE_HTML:-}" ] || [ -n "${TORNADE_HTML:-}" ]; then
+    for f in "${FISSURE_HTML:-}" "${TORNADE_HTML:-}"; do
+        [ -n "$f" ] && [ -s "$f" ] || { echo "FISSURE_HTML et TORNADE_HTML : deux pages enregistrées, non vides ($f)." >&2; exit 1; }
+    done
+    cp "$FISSURE_HTML" "$WORK/fissure.html"
+    cp "$TORNADE_HTML" "$WORK/tornade.html"
+    MANUEL=1
+else
+    fetch fissure 602735
+    sleep 2
+    fetch tornade 616992
+    MANUEL=0
+fi
 
 # --- 2. Le tri : 0 = points neufs, 4 = rien de neuf, 2 = page illisible --------------------------------
 set +e
@@ -83,7 +102,12 @@ set -e
 case $RC in
     0) ;;
     4) echo "Rien de neuf sur Wowhead."; exit 0 ;;
-    2) echo "Page Wowhead illisible : la veille ne sait plus lire Wowhead, à corriger." >&2; exit 1 ;;
+    2) if [ "$MANUEL" = "1" ]; then
+           echo "Page enregistrée illisible : chaque fichier est-il la page de SON objet (602735 fissure, 616992 tornade), enregistrée en « Page Web, HTML uniquement » ?" >&2
+       else
+           echo "Page Wowhead illisible : la veille ne sait plus lire Wowhead, à corriger." >&2
+       fi
+       exit 1 ;;
     *) echo "Erreur de ll_wowhead.lua (code $RC)." >&2; exit 1 ;;
 esac
 
@@ -91,6 +115,11 @@ esac
 # Une PR ouverte de la veille bloque la suivante : ses points seraient proposés deux fois. Fermer la
 # PR (après une fusion locale, ou pour la refuser) rouvre la veille.
 if [ "$DRY_RUN" != "1" ]; then
+    # En local, la branche part d'ici : il faut que ce soit origin/main à jour (sur le runner,
+    # l'Action vient de l'extraire).
+    git fetch -q origin main
+    [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || {
+        echo "HEAD n'est pas origin/main à jour : lancer depuis un worktree tiré d'origin/main." >&2; exit 1; }
     OPEN=$(gh pr list -R "$REPO" --state open --limit 100 --json headRefName \
         --jq "[.[] | select(.headRefName | startswith(\"$PREFIX\"))] | length")
     [ "$OPEN" = "0" ] || { say "Une PR de la veille Wowhead attend encore sa relecture : rien de proposé."; exit 0; }
@@ -125,9 +154,14 @@ fi
 # --- 5. La branche, et une PR ----------------------------------------------------------------------------
 git switch -q -c "$BRANCH"
 git add LeyLines_Data.lua "$CONTRIB"
-{ echo "feat(donnees): veille Wowhead du $DATE, versee par l'Action"; echo; cat "$WORK/report.md"; } > "$WORK/msg.txt"
-git -c user.name="github-actions[bot]" \
-    -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -F "$WORK/msg.txt"
+if [ "$MANUEL" = "1" ]; then
+    { echo "feat(donnees): veille Wowhead du $DATE, pages enregistrees a la main"; echo; cat "$WORK/report.md"; } > "$WORK/msg.txt"
+    git commit -q -F "$WORK/msg.txt"   # l'identité git du poste : c'est un humain qui a lu les pages
+else
+    { echo "feat(donnees): veille Wowhead du $DATE, versee par l'Action"; echo; cat "$WORK/report.md"; } > "$WORK/msg.txt"
+    git -c user.name="github-actions[bot]" \
+        -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -F "$WORK/msg.txt"
+fi
 git push -q origin "$BRANCH"
 say "Branche $BRANCH poussée."
 if gh pr create -R "$REPO" --base main --head "$BRANCH" --title "Positions : veille Wowhead du $DATE" --body-file "$WORK/report.md"; then

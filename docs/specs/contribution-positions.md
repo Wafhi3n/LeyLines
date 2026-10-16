@@ -438,11 +438,22 @@ sur `wowhead.com/forever`), relevées par son addon Wowhead Looter : la position
 buff de site est tout frais (≥ 14 min 55 restantes), arrondie au 0,1 % de carte. C'est notre
 capture, donc un point Wowhead vaut un relevé de joueur, pas la position exacte de l'objet.
 
+**Depuis le 2026-10-16, à la main.** Wowhead défie les robots (pare-feu AWS WAF : 202 vide +
+`x-amzn-waf-action: challenge`, mesuré depuis le runner et depuis le poste du user ; 403 avec un
+User-Agent de navigateur). Le défi exige d'exécuter le JavaScript de la page : on ne le contourne
+pas. Le cron est retiré ; le workflow reste, lancé à la main, pour voir si Wowhead lève le défi. Ni le
+Wowhead Client ni l'addon Wowhead Looter n'y changent rien : ils envoient NOS relevés à Wowhead,
+rien ne redescend (vérifié le 2026-10-16 : `wlUploaded = 1`, `wlObject` vide).
+
 ```
-cron     .github/workflows/wowhead.yml, chaque jour (ou relance à la main, en essai par défaut)
-Action   .github/scripts/wowhead.sh, depuis main :
-           les 2 pages → tools/ll_wowhead.lua : des NOMBRES seulement, triés comme `build` les trierait
-           page illisible → le run ÉCHOUE (Wowhead a changé, ou bloque le runner), chaque jour
+toi      les 2 pages dans ton navigateur, Ctrl+S « Page Web, HTML uniquement », puis « pages
+         Wowhead enregistrées » à la session
+session  dans un worktree tiré d'origin/main :
+         FISSURE_HTML=… TORNADE_HTML=… LUA=… LUAC=… bash .github/scripts/wowhead.sh
+           (sans ces deux variables, le script télécharge lui-même : c'est le workflow)
+script   les 2 pages → tools/ll_wowhead.lua : des NOMBRES seulement, triés comme `build` les trierait
+           page illisible ou refusée → ÉCHEC qui dit pourquoi (défi du pare-feu, code HTTP, ou
+           « pas la page de l'objet »)
            rien de neuf → rien d'écrit (une contribution vide monterait le palier quand même)
            une PR de la veille encore ouverte ? → rien (la fermer rouvre la veille)
            ll_ingest add + build, mêmes vérifications que pour un ticket → branche
