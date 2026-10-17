@@ -58,6 +58,7 @@ end
 function Capture:AuraBySpellID(id)
     local get = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID
     if not get then return nil, false end
+    -- secret: ok (en combat, rend nil sans erreur, vu le 2026-10-11 ; pour LeyAura et FreshLongBuff, nil = « on ne sait pas » et les champs se lisent sous pcall)
     return self:ReadAura(get, id)
 end
 
