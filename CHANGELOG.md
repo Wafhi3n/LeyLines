@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.8.7
+
+Nine new spots from six players, four of whom sent their first ticket.
+
+On the Horde side, kmf101 found the list's first Elemental Convergence in Mulgore, at 50.2, 53.6,
+and a new one in the Barrens at 56.3, 41.6. Nolo803 and ultradivinus each sent one in Ashenvale,
+at 68.0, 79.1 and at 76.5, 67.3.
+
+For the Alliance, Narii2623 added two ley lines in Westfall (42.3, 25.2 and 44.9, 36.2) and one in
+Loch Modan at 30.1, 22.1. Guldred found one in the Wetlands at 61.9, 68.3. kkatee is back with a
+ley line in Redridge Mountains at 19.5, 51.7, and Narii2623 sent the same spot a day later, so it
+already has two witnesses.
+
+The same tickets brought fifteen confirmations of spots already in the list, from Elwynn Forest to
+the Barrens and Silverpine Forest. Thanks, all six of you!
+
 ## v1.8.6
 
 No new spots again, but nine confirmations in one ticket from andreaskristan86-creator, who sent
