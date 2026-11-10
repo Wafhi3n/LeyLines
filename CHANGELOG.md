@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.8.8
+
+Thirteen new spots from five players, sent in fourteen tickets.
+
+On the Horde side, therealdragoon-ux found the list's first Elemental Convergences in Arathi
+Highlands, at 53.6, 69.5, and in Hillsbrad Foothills, at 63.4, 46.4. Silverpine Forest gets three:
+vananyask1 sent 56.2, 10.0 and isaacoolbeans sent the same spot a few hours later, so it already has
+two witnesses; the other two are at 54.8, 24.0 (vananyask1) and 49.4, 52.8 (isaacoolbeans).
+vananyask1 also added two in Tirisfal Glades (68.8, 64.7 and 49.2, 64.0), and isaacoolbeans two in
+the Barrens (50.9, 14.5 and 48.1, 58.7).
+
+For the Alliance, lpbarry1987-dot added two ley lines in Darkshore (44.5, 21.6 and 46.3, 38.0).
+UnknownUser6543 found one in Ashenvale at 26.8, 49.3 and one in Stonetalon Mountains at 78.4, 97.9,
+near the bottom edge of the map.
+
+The rest were confirmations of spots already in the list, most of them on Zephras Isle:
+lpbarry1987-dot alone confirmed nineteen. Thanks, all five of you!
+
 ## v1.8.7
 
 Nine new spots from six players, four of whom sent their first ticket.
