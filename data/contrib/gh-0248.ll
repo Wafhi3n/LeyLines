@@ -1,0 +1,5 @@
+from=hitenk3
+date=2026-11-19
+source=gh-0248
+version=32
+code=LL2;V1411=4515,1566;V1421=5496,6586;V1424=8312,3509
