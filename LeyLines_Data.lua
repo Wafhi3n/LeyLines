@@ -14,7 +14,7 @@
 -- jeu (LeyLines_Thanks.lua). Un pseudo n'y entre que fait de lettres, chiffres, tiret et souligné.
 local _, LL = ...
 
-LL.DATA_VERSION = 31
+LL.DATA_VERSION = 32
 
 LL.THANKS = {
     [2] = { "Wafhien" },
@@ -47,6 +47,7 @@ LL.THANKS = {
     [29] = { "andreaskristan86-creator" },
     [30] = { "Guldred", "Nolo803", "Narii2623", "kkatee", "kmf101", "ultradivinus" },
     [31] = { "lpbarry1987-dot", "isaacoolbeans", "vananyask1", "UnknownUser6543", "therealdragoon-ux" },
+    [32] = { "mjbreeden" },
 }
 
 LL.DATA = {
@@ -186,6 +187,9 @@ LL.DATA = {
         },
         [1417] = {
             0.5361, 0.6947, 31,
+            0.5224, 0.5058, 32,
+            0.2542, 0.6069, 32,
+            0.6833, 0.3078, 32,
         },
         [1420] = {
             0.7542, 0.5019, 27,
@@ -202,6 +206,8 @@ LL.DATA = {
         },
         [1424] = {
             0.6342, 0.4636, 31,
+            0.6441, 0.6093, 32,
+            0.7290, 0.6347, 32,
         },
         [1434] = {
             0.1334, 0.1510, 11,
