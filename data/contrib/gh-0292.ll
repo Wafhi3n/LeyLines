@@ -1,0 +1,5 @@
+from=elcontador666
+date=2026-11-22
+source=gh-0292
+version=32
+code=LL2;L1418=5405,1632;L1434=3215,7215;L2548=3807,4156
