@@ -1,0 +1,5 @@
+from=RuneStarbinder
+date=2026-11-23
+source=gh-0300
+version=32
+code=LL2;L1429=3722,5611;L1433=1264,7281,5502,6469;L1439=4229,2998
